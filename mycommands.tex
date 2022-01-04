@@ -1,0 +1,181 @@
+\newref{def}{name=Definition~}
+\newref{pri}{name=Prinzip~}
+\newref{tab}{name=Tabelle~,names=Tabellen~}
+\newref{abb}{name=Abbildung~}
+\newref{abschnitt}{name=Abschnitt~}
+\newref{kap}{name=Kapitel~}
+\newref{zei}{name=Zeile~,names=Zeilen~}
+\newref{src}{name=Quelltext~,names=Quelltexte~}
+
+
+
+%Abkürzungen
+\newcommand{\true}{\texttt{True}}
+\newcommand{\false}{\texttt{False}}
+\newcommand{\forSchleife}{\texttt{for}-Schleife}
+
+\newcommand{\myindex}[2]{\setindex{#1}\index{#2}\setindex{main}}
+
+\newcommand{\randnotiz}[1]{%
+  \marginpar{%
+    \begin{tiny}%
+%    \fbox{%
+      \parbox{1.5cm}{\color{YellowOrange}#1}%
+%    }
+    \end{tiny}%
+  }%
+}
+
+
+%Definition
+\floatstyle{ruled}
+\newfloat{Definition}{H}{lod}
+\newcommand{\bd}[2]%
+        {\begin{Definition}%
+                        \caption[#1]{\parbox[c][1.5ex][c]{7cm}{#1\color{White}gD}}\label{#2}\index{#1}%
+                        \begin{quote}%
+                                \begin{itshape}%
+                                \vspace{0.4em}
+        }
+\newcommand{\ed}%
+        {%
+                                \end{itshape}%
+                        \end{quote}%
+                        \vspace{-1.5ex}
+        \end{Definition}%
+        \vspace{-1.5ex}
+        }
+%Source Code Listen
+\floatstyle{ruled}
+\newfloat{Quelltext}{H}{losc}
+
+%% lstSource ist die neue Version, sollte immer verwendet werden!
+%#1 Dateiname
+%#2 Startzeile
+%#3 Endezeile
+%#4 Sprache
+%#5 Überschrift
+%#6 Label
+\newcounter{StartZeilenNr}%
+\newcommand{\lstsource}[6]%
+{%
+  \setcounter{StartZeilenNr}{#2}%
+  \addtocounter{StartZeilenNr}{0}%
+  \lstset%
+  {%
+    language={#4},%
+    numbers={left},%
+    escapechar={§},%
+    basicstyle={\ttfamily\scriptsize},%
+    firstnumber={#2},%
+    breaklines=true,%
+    breakatwhitespace=true,%
+    frame={tb},%
+%    framerule={0pt},%
+    framextopmargin={1mm},%
+    xleftmargin={3mm},%
+    framexleftmargin={3mm},%
+    belowcaptionskip={5pt},%
+    abovecaptionskip={4mm},%
+    keywordstyle={\color{blue}},%
+    commentstyle={\color{ForestGreen}},%
+    stringstyle={\color{BrickRed}},%
+    literate=%
+    {Ö}{{\"O}}1%
+    {Ä}{{\"A}}1%
+    {Ü}{{\"U}}1%
+    {ß}{{\ss}}1%
+    {ü}{{\"u}}1%
+    {ä}{{\"a}}1%
+    {ö}{{\"o}}1%
+  }%
+\lstdefinestyle{numbers}%
+  {numbers=left,numbersep=3mm,%
+   numberstyle=\color[gray]{0.5},%
+   xleftmargin=5mm,framexleftmargin=5mm}
+\lstdefinestyle{caption}%
+  {frame=b,framerule=0pt,%
+   framexbottommargin=1mm}
+  \lstinputlisting[style=numbers,caption={#5},label={#6},firstline={#2},lastline={#3}]{#1}%
+}%
+
+%Aufgaben
+\newtheorem{aufgabe}{Aufgabe}[chapter]
+
+
+\newcommand{\myfigure}[4]{%
+\renewcommand{\figurename}{Abb.}
+ \includegraphics[scale=#2,clip=true]{#1}%
+ \caption{#3}\label{#4}%
+\renewcommand{\figurename}{Abbildung}
+}
+
+%Bilder
+\newenvironment{ebild}[4]
+{
+	\begin{figure}[hbtp]
+		\begin{center}%
+			\includegraphics[scale=#2,clip=true]{#1}%
+			\caption{#3}\label{#4}%
+		\end{center}%
+	}
+	{
+	\end{figure}
+}
+% #1 = file
+% #2 = scale
+% #3 = caption
+% #4 = label
+\newcommand{\myebild}[4]{\begin{ebild}{#1}{#2}{#3}{#4} \end{ebild}}
+
+
+\newenvironment{ezweihbild}[8]
+        {%
+                \begin{figure}[hbtp]%
+                        \centering%
+                        \begin{minipage}[b]{6.5cm}%
+                                \centering%
+                                \includegraphics[scale=#2]{#1}%
+                                \caption{#3}\label{#4}%
+                        \end{minipage}%
+                \hfil%
+                        \begin{minipage}[b]{6.5cm}%
+                                \centering%
+                                \includegraphics[scale=#6]{#5}%
+                                \caption{#7}\label{#8}%
+                        \end{minipage}%
+        }
+        {
+                \end{figure}%
+        }
+\newcommand{\myezweihbild}[8]{\begin{ezweibild}{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8} \end{ezweihbild}}
+
+\newenvironment{ezweivbild}[8]
+        {%
+                \begin{figure}[hbtp]%
+                        \centering%
+                        \begin{minipage}[b]{13cm}%
+                                \centering%
+                                \includegraphics[scale=#2]{#1}%
+                                \caption{#3}\label{#4}%
+                        \end{minipage}%
+                \vfil%
+                        \begin{minipage}[b]{13cm}%
+                                \centering%
+                                \includegraphics[scale=#6]{#5}%
+                                \caption{#7}\label{#8}%
+                        \end{minipage}%
+        }
+        {
+                \end{figure}%
+        }
+\newcommand{\myezweivbild}[8]{\begin{ezweivbild}{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8} \end{ezweivbild}}
+
+\DeclareDocumentCommand{\newdualentry}{ O{} O{} m m m m } {
+  \newglossaryentry{gls-#3}{name={#5},text={#5\glsadd{#3}},
+    description={#6},#1
+  }
+  \makeglossaries
+  \newacronym[see={[Glossar:]{gls-#3}},#2]{#3}{#4}{#5\glsadd{gls-#3}}
+}
+

@@ -1,0 +1,226 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tastatur}\index{Tastatur}
+%\subsection{Beispiele}
+
+\begin{wrapfigure}[10]{r}{3.1cm}%
+	\begin{center}%
+		\vspace{-1cm}%
+		\myfigure{invader07.png}{0.8}{Ränder}{picInvader07}%
+	\end{center}%
+\end{wrapfigure}%
+Ich möchte hier die Tastatur nicht erschöpfend behandeln, sondern lediglich das Grundprinzip verdeutlichen. So soll die Bewegungsrichtung durch die Pfeiltasten gesteuert werden können. Ebenso soll das Raumschiffe stehen bleiben oder sich wieder in Bewegung setzen können. Auch kann das Spiel jetzt durch die Escape-Taste verlassen werden (\Gls{boss}).
+
+Zunächst bereiten wir die Verteidiger-Klasse vor bzw. wandeln sie ein wenig ab (\srcref[vref]{srcTastatur00a}). Das Sprite wird nun nicht mehr unten sondern mittig platziert (\zeiref{srcTastatur0001}). Das Raumschiff soll sich nun auch vertikal bewegen können. Dazu braucht es entweder zwei entsprechende Variablen oder aber ein 2-Tupel. Ich nehme ein 2-Tupel (\zeiref{srcTastatur0002}), wobei das erste Element der Richtungsvektor der horizontalen und das zweite der vertikalen Richtung ist. Daraus ergeben sich auch die Bedeutungen der Methoden \texttt{move\_}*\texttt{()}. Der jeweilige Richtungsvektor wird dabei entsprechend der schon oben vorgestellten Semantik gesetzt. In der Methode \texttt{update()} werden nun beide Koordinaten berücksichtigt und aktualisiert; analog in \texttt{change\_direction()}. Bewegen und Stehenbleiben wird einfach dadurch erreicht, dass ich die Geschwindigkeit in \texttt{start()} auf~2 bzw. in \texttt{stop()} auf~0 setze.
+
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{14}{51}{python}{Bewegung durch Tastatur steuern (1), \texttt{Defender}}{srcTastatur00a} 
+
+Die Klasse \texttt{Border} wird trivialerweise so erweitert, dass alle vier Seiten der Spielfläche nun durch eine Steinwand begrenzt werden (\srcref[vref]{srcTastatur00b}). Dazu wird im Konstruktor abgefragt, auf welcher Seite die Wand hochgezogen werden soll. Rechts und links wird das Bitmap in die Höhe gestreckt und oben und unten in die Breite. Anschließend wird das \texttt{Rect}-Objekt ermittelt und die Position festgelegt.
+
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{56}{76}{python}{Bewegung durch Tastatur steuern (2), \texttt{Border}}{srcTastatur00b}
+
+Es werden dann die vier Objekte der \texttt{Border}-Klasse erzeugt und der Spritegruppe hinzugefügt.
+
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{91}{95}{python}{Bewegung durch Tastatur steuern (3), \texttt{Game}-Konstruktor}{srcTastatur00c}
+
+Kommen wir jetzt zur eigentlichen Tastaturverarbeitung: Das Verwenden einer Taste kann die Ereignistypen \texttt{pygame.KEYDOWN}\myindex{pyg}{\texttt{KEYDOWN}} oder \texttt{pygame.KEYUP}\myindex{pyg}{\texttt{KEYUP}}\randnotiz{KEYDOWN\\KEYUP} auslösen. In unserem Beispiel (\zeiref{srcTastatur0003}) wollen wir wissen, welche Taste \emph{gedrückt} wurde, also verwenden wir \texttt{KEYDOWN}. Anschließend können wir über \texttt{pygame.event.key}\myindex{pyg}{\texttt{event}!\texttt{key}}\randnotiz{key} ermitteln, welche Taste gedrückt wurde. Dazu stellt uns Pygame in \texttt{pygame.key}\myindex{pyg}{\texttt{key}} eine Liste von vordefinierten Konstanten zur Verfügung (siehe \tabref[vref]{tabKey} und \tabref[vref]{tabKeyMod}).
+
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{107}{128}{python}{Bewegung durch Tastatur steuern (4), \texttt{Game}.\texttt{watch\_for\_events()}}{srcTastatur00d}
+
+Fangen wir mit der Boss-Taste an. In \zeiref{srcTastatur0004} wird über die Konstante \texttt{K\_ESCAPE}\myindex{pyg}{\texttt{K\_ESCAPE}}\randnotiz{K\_ESCAPE} abgefragt, ob die gedrückte Taste die Escape-Taste ist. Wie beim Weg-Xen wird danach einfach das Flag der Hauptprogrammschleife auf \false\ gesetzt. Probieren Sie es aus!
+
+Danach werden mit Hilfe von \randnotiz{K\_LEFT K\_RIGHT K\_UP K\_DOWN}\texttt{K\_LEFT}, \texttt{K\_RIGHT}, \texttt{K\_UP} und \texttt{K\_DOWN}\myindex{pyg}{\texttt{K\_LEFT}}\myindex{pyg}{\texttt{K\_RIGHT}}\myindex{pyg}{\texttt{K\_UP}}\myindex{pyg}{\texttt{K\_DOWN}} ab \zeiref{srcTastatur0005}ff. die vier Pfeiltasten abgefragt und die entsprechende Nachricht an den Verteidiger gesendet.
+
+Mit Hilfe der Leerzeichen-Taste \texttt{K\_SPACE}\myindex{pyg}{\texttt{K\_SPACE}}\randnotiz{K\_SPACE} wird das Raumschiff in \zeiref{srcTastatur0006} gestoppt. 
+
+Um den Einsatz der Shift-Taste (Umschalttaste) mal zu demonstrieren, habe ich hier das~\texttt{r} doppelt belegt (\zeiref{srcTastatur0007}). Das große~\texttt{R} stoppt das Raumschiff und das kleine~\texttt{r} startet es wieder. Dabei wird die Variable \texttt{event.mod}\myindex{pyg}{\texttt{event}!\texttt{mod}}\randnotiz{event.mod} mit Hilfe einer bitweisen Und-Verknüpfung dahingehend überprüft, ob das entsprechende Bit \texttt{KMOD\_LSHIFT}\myindex{pyg}{\texttt{KMOD\_LSHIFT}}\randnotiz{KMOD\_LSHIFT} für die linke Shift-Taste gedrückt wurde.
+
+Dies soll ersteinmal ausreichen. Die Tastatur ist nur eine Möglichkeit der Spielsteuerung. Maus, Game-Controller oder Joystick sind ebenfalls in Pygame möglich.
+
+\subsection*{Was war neu?}
+
+\begin{itemize}
+	\item \texttt{pygame.KEYDOWN}, \texttt{pygame.KEYUP}:
+	\myindex{pyg}{\texttt{KEYDOWN}}\myindex{pyg}{\texttt{KEYUP}}\\ \url{https://www.pygame.org/docs/ref/event.html}
+	
+	\item \texttt{pygame.key}:
+	\myindex{pyg}{\texttt{KEY}}\\ \url{https://www.pygame.org/docs/ref/key.html}
+
+\end{itemize}
+
+\begin{longtable}{lll}
+	\caption{Liste von vordefinierten Tastaturkonstanten}\label{tabKey} \\
+	% Definition des Tabellenkopfes auf der ersten Seite
+     Konstante & Bedeutung & Beschreibung \\\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Liste von vordefinierten Tastaturkonstanten (Fortsetzung)}\\
+	 Konstante & Bedeutung & Beschreibung \\\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+\texttt{K\_BACKSPACE}    &  \verb+\b+    &  Löschen (backspace) \\ \hline
+\texttt{K\_TAB}          &  \verb+\t+    &  Tabulator\\ \hline
+\texttt{K\_CLEAR}        &  \verb++      &  Leeren\\ \hline
+\texttt{K\_RETURN}       &  \verb+\r+    &  Eingabe (return, enter)\\ \hline
+\texttt{K\_PAUSE}        &  \verb++      &  Pause\\ \hline
+\texttt{K\_ESCAPE}       &  \verb+^[+    &  Abbruch (escape)\\ \hline
+\texttt{K\_SPACE}        &  \verb+ +     &  Leerzeichen (space)\\ \hline
+\texttt{K\_EXCLAIM}      &  \verb+!+     &  Ausrufezeichen\\ \hline
+\texttt{K\_QUOTEDBL}     &  \verb+"+     &  Gänsefüßchen\\ \hline
+\texttt{K\_HASH}         &  \verb+#+     &  Doppelkreuz (hash)\\ \hline
+\texttt{K\_DOLLAR}       &  \verb+$+     &  Dollar\\ \hline
+\texttt{K\_AMPERSAND}    &  \verb+&+     &  Kaufmannsund\\ \hline
+\texttt{K\_QUOTE}        &  \verb+'+     &  Hochkomma\\ \hline
+\texttt{K\_LEFTPAREN}    &  \verb+(+     &  Linke runde Klammer\\ \hline
+\texttt{K\_RIGHTPAREN}   &  \verb+)+     &  Rechte runde Klammer\\ \hline
+\texttt{K\_ASTERISK}     &  \verb+*+     &  Sternchen\\ \hline
+\texttt{K\_PLUS}         &  \verb-+-     &  Plus\\ \hline
+\texttt{K\_COMMA}        &  \verb+,+     &  Komma\\ \hline
+\texttt{K\_MINUS}        &  \verb+-+     &  Minus\\ \hline
+\texttt{K\_PERIOD}       &  \verb+.+     &  Punkt\\ \hline
+\texttt{K\_SLASH}        &  \verb+/+     &  Schrägstrich\\ \hline
+\texttt{K\_0}            &  \verb+0+     &  0\\ \hline
+\texttt{K\_1}            &  \verb+1+     &  1\\ \hline
+\texttt{K\_2}            &  \verb+2+     &  2\\ \hline
+\texttt{K\_3}            &  \verb+3+     &  3\\ \hline
+\texttt{K\_4}            &  \verb+4+     &  4\\ \hline
+\texttt{K\_5}            &  \verb+5+     &  5\\ \hline
+\texttt{K\_6}            &  \verb+6+     &  6\\ \hline
+\texttt{K\_7}            &  \verb+7+     &  7\\ \hline
+\texttt{K\_8}            &  \verb+8+     &  8\\ \hline
+\texttt{K\_9}            &  \verb+9+     &  9\\ \hline
+\texttt{K\_COLON}        &  \verb+:+     &  Doppelpunkt\\ \hline
+\texttt{K\_SEMICOLON}    &  \verb+;+     &  Semicolon\\ \hline
+\texttt{K\_LESS}         &  \verb+<+     &  Kleiner\\ \hline
+\texttt{K\_EQUALS}       &  \verb+=+     &  Gleich\\ \hline
+\texttt{K\_GREATER}      &  \verb+>+     &  Größer\\ \hline
+\texttt{K\_QUESTION}     &  \verb+?+     &  Fragezeichen\\ \hline
+\texttt{K\_AT}           &  \makeatletter \verb+@+ \makeatother    &  Klammeraffe\\ \hline
+\texttt{K\_LEFTBRACKET}  &  \verb+[+     &  Linke eckige Klammer\\ \hline
+\texttt{K\_BACKSLASH}    &  \verb+\+     &  Umgekehrter Schrägstrich\\ \hline
+\texttt{K\_RIGHTBRACKET} &  \verb+]+     &  Rechte eckige Klammer\\ \hline
+\texttt{K\_CARET}        &  \verb+^+     &  Hütchen\\ \hline
+\texttt{K\_UNDERSCORE}   &  \verb+_+     &  Unterstrich\\ \hline
+\texttt{K\_BACKQUOTE}    &  \verb+`+     &  Akzent Grvis\\ \hline
+\texttt{K\_a}            &  \verb+a+     &  a\\ \hline
+\texttt{K\_b}            &  \verb+b+     &  b\\ \hline
+\texttt{K\_c}            &  \verb+c+     &  c\\ \hline
+\texttt{K\_d}            &  \verb+d+     &  d\\ \hline
+\texttt{K\_e}            &  \verb+e+     &  e\\ \hline
+\texttt{K\_f}            &  \verb+f+     &  f\\ \hline
+\texttt{K\_g}            &  \verb+g+     &  g\\ \hline
+\texttt{K\_h}            &  \verb+h+     &  h\\ \hline
+\texttt{K\_i}            &  \verb+i+     &  i\\ \hline
+\texttt{K\_j}            &  \verb+j+     &  j\\ \hline
+\texttt{K\_k}            &  \verb+k+     &  k\\ \hline
+\texttt{K\_l}            &  \verb+l+     &  l\\ \hline
+\texttt{K\_m}            &  \verb+m+     &  m\\ \hline
+\texttt{K\_n}            &  \verb+n+     &  n\\ \hline
+\texttt{K\_o}            &  \verb+o+     &  o\\ \hline
+\texttt{K\_p}            &  \verb+p+     &  p\\ \hline
+\texttt{K\_q}            &  \verb+q+     &  q\\ \hline
+\texttt{K\_r}            &  \verb+r+     &  r\\ \hline
+\texttt{K\_s}            &  \verb+s+     &  s\\ \hline
+\texttt{K\_t}            &  \verb+t+     &  t\\ \hline
+\texttt{K\_u}            &  \verb+u+     &  u\\ \hline
+\texttt{K\_v}            &  \verb+v+     &  v\\ \hline
+\texttt{K\_w}            &  \verb+w+     &  w\\ \hline
+\texttt{K\_x}            &  \verb+x+     &  x\\ \hline
+\texttt{K\_y}            &  \verb+y+     &  y\\ \hline
+\texttt{K\_z}            &  \verb+z+     &  z\\ \hline
+\texttt{K\_DELETE}       &  \verb+ +     &  Löschen (delete)\\ \hline
+\texttt{K\_KP0}          &  \verb+ +     &  Nummernfeld 0\\ \hline
+\texttt{K\_KP1}          &  \verb+ +     &  Nummernfeld 1\\ \hline
+\texttt{K\_KP2}          &  \verb+ +     &  Nummernfeld 2\\ \hline
+\texttt{K\_KP3}          &  \verb+ +     &  Nummernfeld 3\\ \hline
+\texttt{K\_KP4}          &  \verb+ +     &  Nummernfeld 4\\ \hline
+\texttt{K\_KP5}          &  \verb+ +     &  Nummernfeld 5\\ \hline
+\texttt{K\_KP6}          &  \verb+ +     &  Nummernfeld 6\\ \hline
+\texttt{K\_KP7}          &  \verb+ +     &  Nummernfeld 7\\ \hline
+\texttt{K\_KP8}          &  \verb+ +     &  Nummernfeld 8\\ \hline
+\texttt{K\_KP9}          &  \verb+ +     &  Nummernfeld 9\\ \hline
+\texttt{K\_KP\_PERIOD}   &  \verb+.+     &  Nummernfeld Punkt\\ \hline
+\texttt{K\_KP\_DIVIDE}   &  \verb+/+     &  Nummernfeld Geteilt/Schrägstrich\\ \hline
+\texttt{K\_KP\_MULTIPLY} &  \verb+*+     &  Nummernfeld Mal/Sternchen\\ \hline
+\texttt{K\_KP\_MINUS}    &  \verb+-+     &  Nummernfeld Minus\\ \hline
+\texttt{K\_KP\_PLUS}     &  \verb-+-     &  Nummernfeld Plus\\ \hline
+\texttt{K\_KP\_ENTER}    &  \verb+\r+    &  Nummernfeld Eingabe (return, enter)\\ \hline
+\texttt{K\_KP\_EQUALS}   &  \verb+=+     &  Nummernfeld Gleich\\ \hline
+\texttt{K\_UP}           &  \verb+ +     &  Pfeil nach oben\\ \hline
+\texttt{K\_DOWN}         &  \verb+ +     &  Pfeil nach unten\\ \hline
+\texttt{K\_RIGHT}        &  \verb+ +     &  Pfeil nach rechts\\ \hline
+\texttt{K\_LEFT}         &  \verb+ +     &  Pfeil nach links\\ \hline
+\texttt{K\_INSERT}       &  \verb+ +     &  Einfügen ein/aus\\ \hline
+\texttt{K\_HOME}         &  \verb+ +     &  Pos1\\ \hline
+\texttt{K\_END}          &  \verb+ +     &  Ende\\ \hline
+\texttt{K\_PAGEUP}       &  \verb+ +     &  Hochblättern\\ \hline
+\texttt{K\_PAGEDOWN}     &  \verb+ +     &  Runterblättern\\ \hline
+\texttt{K\_F1}           &  \verb+ +     &  F1\\ \hline
+\texttt{K\_F2}           &  \verb+ +     &  F2\\ \hline
+\texttt{K\_F3}           &  \verb+ +     &  F3\\ \hline
+\texttt{K\_F4}           &  \verb+ +     &  F4\\ \hline
+\texttt{K\_F5}           &  \verb+ +     &  F5\\ \hline
+\texttt{K\_F6}           &  \verb+ +     &  F6\\ \hline
+\texttt{K\_F7}           &  \verb+ +     &  F7\\ \hline
+\texttt{K\_F8}           &  \verb+ +     &  F8\\ \hline
+\texttt{K\_F9}           &  \verb+ +     &  F9\\ \hline
+\texttt{K\_F10}          &  \verb+ +     &  F10\\ \hline
+\texttt{K\_F11}          &  \verb+ +     &  F11\\ \hline
+\texttt{K\_F12}          &  \verb+ +     &  F12\\ \hline
+\texttt{K\_F13}          &  \verb+ +     &  F13\\ \hline
+\texttt{K\_F14}          &  \verb+ +     &  F14\\ \hline
+\texttt{K\_F15}          &  \verb+ +     &  F15\\ \hline
+\texttt{K\_NUMLOCK}      &  \verb+ +     &  Umschalten Zahlen\\ \hline
+\texttt{K\_CAPSLOCK}     &  \verb+ +     &  Umschalten Großbuchstaben\\ \hline
+\texttt{K\_SCROLLOCK}    &  \verb+ +     &  Umschalten auf scrollen\\ \hline
+\texttt{K\_RSHIFT}       &  \verb+ +     &  Rechte Umschalttaste\\ \hline
+\texttt{K\_LSHIFT}       &  \verb+ +     &  Linke Umschalttaste\\ \hline
+\texttt{K\_RCTRL}        &  \verb+ +     &  Rechte Steuerungstaste\\ \hline
+\texttt{K\_LCTRL}        &  \verb+ +     &  Linke Steuerungstaste\\ \hline
+\texttt{K\_RALT}         &  \verb+ +     &  Rechte Alterntivtaste\\ \hline
+\texttt{K\_LALT}         &  \verb+ +     &  Linke Alternativtaste\\ \hline
+\texttt{K\_RMETA}        &  \verb+ +     &  Rechte Metataste\\ \hline
+\texttt{K\_LMETA}        &  \verb+ +     &  Linke Metataste\\ \hline
+\texttt{K\_LSUPER}       &  \verb+ +     &  Linke Windowstaste\\ \hline
+\texttt{K\_RSUPER}       &  \verb+ +     &  Rechte Windowstaste\\ \hline
+\texttt{K\_MODE}         &  \verb+ +     &  AltGr Umschalter\\ \hline
+\texttt{K\_HELP}         &  \verb+ +     &  Hilfe\\ \hline
+\texttt{K\_PRINT}        &  \verb+ +     &  Bildschirmdruck/Screenshot\\ \hline
+\texttt{K\_SYSREQ}       &  \verb+ +     &  Systemabfrage\\ \hline
+\texttt{K\_BREAK}        &  \verb+ +     &  Abbruch/Unterbrechung\\ \hline
+\texttt{K\_MENU}         &  \verb+ +     &  Menü\\ \hline
+\texttt{K\_POWER}        &  \verb+ +     &  Ein-/Ausschalten\\ \hline
+\texttt{K\_EURO}         &  \verb+€+     &  Euro-Währungszeichen\\ \hline
+\texttt{K\_AC\_BACK}     &  \verb+ +     &  Android Zurückschalter\\ \hline
+\end{longtable} 
+
+\begin{longtable}{ll}
+	\caption{Liste von vordefinierten Konstanten zur Tastaturschaltung}\label{tabKeyMod} \\
+	% Definition des Tabellenkopfes auf der ersten Seite
+	Konstante  & Beschreibung \\\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Liste von vordefinierten Konstanten zur Tastaturschaltung (Fortsetzung)}\\
+	Konstante & Beschreibung \\\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+    \texttt{KMOD\_NONE}   &  Keine Belegungstaste gedrückt\\ \hline
+    \texttt{KMOD\_LSHIFT} &  Linke Umschalttaste\\ \hline
+    \texttt{KMOD\_RSHIFT} &  Rechte Umschalttaste\\ \hline
+    \texttt{KMOD\_SHIFT}  &  Linke oder rechte Umschalttaste oder beide\\ \hline
+    \texttt{KMOD\_LCTRL}  &  Linke Steuerungstaste\\ \hline
+    \texttt{KMOD\_RCTRL}  &  Rechte Steuerungstaste\\ \hline
+    \texttt{KMOD\_CTRL}   &  Linke oder rechte Steuerungstaste oder beide\\ \hline
+    \texttt{KMOD\_LALT}   &  Linke Alternativtaste\\ \hline
+    \texttt{KMOD\_RALT}   &  Rechte Alternativtaste\\ \hline
+    \texttt{KMOD\_ALT}    &  Linke oder rechte Alternativtaste oder beide\\ \hline
+    \texttt{KMOD\_LMETA}  &  Linke Metataste\\ \hline
+    \texttt{KMOD\_RMETA}  &  Rechte Metataste\\ \hline
+    \texttt{KMOD\_META}   &  Linke oder rechte Metataste oder beide\\ \hline
+    \texttt{KMOD\_CAPS}   &  Umschalten Großbuchstaben\\ \hline
+    \texttt{KMOD\_NUM}    &  Umschalten Zahlen\\ \hline
+    \texttt{KMOD\_MODE}   &  AltGr Umschalter\\ \hline
+\end{longtable} 

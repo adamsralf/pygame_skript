@@ -1,0 +1,96 @@
+\documentclass[a4paper,12pt,oneside]{scrreprt}
+%\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[ngerman]{babel}
+\usepackage[german]{varioref}
+\usepackage[pdftex,unicode=true,breaklinks,bookmarksnumbered,colorlinks,linkcolor=blue,linktocpage,pdfauthor={Ralf Adams},pdftitle={Einführung in PyGame}]{hyperref}
+\usepackage[german,nokeyprefix]{refstyle}
+\usepackage{enumerate}
+%\usepackage{fontspec}
+\usepackage{verbatim}
+%\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
+\usepackage{flafter}
+\usepackage{listings}
+\usepackage{float}
+%\usepackage{ifthen}
+%%\usepackage{longtable}
+%\usepackage{eurosym}
+%\usepackage{wasysym}
+%\usepackage{subfigure}
+%\usepackage[T1]{fontenc}
+\usepackage[footsepline,plainfootsepline,footbotline,plainfootbotline,draft=false]{scrlayer-scrpage}
+%\usepackage{array}
+%\usepackage{booktabs}
+\usepackage{makeidx}
+%\usepackage{colortbl}
+%\usepackage{tikz}
+%\usepackage{tikz-uml}
+%\usetikzlibrary{positioning}
+%\usetikzlibrary{shapes}
+%\usetikzlibrary{calc}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{matrix}
+%\usetikzlibrary{circuits.logic}
+%\usetikzlibrary{circuits.logic.IEC}
+% \usepackage[scaled=0.8]{beramono}
+% \setmonofont[Scale=0.83]{Bitstream Vera Sans Mono}
+%\usepackage{textcomp}
+%\usepackage{courier}
+% \renewcommand*\familydefault{\ttdefault}
+
+
+\selectlanguage{ngerman}
+
+%\usepackage{todo}
+
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\deffootnote[1.0em]{1.1em}{1.1em}{\textsuperscript{\thefootnotemark\ }}
+
+\input{mycommands.tex}
+\lstloadlanguages{C}
+\renewcommand{\lstlistingname}{Quelltext}
+\renewcommand{\lstlistlistingname}{Quelltexte}
+
+\input{mypagestyle}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% START DOKUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeindex
+
+
+
+
+
+\KOMAoptions{draft=true}
+\begin{document}
+
+  \title{Einführung in die\\2D-Spieleprogrammierung mit PyGame}
+  \author{Ralf Adams (TBS1, Bochum)}
+  \date{Version 0.1 vom \today}
+  \maketitle
+  \tableofcontents
+%  \listof{Prinzip}{OO-Prinzipien}
+%  \listof{Definition}{Definitionen}
+%  \listoftables
+%  \listoffigures
+%  \lstlistoflistings
+
+
+%%%%%%%% Einige eigene Einstellungen
+\setlength{\parindent}{0.0em}
+\setlength{\parskip}{1.0ex plus0.5ex minus0.5ex}
+\setlength{\itemsep}{-0.3ex plus0.2ex}
+
+%%%%%%%%%%%%%%%%%%%%%%% START TEXT
+
+\input{ziele.tex}
+\input{einfuehrung.tex}
+
+ \printindex
+
+\end{document}

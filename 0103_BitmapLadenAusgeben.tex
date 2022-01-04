@@ -1,0 +1,224 @@
+\section{Bitmaps laden und ausgeben}\index{Bitmap}\index{Bitmap!laden}\index{Bitmap!ausgeben}
+%\subsection{Beispiel}
+
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader01.py}{1}{999}{python}{Bitmaps laden und ausgeben, Version 1.0}{srcInvader01}
+
+In \srcref{srcInvader01} werden zwei Bitmaps -- hier zwei png-Dateien -- geladen und auf den Bildschirm ausgegeben. 
+
+Das Laden erfolgt über die Funktion \texttt{pygame.image.load()}\myindex{pyg}{\texttt{image}!\texttt{load()}}\randnotiz{load()}. In \zeiref{srcInvader0101}f. werden die Bitmaps -- auch \glspl{sprite} genannt -- geladen und in ein \texttt{Surface}-Objekt umgewandelt. Die beiden Bitmaps werden dann, ohne sie weiter zu verarbeiten, mit Hilfe von \texttt{pygame.Sur\-face.\-blit()}\myindex{pyg}{\texttt{Surface}!\texttt{blit()}}\randnotiz{blit()} auf das \texttt{screen}-Surface gedruckt (\zeiref{srcInvader0102}). Der erste Parameter von \texttt{blit()} ist das \texttt{Surface}-Objekt, welches gedruckt werden soll, und danach erfolgt die Angabe der Position. Dabei wird zuerst die horizontale (waagerechte) und dann die vertikale (senkrechte) Koordinate angegeben. Der 0-Punkt ist dabei anders als in der Schulmathematik nicht links unten, sondern links oben. Das Ergebnis können Sie in \abbref[vref]{picInvader01} \emph{bewundern}.
+
+\myebild{invader01.png}{0.8}{Bitmaps laden und ausgeben, Version 1.0}{picInvader01}
+
+Wir wollen nun die Bitmaps ein wenig unseren Bedürfnissen anpassen. Zunächst empfiehlt das Handbuch, dass das Bitmap nach dem Laden in ein für Pygame leichter zu verarbeitendes Format konvertiert wird. Darüber hinaus möchte ich die Größenverhältnisse der beiden Bitmaps angleichen, da mir der Enemy im Verhältnis zum Defender zu groß ist. 
+
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader02.py}{19}{23}{python}{Bitmaps laden und ausgeben, Version 1.1}{srcInvader02}
+
+Die Funktion \texttt{pygame.Surface.load()} lieferte mir ja ein \texttt{Surface}-Objekt zurück. Die Klasse \texttt{Surface} hat nun eine Methode, die mir die gewünschte Konvertierung vornimmt: \texttt{pygame.Surface.convert()}\myindex{pyg}{\texttt{Surface}!\texttt{convert()}}\randnotiz{convert()}. Beispielhaft sei hier auf \zeiref{srcInvader0201} verwiesen. 
+
+Das Verändern der Größe erfolgt durch \texttt{pygame.transform.scale()}\myindex{pyg}{\texttt{transform}!\texttt{scale()}}\randnotiz{scale()}. In \zeiref{srcInvader0202} wird das Image auf die angegeben $(width, height)$ in der Maßeinheit Pixel skaliert. Das Ergebnis an \abbref{picInvader02} entspricht nicht ganz meinen Erwartungen.  
+
+\begin{wrapfigure}[9]{r}{5cm}
+    \vspace{-1em}
+	\myfigure{invader02.png}{0.8}{Größen OK}{picInvader02}
+\end{wrapfigure}
+\label{pageTransparenz}Die Größenverhältnisse gefallen mir zwar jetzt, aber warum erscheint plötzlich ein schwarzer Hintergrund? Die Ursache dafür ist, dass durch die Konvertierung mit \texttt{convert()} die Information für die Transparenz\index{Transparenz} verloren gegangen ist. Die Transparenz steuert die \emph{Durchsichtigkeit} eines Pixels. Erreicht wird dies dadurch, dass zusätzlich zu jedem Pixel nicht nur die drei RGB-Werte, sondern auch eine Durchsichtigkeit abgespeichert wird. Diese zusätzliche Information nennt man den \emph{Alpha-Kanal}\index{Alpha-Kanal}\randnotiz{Alpha-Kanal}.
+
+Ich habe nun zwei Möglichkeiten, diese Transparenz wieder verfügbar zu machen:
+\begin{itemize}
+	\item \texttt{pygame.Surface.convert\_alpha()}\myindex{pyg}{\texttt{Surface}!\texttt{convert\_alpha()}}\randnotiz{convert\_alpha()}: Ganz einfach formuliert wird bei der Konvertierung der Alpha-Kanal erhalten. Wenn möglich, sollte das das Mittel Ihrer Wahl sein.
+	
+	\item \texttt{pygame.Surface.set\_colorkey()}\myindex{pyg}{\texttt{Surface}!\texttt{set\_colorkey()}}\randnotiz{set\_colorkey()}: Als Übergabeparameter übergeben Sie die Farbe, die von Pygame beim Drucken auf das Ziel-Surface übersprungen werden soll. Dabei können zwei Nachteile entstehen. Zum einen können Transparenzen, die zwischen sichtbar und unsichtbar liegen, nicht abgebildet werden. Es wäre also nicht möglich, einen Pixel \emph{halbdurchscheinen} zu lassen. Zum anderen werden Teile des Figur, die die gleiche Farbe wie der Hintergrund haben, ebenfalls transparent erscheinen. Würde unser Alian in der Mitte ein schwarzes Auge haben, würde es verschwinden und der Alien hätte ein Loch in der Mitte.
+\end{itemize}
+
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader03.py}{19}{24}{python}{Bitmaps laden und ausgeben, Version 1.2}{srcInvader03}
+
+
+In \srcref[vref]{srcInvader03} habe ich beide Varianten mal ausprobiert und in \abbref[vref]{picInvader03} können Sie das Ergebnis sehen. Nun sind beide Bitmaps ohne schwarze Umrandung sichtbar, der weiße Hintergrund scheint wieder durch.
+
+\begin{wrapfigure}[8]{r}{5cm}
+%    \vspace{-1.5em}
+	\myfigure{invader03.png}{0.8}{Transparenz OK}{picInvader03}
+\end{wrapfigure}Was mir nun noch nicht gefällt ist die Position und die Anzahl der Angreifer. Ich möchte den Verteidiger mittig unten platzieren und die Angreifer am oberen Bildschirmrand und zwar so, dass sie horizontal  \gls{aequidistant}\index{äquidistant}\randnotiz{äquidistant} sind. Dabei gibt es zwei Möglichkeiten: Ich gebe einen Mindestabstand an und die Anzahl wird ausgerechnet, oder ich gebe die maximale Anzahl an und der Abstand wird ausgerechnet. Welchen Weg ich wähle, hängt von meiner Spiellogik ab; meist ist die Anzahl vorgegeben.
+
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader04.py}{1}{999}{python}{Bitmap: Positionen, Version 1.4}{srcInvader04}
+
+In \srcref[vref]{srcInvader04} sind die obigen Anforderungen umgesetzt worden. Schauen wir uns die einzelnen Aspekte genauer an.
+
+Der Verteidiger sollte unten mittig positioniert werden. Wir erinnern uns, dass der Funktion \texttt{blit()} auch die Koordinaten der linken oberen Ecke mitgegeben werden. 
+
+Diese Angabe muss erst berechnet werden. Der Übersichtlichkeit wegen -- in einem normalen Quelltext würde ich die Berechnung nicht so kleinteilig programmieren -- berechne ich hier die Koordinaten einzeln.
+
+Die obere Kante ist dabei recht einfach zu ermitteln. Würden wir \texttt{defender\_top} auf die gesamte Höhe des Bildschirms \texttt{Settings.windows\_height} setzen, würden wir den Verteidiger nicht sehen, da er komplett unten aus dem Bildschirm rausragen würden. Um wie viele Pixel müssen wir also die obere Kante anheben? Genau um die Höhe des Raumschiffs, $30~px$:
+
+\lstset{firstnumber=24}
+\begin{lstlisting}
+	defender_pos_top = Settings.window_height - 30
+\end{lstlisting}
+
+Mir gefällt aber nicht, dass der Verteidiger dabei so an den Rand angeklebt aussieht. Ich spendiere ihm noch weitere $5~px$, damit er mehr danach aussieht, als schwebe er im Raum:
+
+\lstset{firstnumber=24}
+\begin{lstlisting}
+	defender_pos_top = Settings.window_height - 30 - 5
+\end{lstlisting}
+
+In \zeiref{srcInvader0401} wird der Abstand des linken Rands des Bitmaps vom Spielfeldrand berechnet. Mit
+
+\lstset{firstnumber=23}
+\begin{lstlisting}
+	defender_pos_left = Settings.window_width // 2
+\end{lstlisting}
+
+würden wir die horizontale Mitte des Bildschirmes ausrechnen. Diesen Wert können wir aber nicht einsetzen, da dann der linke Rand des Verteidigers in der horizontalen Mitte stehen würde -- also zu weit rechts (siehe \abbref[vref]{picInvader04a}). 
+
+\myebild{invader04a.png}{0.7}{Bitmaps positionieren (Verteidiger)}{picInvader04a}
+
+Die Anzahl der Pixel, die wir zu weit nach rechts gerutscht sind, können wir aber genau bestimmen und dann abziehen: Es ist genau die Hälfte der Breite des Verteidigers (hier $30~px$):
+\begin{lstlisting}
+	defender_pos_left = Settings.window_width // 2 - 30 // 2
+\end{lstlisting}
+
+Mit Hilfe von ein wenig Bruchrechnen lässt sich der Ausdruck vereinfachen:
+\begin{lstlisting}
+	defender_pos_left = (Settings.window_width - 30) // 2
+\end{lstlisting}
+
+Jetzt kommen die Angreifer. Im ersten Ansatz wollen wir diese hintereinander ohne Überschneidungen oben ausgeben. Die obere Kante \texttt{alien\_top} können wir konstant mit einem angenehmen Abstand von $10~px$ vom oberen Rand setzen:
+
+\lstset{firstnumber=44}
+\begin{lstlisting}
+	alien_top = 10 
+\end{lstlisting}
+
+Die linke Position \texttt{alien\_left} muss für jedes Alien einzeln bestimmt werden. Da diese erstmal direkt nebeneinander liegen, ist ein linker Rand genau die Breite eines Aliens vom nächsten linken Rand entfernt. Wenn ich also beim $0ten$ Alien bin, liegt die horizontale Koordinate direkt am linken Bildschirmrand. Beim $1ten$ Alien genau $1\times50~px$, beim $2ten$ genau $2\times50~px$ usw., da die Breite des Aliens $50~px$ beträgt. In eine for-Schleife gegossen, sieht das so aus:
+
+\lstset{firstnumber=45}
+\begin{lstlisting}
+	for i in range(Settings.aliens_nof):
+	alien_left = i * 50
+	alien_pos = (alien_left, alien_top)
+	screen.blit(alien_image, alien_pos)
+\end{lstlisting}
+
+
+\myebild{invader04b.png}{0.8}{Bitmaps positionieren (Angreifer, Version 1)}{picInvader04b}
+
+
+Der ganze Platz hinter dem letzten Alien kann jetzt aber vor, zwischen und nach den Aliens verteilt werden und zwar so, dass zwischen den Aliens, dem linken Alien und dem linken Bildschirmrand und dem rechten Alien und dem rechten Bildschirmrand immer gleich viel Abstand liegt. Wie viele Zwischenräume sind es denn? Nun einmal die beiden ganz rechts und ganz links, also 2:
+
+\lstset{firstnumber=31}
+\begin{lstlisting}
+	space_nof = 2  
+\end{lstlisting}
+
+Dann die Anzahl der Zwischenräume zwichen den Aliens. Dies ist immer 1 weniger als die der Aliens (zählen Sie nach!):
+
+\lstset{firstnumber=31}
+\begin{lstlisting}
+	space_nof = Settings.aliens_nof - 1 + 2
+\end{lstlisting}
+
+also:
+
+\lstset{firstnumber=31}
+\begin{lstlisting}
+	space_nof = Settings.aliens_nof + 1     
+\end{lstlisting}
+
+Nun muss der verfügbare Platz \texttt{space\_availible} hinter den Aliens noch ausgerechnet werden. Ich erreiche dies, indem ich den Platz, den die Aliens verbrauchen, \texttt{space\_\-for\_\-a\-liens} ausrechne
+
+\lstset{firstnumber=29}
+\begin{lstlisting}
+	space_for_aliens =  Settings.aliens_nof * 50     
+\end{lstlisting}
+
+und diesen von der Bildschirmbreite abziehe.
+\lstset{firstnumber=30}
+\begin{lstlisting}
+	space_availible = Settings.window_width - space_for_aliens
+\end{lstlisting}
+
+Ich habe also den verfügbaren Platz in \texttt{space\_availible} und die Anzahl der Räume, die gefüllt werden müssen in \texttt{space\_nof}. Wenn ich jetzt die Breite der Räume \texttt{space\_between\_\-aliens} ermitteln will, muss ich diese beiden Werte dividieren:
+
+\lstset{firstnumber=32}
+\begin{lstlisting}
+	space_between_aliens = space_availible // space_nof
+\end{lstlisting}
+
+Jetzt müssen wir nur noch die Berechnung von \texttt{alien\_left} anpassen. Erstmal verschieben wir den Start um einen solchen Freiraum (siehe \abbref[vref]{picInvader04c}):
+
+\lstset{firstnumber=45}
+\begin{lstlisting}
+	for i in range(Settings.aliens_nof):
+	alien_left = space_between_aliens + i * 50
+	alien_pos = (alien_left, alien_top)
+	screen.blit(alien_image, alien_pos)
+\end{lstlisting}
+
+\myebild{invader04c.png}{0.8}{Bitmaps positionieren (Angreifer, Version 2)}{picInvader04c}
+
+Nun muss der Abstand von einem linken Rand zum anderen, der bisher nur aus der Breite des Aliens bestand, um den Abstand \texttt{space\_between\_aliens} erweitert werden:
+
+\lstset{firstnumber=45}
+\begin{lstlisting}
+	for i in range(Settings.aliens_nof):
+	alien_left = space_between_aliens + i * (space_between_aliens + 50)
+	alien_pos = (alien_left, alien_top)
+	screen.blit(alien_image, alien_pos)
+\end{lstlisting} 
+
+Und schon passt alles (siehe \abbref[vref]{picInvader04d}).
+
+\myebild{invader04d.png}{0.8}{Bitmaps positionieren (Angreifer, Version 3)}{picInvader04d}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Was war neu?}
+
+Zum Abschluss möchte ich eine kurze Zusammenfassung darüber geben, was wir hier an Informationen erworben haben:
+
+\begin{itemize}
+	\item Die Positionsangaben werden bei der Ausgabe auf dem Bildschirm benötigt. Wir werden später sehen, dass wir die Positionsangaben auch noch für andere Fragestellungen brauchen, wie beispielsweise die \Gls{kollsionserkennung}.
+	
+	\item Die Positionsangabe bezieht sich immer auf die linke, obere Ecke des Bitmaps. 
+	
+	\item Das Koordinatensystem hat seinen 0-Punkt linksoben und nicht linksunten.
+	
+	\item Wir müssen häufig elementare Geometrieberechnungen durchführen und am besten macht man diese Schritt für Schritt.
+	
+	\item Für solche Geometrieberechnungen werden folgende Informationen gebraucht: die Position des Bitmap, seine Breite und Höhe. Breite und Höhe haben wir hier noch als Konstanten verarbeitet, dass ist nicht zukunftsweisend.
+\end{itemize}
+
+Und hier die neuen Klassen bzw. Funktionen:
+
+\begin{itemize}
+	\item \texttt{pygame.image}
+	\myindex{pyg}{\texttt{image}}:\\
+	\url{https://www.pygame.org/docs/ref/image.html}
+	
+	\item \texttt{pygame.image.load()}
+	\myindex{pyg}{\texttt{image}!\texttt{load()}}:\\
+	\url{https://www.pygame.org/docs/ref/image.html#pygame.image.load}
+	
+	\item \texttt{pygame.Surface.blit()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{blit()}}\\
+	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.blit}
+	
+	\item \texttt{pygame.Surface.convert()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{convert()}}\\
+	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.convert}
+	
+	\item \texttt{pygame.Surface.convert\_alpha()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{convert\_alpha()}}\\
+	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.convert\_alpha}
+	
+	\item \texttt{pygame.Surface.set\_colorkey()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{set\_colorkey()}}\\
+	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.set\_colorkey}
+	
+	\item \texttt{pygame.transform.scale()}:
+	\myindex{pyg}{\texttt{transform}!\texttt{scale()}}\\
+	\url{https://www.pygame.org/docs/ref/transform.html#pygame.transform.scale}
+	
+\end{itemize}
+

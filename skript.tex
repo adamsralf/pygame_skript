@@ -1,0 +1,91 @@
+\documentclass[a4paper,12pt,oneside]{scrreprt}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[ngerman]{babel}
+\usepackage[german]{varioref}
+\usepackage[pdftex,unicode=true,breaklinks,bookmarksnumbered,colorlinks,linkcolor=blue,linktocpage,pdfauthor={Ralf Adams},pdftitle={Einführung in PyGame}]{hyperref}
+\usepackage[german,nokeyprefix]{refstyle}
+\usepackage{enumerate}
+\usepackage{fontspec}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{flafter}
+\usepackage{listings}
+\usepackage{float}
+\usepackage[footsepline,plainfootsepline,footbotline,plainfootbotline,draft=false]{scrlayer-scrpage}
+\usepackage{manyind}
+\usepackage{colortbl}
+\usepackage[font={small}]{caption}
+\usepackage{lastpage}
+\usepackage[acronym]{glossaries}
+\usepackage{xparse}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{animations}
+\graphicspath{{./pics/}}
+
+
+\selectlanguage{ngerman}
+
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\deffootnote[1.0em]{1.1em}{1.1em}{\textsuperscript{\thefootnotemark\ }}
+
+\input{mycommands.tex}
+\lstloadlanguages{C}
+\renewcommand{\lstlistingname}{Quelltext}
+\renewcommand{\lstlistlistingname}{Quelltexte}
+
+\input{mypagestyle}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% START DOKUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\loadglsentries[main]{gloss.tex}
+
+\makeindex
+\makeglossaries
+
+
+\begin{document}
+
+  \title{Einführung in die\\2D-Spieleprogrammierung mit Pygame}
+  \author{Ralf Adams (TBS1, Bochum)}
+  \date{Version 0.1 vom \today}
+  \maketitle
+  \tableofcontents
+%  \listof{Prinzip}{OO-Prinzipien}
+%  \listof{Definition}{Definitionen}
+%  \listoftables
+  \listoffigures
+  \lstlistoflistings
+
+
+%%%%%%%% Einige eigene Einstellungen
+\setlength{\parindent}{0.0em}
+\setlength{\parskip}{1.0ex plus0.5ex minus0.5ex}
+\setlength{\itemsep}{-0.3ex plus0.2ex}
+
+%%%%%%%%%%%%%%%%%%%%%%% START TEXT
+
+\chapter{Ziele}\input{00_ziele.tex}
+\chapter{Grundlagen}
+\input{0101_DerAnfang.tex}
+\input{0102_Grafikprimitives.tex}
+\input{0103_BitmapLadenAusgeben.tex}
+\input{0104_BitmapBewegen.tex}
+\input{0105_SpriteKlasse.tex}
+\input{0106_Tastatur.tex}
+\input{0107_Fonts.tex}
+\input{0108_Textbitmaps.tex}
+\input{0109_Kollisionsarten.tex}
+\input{0110_Zeitsteuerung.tex}
+\input{0111_Animation.tex}
+\chapter{Beispielprojekte}
+\input{0201_Bubbles.tex}
+
+\printglossaries
+\printindex
+\printindex[pyg][Index für den Namensraum \texttt{pygame}]
+
+\end{document}

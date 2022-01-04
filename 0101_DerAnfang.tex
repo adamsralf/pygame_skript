@@ -1,0 +1,105 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Das erste Beispiel}
+%\subsection{Der Anfang}
+
+\lstsource{SRC/00 Einführung/01 Start/start00.py}{1}{999}{python}{Mein erstes \emph{Spiel}, Version 1.0}{srcStart00}
+
+Um Pygame verwenden zu können, muss das Modul \texttt{pygame} importiert werden (\zeiref{srcStart0001}). Danach stehen uns \glspl{konstante}, \glspl{funktion} und \glspl{klasse} des \Gls{namensraum}s zur Verfügung. 
+
+In \zeiref{srcStart0002}  wird die \Gls{umgebungsvari} gesetzt, die erstmal nichts mit Pygame zu tun hat. Vielmehr wird hier die Umgebungsvariable \texttt{SDL\_VIDEO\_WINDOW\_POS}\index{\texttt{SDL\_VIDEO\_WINDOW\_POS}}\randnotiz{SDL\_VIDEO\_\-WINDOW\_POS} des Betriebssystems gesetzt. Diese steuert die linke obere Startposition meines Fensters bezogen auf den ganzen Bildschirm. 
+
+Pygame ist nicht nur der Aufruf von Funktionen oder die Instantiierung von Klassen, sondern vielmehr wird ein ganzes Subsystem verwendet. Dieses Subsystem muss erst noch gestartet werden. Dabei klinkt sich Pygame in die relevanten Komponenten des Betriebssystems ein, damit diese im Spiel verwendet werden können. In \zeiref{srcStart0003} wird der ganze Pygame-Motor mit \texttt{init()} \myindex{pyg}{\texttt{init()}}\randnotiz{init()}angeworfen. Man könnte auch nur die Komponenten starten, die gerade gebraucht werden wie beispielsweise die Soundunterstützung mit \texttt{pygame.mixer.init()}\myindex{pyg}{\texttt{mixer}!\texttt{init()}}.
+
+Wir werden uns nur mit Spielen beschäftigen, die unmittelbar auf dem Desktop laufen. Oder anders herum: Wir werden keinen Game-Server implementieren. Daher brauchen unsere Spiele eine \emph{Spielfläche}/ein Fenster innerhalb dessen sich alles abspielt. Die Funktion \texttt{pygame.display.set\_mode()}\myindex{pyg}{\texttt{display}!\texttt{set\_mode()}}\randnotiz{set\_mode()} liefert mir einen solche Spielfläche. Die Funktion bekommt in \zeiref{srcStart0005} einen(!) Übergabeparameter -- nämlich die Breite und die Höhe des Fensters als ein 2-Tupel. Unser Fenster ist also $600~px$ breit und $400~px$ (siehe \Gls{PX}) hoch. Als Rückgabe bekomme ich ein \texttt{pygame.Surface}-Objekt\myindex{pyg}{\texttt{Surface}}, was ungefähr sowas wie ein \Gls{bitmap} ist. Dem Fenster kann ich dann noch mit \texttt{pygame.display.set\_caption()}\myindex{pyg}{\texttt{display}!\texttt{set\_caption()}}\randnotiz{set\_caption()} eine Titelüberschrift verpassen (siehe \zeiref{srcStart0004}).
+
+Das Spiel selbst -- so wie auch alle zukünftigen Spiele -- laufen innerhalb einer \Gls{mainloop}\index{Hauptprogrammschleife}\index{main loop}. Hier startet die Schleife in \zeiref{srcStart0006} und endet in \zeiref{srcStart0011}. Innerhalb dieser Schleife werden zukünftig immer drei Dinge passieren: 
+\begin{enumerate}
+	\item Ereignisse auslesen und verarbeiten: Wie in \zeiref{srcStart0007}f. werden Maus-, Tastatur- oder Konsolenereignisse festgestellt und an die Spielelemente weitergegeben. In unserem Fall wird lediglich das Anklicken des X im Fenster oben rechts registriert.  
+	\item Zustand der Spielelemente aktualisieren: Basierend auf den oben festgestellten Ereignissen und den Zuständen der Spielelemente, werden die neuen Zustände ermittelt (Spieler bewegt sich, Geschoss prallt auf, Punkte erhöhen sich etc.). In unserem Fall wird nur das Flag \texttt{running}\index{Flag} der Hauptprogrammschleife auf \false\ gesetzt.
+	\item Bitmaps der Spielelemente malen: Die Spielelemente haben eine neue Position oder ein neues Aussehen und müssen deshalb neu gemalt werden. In diesem Minimalbeispiel wird lediglich \zeiref{srcStart0009} der Hintergrund der Spielfläche eingefärbt und anschließend in \zeiref{srcStart0010} der \Gls{doublebuffer}\index{Doublebuffer}\randnotiz{Doublebuffer} mit \texttt{pygame.display.flip()}\myindex{pyg}{\texttt{display}!\texttt{flip()}}\randnotiz{flip()} ausgetauscht.
+\end{enumerate}
+
+Pygame schleust durch den Aufruf von \texttt{py\-game.\-init()} einen Horchposten in das Betriebssystem. Und zwar horcht Pygame die \emph{\Gls{messagequeue}} ab. Dort werden vom Betriebssystem alle Meldungen eingesammelt, die durch Ereignisse ausgelöst werden. Dies können \glslink{usb}{USB}-An\-schluss\-mel\-dungen, \glslink{ssd}{SSD}-Fehlermeldungen, Mausaktionen, Programmstarts bzw. -abstürze  usw. sein. Pygame fischt nun aus der Message-Queue mit Hilfe von \texttt{pygame.event.get()}\myindex{pyg}{\texttt{event}!\texttt{get()}}\randnotiz{event.get()} alle Events, die das Spiel betreffen könnten heraus. Mit Hilfe einer \forSchleife\ iteriere ich nun die Ereignisse und picke die für mich interessanten heraus. 
+
+Dabei überprüfe ich zuerst, was für ein Ereignistyp (\texttt{pygame.event.type})\myindex{pyg}{\texttt{event}!\texttt{type}}\randnotiz{event.type} mir da angeboten wird. Derzeit ist für mich nur der Typ \texttt{pygame.QUIT}\randnotiz{pygame.QUIT}\myindex{pyg}{\texttt{QUIT}} wichtig. Dieser Typ wird ausgelöst, wenn das Betriebssystem eine \emph{Beenden}-Nachricht an die Anwendung sendet. Falls ich nun eine solche Nachricht empfange, setzte ich das \Gls{flag}\ \texttt{running} auf \texttt{False}, so dass die Hauptprogrammschleife beendet wird.
+
+Falls ich dieses Signal nicht empfange, läuft die Hauptprogrammschleife fröhlich weiter und füllt in \zeiref{srcStart0009} die gesamte Spielfläche mit \texttt{screen.fill()}\myindex{pyg}{\texttt{Surface}!\texttt{fill()}} mit einer Farbe -- hier grün -- ein. Bitte beachten Sie, dass ähnlich wie in \zeiref{srcStart0005} die Funktion einen Übergabeparameter -- nämlich ein 3-Tupel -- erwartet. Dieses 3-Tupel kodiert die Farbe durch \glslink{rgb}{RGB}\randnotiz{RGB}-Angaben zwischen 0 und 255.
+
+Verbleibt noch \zeiref{srcStart0010}: Dort wird die Funktion \texttt{pygame.quit()}\myindex{pyg}{\texttt{quit()}}\randnotiz{quit()} aufgerufen. Diese Funktion ist quasi das Gegenteil von \texttt{pygame.init()} in \zeiref{srcStart0003}. Alle reservierten Ressourcen werden wieder freigegeben und die Pygame-Horchposten werden wieder aus dem System entfernt. Rufen Sie diese Funktion unbedingt immer am Ende Ihrer Anwendung auf; beenden Sie nicht einfach das Spiel. Der Unterschied entspricht dem einfachen Herauslaufen aus der Wohnung und dem ordnungsgemäßen Lichtausmachen und Türabschließen beim Verlassen der Wohnung.  
+
+Wenn Sie jetzt die Anwendung starten, bekommen Sie eine schmucke grüne Spielfläche zu sehen. Beenden können Sie diese durch das Anklicken des~X im Fensterrahmen oben rechts.
+
+\myebild{grüne_fläche.png}{0.8}{Eine einfache grüne Spielfläche}{picGrüneFläche}
+
+Wenn wir uns das Spiel mal im Task-Manager anschauen (siehe~\abbref[vref]{picTaskManager00}), könnten wir leicht überrascht sein: Es werden rund 30\% der CPU-Zeit für dieses \emph{IchMacheJaEigentlichGarNichts}-Spiel verbraucht. 
+
+\myebild{TaskManager00.png}{0.7}{Ressourcenverbrauch ohne Taktung}{picTaskManager00}
+
+Wenn wir uns die Hauptprogrammschleife anschauen, sollte es allerdings nicht wirklich verwundern. Da wird ungebremst ein Bitmap auf den Bildschirm gemalt und das ohne Unterbrechung. Besser wäre es bei jedem Schleifendurchlauf genügend Zeit zur Verfügung zu stellen, um die Ereignisse einzusammeln, die neuen Zustände zu berechnen und erst dann die Bildschirmausgabe zu generieren. Die Bildschirmausgabe selbst sollte auch nicht beliebig schnell und oft passieren, sondern in der Regel reichen 60~\gls{fps}\randnotiz{fps}, um eine Bewegung als flüssig wahrzunehmen. 
+
+\lstsource{SRC/00 Einführung/01 Start/start01.py}{1}{999}{python}{Mein erstes \emph{Spiel}, Version 1.1}{srcStart01}
+
+In \zeiref{srcStart0101} wird zur Taktung ein \texttt{pygame.time.Clock}\randnotiz{Clock}\myindex{pyg}{\texttt{time}!\texttt{Clock}}-Objekt erzeugt. Mit Hilfe dieses Objektes können verschiedene zeitbezogene Aufgaben bewältigt werden, wir brauchen das Objekt im Moment nur für die Taktung in \zeiref{srcStart0102}. Dort wird \texttt{pygame.time.Clock.\-tick()}\randnotiz{tick()}\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick()}} mit einer Framerate gemessen in $fps$ aufgerufen. Diese Funktion sorgt dafür, dass die Anwendung nun mit maximal $60~fps$ abläuft. Dies ist an dem deutlich reduzierten CPU-Verbrauch in \abbref[vref]{picTaskManager01} zu erkennen.
+
+Hinweis: In der Pygame-Dokumentation wird darauf verwiesen, dass die Funktion \texttt{tick()} zwar sehr ressourcenschonend, aber etwas ungenau sei. Falls Genauigkeit aber bei der Taktung wichtig ist, wird die Funktion \texttt{tick\_busy\_loop()}\randnotiz{tick\_busy\_loop()}\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick\_busy\_loop()}} empfohlen. Deren Nachteil ist, dass sie aber erheblich mehr Rechenzeit als \texttt{tick()} verbraucht.
+
+\myebild{TaskManager01.png}{0.7}{Ressourcenverbrauch mit Taktung}{picTaskManager01}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Was war neu?}
+
+\begin{itemize}
+	\item \texttt{import pygame}:\\ \url{https://www.pygame.org/docs/tut/ImportInit.html}
+	
+	\item \texttt{os.environ['SDL\_VIDEO\_WINDOW\_POS']}:\\
+	\url{https://docs.python.org/3/library/os.html#os.environ}
+	
+	\item \texttt{pygame.init()}:
+	\myindex{pyg}{\texttt{init()}}\\
+	\url{https://www.pygame.org/docs/ref/pygame.html#pygame.init}
+	
+	\item \texttt{pygame.quit()}:
+	\myindex{pyg}{\texttt{quit()}}\\
+	\url{https://www.pygame.org/docs/ref/pygame.html#pygame.quit}
+	
+	\item \texttt{pygame.display.set\_mode()}:
+	\myindex{pyg}{\texttt{display}!\texttt{set\_mode()}}\\
+	\url{https://www.pygame.org/docs/ref/display.html#pygame.display.set_mode}
+	
+	\item \texttt{pygame.display.set\_caption()}:
+	\myindex{pyg}{\texttt{display}!\texttt{set\_caption()}}\\
+	\url{https://www.pygame.org/docs/ref/display.html#pygame.display.set_caption}
+	
+	\item \texttt{pygame.display.flip()}:
+	\myindex{pyg}{\texttt{display}!\texttt{flip()}}\\
+	\url{https://www.pygame.org/docs/ref/display.html#pygame.display.flip}
+	
+	\item \texttt{pygame.time.Clock}:
+	\myindex{pyg}{\texttt{time}!\texttt{Clock}}\\
+	\url{https://www.pygame.org/docs/ref/time.html#pygame.time.Clock}
+	
+	\item \texttt{pygame.time.Clock.tick()}:
+	\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick()}}\\
+	\url{https://www.pygame.org/docs/ref/time.html#pygame.time.Clock.tick}
+	
+	\item \texttt{pygame.time.Clock.tick\_busy\_loop()}:
+	\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick\_busy\_loop()}}\\
+	\url{https://www.pygame.org/docs/ref/time.html#pygame.time.Clock.tick_busy_loop}
+	
+	\item \texttt{pygame.event.get()}:
+	\myindex{pyg}{\texttt{event}!\texttt{get()}}\\
+	\url{https://www.pygame.org/docs/ref/event.html#pygame.event.get}
+	
+	\item \texttt{pygame.event.type}:
+	\myindex{pyg}{\texttt{event}!\texttt{type}}\\
+	\url{https://www.pygame.org/docs/ref/event.html#pygame.event.EventType.type}
+	
+	\item \texttt{pygame.QUIT}:
+	\myindex{pyg}{\texttt{QUIT}}\\
+	\url{https://www.pygame.org/docs/ref/event.html#pygame.event.EventType.type}
+	
+	\item \texttt{pygame.Surface.fill()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{fill()}}\\
+	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.fill}
+\end{itemize}
+

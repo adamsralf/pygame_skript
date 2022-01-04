@@ -1,0 +1,212 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kollisionserkennung}\index{Kollision}
+%\subsection{Beispiele}
+Kollisionserkennung wird in der Spieleprogrammierung  oft gebraucht: Personen können nicht durch Hindernisse gehen, Geschosse treffen auf Ziele, Bälle prallen ab usw.. Deshalb stellt Pygame einen ganzen Blumenstrauß von Kollisionserkennungen zur Verfügung:
+
+\begin{itemize}
+    \item \textbf{Rechtecküberschneidung}\index{Kollisionserkennung!Rechteck}: Wir haben schon bei Betrachtung der \texttt{Sprite}-Klasse gesehen, dass das Attribut \texttt{rect} notwendig ist. Dieses enthält die Positions- und Größenangaben des umgebenen Rechtecks. Treffen nun zwei Sprites aufeinander, wird überprüft, ob sich die beiden Rechtecke überschneiden. Dies ist eine sehr \emph{billige} Erkennungsmethode, da mit wenigen Vergleichen entschieden werden kann, ob sich zwei Rechtecke treffen/überlappen. Hier eine beispielhafte Programmierung:
+\lstset{firstnumber=1}
+\begin{lstlisting}
+def rectangleCollision(rect1, rect2):
+    return rect1.left < rect2.right and
+           rect2.left < rect1.right and
+           rect1.top < rect2.bottom and
+           rect2.top < rect1.bottom
+\end{lstlisting}
+
+
+\begin{figure}[H]
+\begin{center}
+\tikzset{
+    shape rechteck/.style= {
+    draw,
+    line width = 1pt,
+    inner xsep = 0.0cm,
+    inner ysep = 0.0cm,
+   }
+}
+
+\begin{tikzpicture}
+\tiny
+\draw [->, name=xachse] (0cm, 6cm)  -- +(13cm, 0cm);
+\draw [<-, name=yachse] (0cm, 0cm)  -- +(0cm, 6cm);
+
+\pgfsetfillopacity{0.5}
+\draw (4.0cm, 3.0cm) node[name=k1,shape=rectangle,shape rechteck, fill = yellow!30, minimum height = 4.0cm, minimum width = 3cm] {};
+\draw (6.5cm, 2.0cm) node[name=k2,shape=rectangle,shape rechteck, fill = green!30, minimum height = 3.5cm, minimum width = 5cm] {};
+\pgfsetfillopacity{1.0}
+
+\draw[-, very thick, red, dotted]  let \p1 = (k1.north west) in (k1.north west) --  (\x1, 6.0cm);
+\draw[-, very thick, red, dotted]  let \p1 = (k1.north west) in (k1.north west) --  (0cm, \y1);
+\draw[-, very thick, blue, dotted] let \p1 = (k1.north east) in (k1.north east) --  (\x1, 6.0cm);
+\draw[-, very thick, blue, dotted] let \p1 = (k1.south west) in (k1.south west) --  (0cm,\y1);
+
+\draw[-, very thick, red, dotted]  let \p1 = (k2.north west) in (k2.north west) --  (\x1, 6.0cm);
+\draw[-, very thick, red, dotted]  let \p1 = (k2.north west) in (k2.north west) --  (0cm, \y1);
+\draw[-, very thick, blue, dotted] let \p1 = (k2.north east) in (k2.north east) --  (\x1, 6.0cm);
+\draw[-, very thick, blue, dotted] let \p1 = (k2.south west) in (k2.south west) --  (0cm,\y1);
+
+\path [name=x1, color=red] let \p1 = (k1.north west) in node  at (\x1,6.4cm) {$left_1$};
+\path [name=x2, color=red] let \p1 = (k2.north west) in node  at (\x1,6.4cm) {$left_2$};
+\path [name=x1, color=blue] let \p1 = (k1.north east) in node  at (\x1,6.4cm) {$right_1$};
+\path [name=x2, color=blue] let \p1 = (k2.north east) in node  at (\x1,6.4cm) {$right_2$};
+\path [name=y1, color=red] let \p1 = (k1.north west) in node  at (-0.5cm,\y1) {$top_1$};
+\path [name=y2, color=red] let \p1 = (k2.north west) in node  at (-0.5cm,\y1) {$top_2$};
+\path [name=y1, color=blue] let \p1 = (k1.south west) in node  at (-0.9cm,\y1) {$bottom_1$};
+\path [name=y2, color=blue] let \p1 = (k2.south west) in node  at (-0.9cm,\y1) {$bottom_2$};
+\end{tikzpicture}
+\caption{Kollisionserkennung mit Rechtecken}\label{picKollRect01}
+\end{center}
+\end{figure}
+
+
+
+    \item \textbf{Kreisüberschneidung}\index{Kollisionserkennung!Kreis}: Bei eher runden Sprites empfiehlt es sich, nicht die Rechtecke zu überprüfen, sondern den Innenkreis zur Kollisionsprüfung zu verwenden. Auch diese Kollisionsprüfung ist recht schnell, da nur ein Vergleich auf den Abstand der Mittelpunkte erfolgen muss: $\sqrt{(x_2-x_1)^2+(y_2-y_1)^2} < r_1+r_2$.
+
+\begin{figure}[H]
+\begin{center}
+\tikzset{
+    shape kreis/.style= {
+    draw,
+    fill = yellow!30,
+    line width = 1pt,
+    inner xsep = 0.0cm,
+    inner ysep = 0.0cm,
+   }
+}
+
+\begin{tikzpicture}
+\draw [->, name=xachse] (0cm, 0cm)  -- +(13cm, 0cm);
+\draw [->, name=yachse] (0cm, 0cm)  -- +(0cm, 6cm);
+
+\draw (4.0cm, 3.5cm) node[name=k1,shape=circle,shape kreis,  minimum height = 4cm] {};
+\draw (8.5cm, 2.5cm) node[name=k2,shape=circle,shape kreis,  minimum height = 3cm] {};
+
+\draw[-, very thick, blue] 
+ (k1.north west) --  node[above, blue, xshift=0cm] {$r_1$} (k1.center);
+\draw[-, very thick, blue] 
+ (k2.north east) --  node[above, blue, xshift=0cm] {$r_2$} (k2.center);
+
+\draw[-, very thick, blue] 
+ (k1.center) --  node[above, blue, sloped, xshift=0cm] {\footnotesize$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$} (k2.center);
+
+\draw[-, very thick, red, dotted] 
+ (k1.center) --  +(0cm, -3.5cm);
+\draw[-, very thick, red, dotted] 
+ (k1.center) --  +(-4.0cm, 0cm);
+
+\draw[-, very thick, red, dotted] 
+ (k2.center) --  +(0cm, -2.5cm);
+\draw[-, very thick, red, dotted] 
+ (k2.center) --  +(-8.5cm, 0cm);
+
+\path [name=x1, color=red] let \p1 = (k1) in node  at (\x1,-0.4cm) {$x_1$};
+\path [name=x2, color=red] let \p1 = (k2) in node  at (\x1,-0.4cm) {$x_2$};
+\path [name=y1, color=red] let \p1 = (k1) in node  at (-0.4cm,\y1) {$y_1$};
+\path [name=y2, color=red] let \p1 = (k2) in node  at (-0.4cm,\y1) {$y_2$};
+\end{tikzpicture}
+\caption{Kollisionserkennung mit Kreisen}\label{picKollKreis01}
+\end{center}
+\end{figure}
+
+    \item \textbf{Pixelüberschneidung}\index{Kollisionserkennung!Pixel}: Bei der pixelgenauen Überschneidung wird für jedes Pixel der beiden Sprites überprüft, ob sie die gleiche Position haben. Wenn \emph{Ja} überschneiden sie sich, wenn \emph{Nein} nicht. Dies ist die teuerste Kollisionsprüfung, aber auch die genauste. Um den Aufwand zu reduzieren, wird zuerst das Schnittmengen-Rechteck der beiden Sprites ermittelt. Wie bei der Rechteckprüfung wird dabei erstmal gecheckt, ob die beiden Rechtecke sich überschneiden. Wenn nicht, bin ich sofort fertig. Wenn doch, muss die Schnittmenge der beiden Rechtecke wiederum ein Rechteck sein. Wenn nun zwei Pixel die gleiche Position haben, müssen diese innherhalb des Schnittmengen-Rechtecks liegen und die Pixel-Prüfung kann auf diesen in der Regel viel kleineren Bereich eingeschränkt werden. Ein weiteres Problem bei der Pixelprüfung ist, Hintergrund von Vordergrund zu unterscheiden. Woher soll die Pixelprüfung wissen, ob die Farbe Blau nun ein Teil des Objektes oder des Hintergrunds ist? Dazu gibt es mehrere Ansätze. Der einfachste ist, zu jedem Sprite ein schwarz/weiß-Bild zu erstellen (ein \gls{maske}\index{Maske}\randnotiz{Maske}); die weißen Pixel sind wichtig, die schwarzen können ignoriert werden. Nun wird die Pixelprofüung nur noch auf den Masken durchgeführt.
+
+\end{itemize}
+
+Schauen wir uns das Kollisionsverhalten mal im Detail an. In \abbref[vref]{picKollision00} sehen wir vier Sprites: eine Mauer, ein Raumschiff, ein Monster und ein Geschoss. Keine der Sprites berühren sich.
+
+\myebild{kollision00.png}{0.8}{Kollisionsprüfung: 4 Sprites ohne Kollision}{picKollision00}
+
+%\begin{wrapfigure}[9]{r}{3.1cm}%
+%	\begin{center}%
+%		\vspace{-1cm}%
+%		\myfigure{kollision00.png}{0.8}{Kollsionsprüfung: 4 Sprites ohne Kollsion}{picKollision00}%
+%	\end{center}%
+%\end{wrapfigure}%
+
+In \abbref[vref]{picKollision01} erkennen Sie gut den Effekt einer Kollisionserkennung durch die umgebenden Rechtecke. Bei der Mauer ist alles perfekt. Das Geschoss trifft die Mauer und durch die Farbgebung wird signalisiert, dass die Kollision vom Programm erkannt wurde. Den Nachteil sehen wir aber beim Raumschiff. Dort wird auch eine Kollision erkannt, obwohl sich die beiden Sprites nicht berühren. Aber das umgebende Rechteck des Raumschiffs umschließt die leeren Flächen in den Ecken, so dass eine Kollision erkannt wird. Beim Monster kann das ebenfalls beobachtet werden. 
+
+\myebild{kollision01.png}{0.8}{Kollisionsprüfung durch Rechtecke (Montage)}{picKollision01}
+
+Anders sieht es aus, wenn wir die Kollsion durch die Innenkreise bestimmen lassen (\abbref[vref]{picKollision02}). Jetzt wird die Kollision bei der Mauer nicht mehr richtig erkannt, da die Ecken nicht mehr zum Innenkreis gehören. Beim Raumschiff hingegen liefert diese Methode genau das gewünschte Ergebnis, da die leeren Ecken nicht zum Innenkreis gehören. Würden wir nun etwas weiter nach rechts gehen, würde auch das Raumschiff rot werden, da eine Kollision erkannt wird. Das Monster liefert immer noch ein falsches Ergebnis.
+
+\myebild{kollision02.png}{0.8}{Kollisionsprüfung durch Kreise (Montage)}{picKollision02}
+
+Verbleibt noch die pixelgenaue Prüfung (\abbref[vref]{picKollision03}). Die Kollision mit der Mauer wird richtig erkannt. Erstaunlicher sind die beiden Ergebnisse beim Raumschiff und beim Monster. Beide erkennen richtig keine Kollision, da das Geschoss sich zwar innerhalb des Rechtecks und des Innenkreises befindet, aber nur auf transparenten Pixel. Probieren Sie es ruhig aus, das Geschoss mal nach rechts bzw. links zu bewegen, und Sie werden die pixelgenaue Kollisionserkennung anhand des Farbwechsels sofort sehen. 
+
+\myebild{kollision03.png}{0.8}{Kollisionsprüfung durch Masken (Montage)}{picKollision03}
+
+Schauen wir uns jetzt den dazugehörigen Quelltext genauer an, wobei ich auf eine nochmalige Besprechung der Präambel und von \texttt{Settings} verzichten möchte. 
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{1}{24}{python}{Kollisionsarten (1): Präambel und \texttt{Settings}}{srcKollision00a} 
+
+Interessanter wird es beim \texttt{Obstacle}. Dies ist die Klasse für die Mauer, das Raumschiff und das Monster. Für die Rechteckprüfung wird das umgebende Rechteck benötigt, welches in \zeiref{srcKollision01} wir gewohnt mit Hilfe von \texttt{pygame.Surface.get\_rect()}\myindex{pyg}{\texttt{Surface}!\texttt{get\_rect()}}\randnotiz{get\_rect()} ermitteln und in das Attribut \texttt{rect}\index{self.rect}\randnotiz{self.rect} ablegen. Für Sprites mit impliziter oder einer durch \texttt{set\_colorkey()}\myindex{pyg}{\texttt{Surface}!\texttt{set\_colorkey()}} expliziten Transparenz kann die Maske sehr einfach mit \texttt{pygame.\-mask.\-from\_surface()}\myindex{pyg}{\texttt{mask}!\texttt{from\_surface()}}\randnotiz{from\_surface()} bestimmt werden (\zeiref{srcKollision02}). Damit die vordefinierten Funktionen zur Kollisionserkennung greifen können, muss diese Maske im \texttt{Sprite}-Objekt im Attribut \texttt{mask}\index{self.mask}\randnotiz{self.mask} abgelegt werden. In \zeiref{srcKollision03} wird der Innenradius berechnet. Dies ist etwas unsauber implementiert. Eigentlich müsste man das Minimum von Breite und Höhe ermitteln und dieses halbieren. Wie bei der Maske muss auch der Radius in einem Attribut abgelegt werden, damit die vordefinierten Kollisionsmethoden arbeiten können: \texttt{radius}\index{self.radius}\randnotiz{self.radius}. 
+
+Das Flag \texttt{hit} wird nur dafür gebraucht, damit je nach erkannter Kollision das richtige Image ausgegeben wird, denn -- Sie haben es sicherlich schon gesehen -- es werden für dieses Sprite zwei Bilder geladen: eines für den Zustand \emph{nicht getroffen} und eines für \emph{getroffen}.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{27}{40}{python}{Kollisionsarten (2): \texttt{Obstacle}}{srcKollision00b} 
+
+Die Klasse \texttt{Bullet} ähnelt in Vielem der Klasse \texttt{Obstacle}. Da wir auch diese Klasse für die drei Kollisionsprüfungsarten verwenden wollen, brauchen wir auch hier die drei Attribute \texttt{rect}, \texttt{radius} und \texttt{mask}. Daneben ist die Klasse mit einigen Zeilen versehen, um das Bullet bewegen zu können; sollte auch selbsterklärend sein. Hinweis: Der Einfachheit halber habe ich keine Randprüfung mit eingebaut. Warum auch.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{43}{58}{python}{Kollisionsarten (3): \texttt{Bullet}}{srcKollision00c} 
+
+Und jetzt die Klasse \texttt{Game}. Im Konstruktor passieren die üblichen Dinge. Besonders erwähnenswert ist hier eigentlich nichts.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{61}{75}{python}{Kollisionsarten (4): Konstruktor von \texttt{Game}, Konstruktor}{srcKollision00d} 
+
+AUch die Methoden \texttt{run()} und \texttt{watch\_for\_events()} folgen ausgetretenen Pfaden.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{77}{111}{python}{Kollisionsarten (5): \texttt{run()} und \texttt{watch\_for\_events()} von \texttt{Game}}{srcKollision00e} 
+
+Ebenso so \texttt{update()} und \texttt{draw()};
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{113}{124}{python}{Kollisionsarten (6): \texttt{update()} und \texttt{draw()} von \texttt{Game}}{srcKollision00f} 
+
+Die Methode \texttt{resize()} hat nichts mit der eigentlichen Kollisionsprüfung zu tun, sondern soll nur sicherstellen, dass die \texttt{Obstacle}-Objekte äquidistant auf die Fensterbreite verteilt werden. Die erste \forSchleife\ ermittelt mir die Summe der Breiten der \texttt{Obstacle}-Objekte. Diese Info brauche ich, um in \zeiref{srcKollision04} den Abstand auszurechnen. Dazu ziehe ich von der Fensterbreite \texttt{total\_width} ab. Diese Anzahl an Pixel kann nun auf die Zwischenräume verteilt werden. Und wie viele Zwischenräume haben wir? Zwei zwischen den drei \texttt{Obstacle}-Objekten, einen zum linken Rand und einen zum rechten; also sind es insgesamt vier Zwischenräume. Den Abstand merke ich mir in \texttt{padding}. Jetzt kann ich in der zweiten \forSchleife\ die linke Position der \texttt{Obstacle}-Objekte bestimmen und setzen.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{126}{135}{python}{Kollisionsarten (7): \texttt{resize()} von \texttt{Game}}{srcKollision00g} 
+
+Und jetzt -- Trommelwirbel -- die eigentliche Kollisionsprüfung. Je nachdem welche Kollisionsprüfung wir eingestellt haben, wird innerhalb der \forSchleife\ die entsprechende Methode zur Kollisionsprüfung aufgerufen: \texttt{pygame.sprite.collide\_circle()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_circle()}}, \texttt{pygame.\-sprite.\-collide\_mask()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_mask()}} oder \texttt{pygame.sprite.collide\_rect()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}}. Die Semantik ist eigentlich simpel. Den Methoden werden zwei \texttt{Sprite}-Objekte übergeben und sie liefern \true\ falls eine Kollision vorliegt, ansonsten \false. Dabei ist -- wie oben schon erwähnt -- darauf zu achten, dass die benutzte Methode auch die Infos im Sprite vorfindet, die sie braucht:
+
+\begin{itemize}
+    \item \texttt{pygame.sprite.collide\_circle()}: \texttt{self.radius}
+    \item \texttt{pygame.sprite.collide\_mask()}: \texttt{self.mask}
+    \item \texttt{pygame.sprite.collide\_rect()}: \texttt{self.rect}
+\end{itemize}
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{137}{146}{python}{Kollisionsarten (8): \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision00h} 
+
+Noch ein Hinweis: Die letzte \forSchleife\ hätten wir abkürzen könnnen. Die Kollisionsprüfung mit Rechtecken auf eine Liste -- also kollidiert ein Sprite mit irgendeinem Sprite einer SpriteGroup -- wird so oft gebraucht, dass es dafür eine eigene Methode gibt: \texttt{pygame.sprite.spritecollide()}\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}}\randnotiz{spritecollide()}. Der erste Parameter ist ein einzelnes \texttt{Sprite}-Objekt -- hier unsere Feuerkugel. Der zweite Parameter ist die Liste von Sprites, in der nach einer Kollision gesucht werden soll. Der dritte Parameter regelt, ob die kollidierenden Objekte aus der Liste entfernt werden soll. Dies ist ganz nützlich, wenn beispielsweise das Hindernis durch Berührung verschwinden soll. Hinweis: Die Methode hat noch einen vierten Parameter. Diesem kann man einen Funktionszeiger auf eine andere Kollisionsprüfungsmethode mitgeben. Diese Funktion muss zwei \texttt{Sprite}-Objekte als Parameter akzeptieren. Man kann also etwas Selbsterstelltes oder eine der drei Methoden \texttt{collide\_circle()}, \texttt{collide\_mask()} oder \texttt{collide\_rect()} verwenden. Wird hier nichts angegeben -- so wie in unserem Quelltext -- wird automatisch \texttt{collide\_rect()} verwendet.
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision01.py}{145}{147}{python}{Kollisionsarten (9): Variante von \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision01a} 
+
+Und zu guter letzt noch der Aufruf:
+
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{149}{999}{python}{Kollisionsarten (10): Der Aufruf von \texttt{Game}}{srcKollision00i} 
+
+
+\subsection*{Was war neu?}
+
+\begin{itemize}
+	\item \texttt{pygame.mask.from\_surface()}:
+	\myindex{pyg}{\texttt{mask}!\texttt{from\_surface()}}\\ 
+    \url{https://www.pygame.org/docs/ref/mask.html#pygame.mask.from_surface}
+	
+	\item \texttt{pygame.sprite.collide\_circle()}:
+	\myindex{pyg}{\texttt{sprite}!\texttt{collide\_circle()}}\\ 
+    \url{https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_circle}
+
+	\item \texttt{pygame.sprite.collide\_mask()}:
+	\myindex{pyg}{\texttt{sprite}!\texttt{collide\_mask()}}\\ 
+    \url{https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_mask}
+
+	\item \texttt{pygame.sprite.collide\_rect()}:
+	\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}}\\ 
+    \url{https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_rect}
+	
+	\item \texttt{pygame.sprite.spritecollide()}:
+	\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}}\\ 
+    \url{https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.spritecollide}
+	
+\end{itemize}
+
