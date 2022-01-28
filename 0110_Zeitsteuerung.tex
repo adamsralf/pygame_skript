@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Zeitsteuerung}\index{Zeitsteuerung}
+\section{Zeitsteuerung}\index{Zeitsteuerung}\label{secZeitstuerung}
 %\subsection{Beispiele}
 In Spielen werden an vielen Stellen zeitgesteuerte Aktionen benötigt: jede halbe Sekunde fällt eine Bombe, das Schutzschild ist 10 Sekunden aktiv, nach 3~Sprüngen steht die Funktion \emph{Sprung} 5~Minuten lang nicht zur Verfügung, bei einer Animation sollen die Teilbilder jede $1/30$ Sekunde erscheinen usw..
 
@@ -15,7 +15,7 @@ Die Klasse \texttt{Enemy} liefert auch nichts Weltbewegendes. Lediglich \zeiref{
 
 \lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{27}{41}{python}{Zeitsteuerung (2), Version 1.0: \texttt{Enemy}}{srcZeit00b} 
 
-Auch \texttt{Bullet} ist in weiten Teilen eine Wiederholung. Interessant dürfte \zeiref{srcZeit0004} sein. Die Methode \texttt{pygame.sprite.Sprite.kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}}\randnotiz{kill()} ist nicht wirklich eine Selbstzerstörung. Vielmehr entfernt diese Methode das \texttt{Sprite}-Objekt aus allen Spritegroups. Wenn damit auch alle Referenzen verloren gehen, wird natürlich auch dieses Objekt zerstört, besteht aber noch irgendwo eine Referenz, bleibt das Objekt erhalten. In der Regel werden \texttt{Sprite}-Objekte aber in Gruppen (also in \texttt{pygame.sprite.Group}-Objekten) verwaltet und somit durch \texttt{kill()} zerstört. Sie können das in \abbref[vref]{picZeit00} dadurch erkennen, dass $30~px$ vor dem unteren Bildschirmrand der Feuerball verschwindet.
+Auch \texttt{Bullet} ist in weiten Teilen eine Wiederholung. Interessant dürfte \zeiref{srcZeit0004} sein. Die Methode \texttt{pygame.sprite.Sprite.kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}|underline}\randnotiz{kill()} ist nicht wirklich eine Selbstzerstörung. Vielmehr entfernt diese Methode das \texttt{Sprite}-Objekt aus allen Spritegroups. Wenn damit auch alle Referenzen verloren gehen, wird natürlich auch dieses Objekt zerstört, besteht aber noch irgendwo eine Referenz, bleibt das Objekt erhalten. In der Regel werden \texttt{Sprite}-Objekte aber in Gruppen (also in \texttt{pygame.sprite.Group}-Objekten) verwaltet und somit durch \texttt{kill()} zerstört. Sie können das in \abbref[vref]{picZeit00} dadurch erkennen, dass $30~px$ vor dem unteren Bildschirmrand der Feuerball verschwindet.
 
 \lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{44}{56}{python}{Zeitsteuerung (3), Version 1.0: \texttt{Bullet}}{srcZeit00c} 
 
@@ -62,7 +62,7 @@ Danach wird in \texttt{new\_bullet()} abgeprüft, ob das Intervallende erreicht 
 
 \lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit02.py}{102}{109}{python}{Zeitsteuerung (10), Version 1.2: \texttt{new\_bullet()} von \texttt{Game}}{srcZeit02b} 
 
-Da wir diese Logik mehrfach brauchen, habe ich das ganze in der Klasse \texttt{Timer}\randnotiz{Timer}\index{Timer} gekapselt. Das Herzstück sind wieder die beiden Attribute, die sich die Intervalldauer (\texttt{duration}) und das Intervallende (\texttt{next})  merken. Anders als bisher wird sich also nicht der Intervallstart gemerkt, sondern das Intervallende -- was ein wenig Rechenzeit spart. Interessant ist der optionale Übergabeparameter \texttt{with\_start}. Über diesen kann ich steuern, ob schon beim ersten Durchlauf bis zum Intervallende gewartet werden soll, oder ob beim aller ersten Aufruf von \texttt{is\_next\_stop\_reached()} schon \true\ zurückgeliefert werden soll. Was würde das bei unserem Beispiel bedeuten? Würde \texttt{width\_start} den Wert \true\ haben, würde der erste Feuerball sofort beim ersten Schleifendurchlauf abgeworfen werden. Wäre der Wert \false, würde der erste Feuerball erst nach $500~ms$ abgeworfen werden.
+Da wir diese Logik mehrfach brauchen, habe ich das ganze in der Klasse \texttt{Timer}\randnotiz{Timer}\index{Timer|underline} gekapselt. Das Herzstück sind wieder die beiden Attribute, die sich die Intervalldauer (\texttt{duration}) und das Intervallende (\texttt{next})  merken. Anders als bisher wird sich also nicht der Intervallstart gemerkt, sondern das Intervallende -- was ein wenig Rechenzeit spart. Interessant ist der optionale Übergabeparameter \texttt{with\_start}. Über diesen kann ich steuern, ob schon beim ersten Durchlauf bis zum Intervallende gewartet werden soll, oder ob beim aller ersten Aufruf von \texttt{is\_next\_stop\_reached()} schon \true\ zurückgeliefert werden soll. Was würde das bei unserem Beispiel bedeuten? Würde \texttt{width\_start} den Wert \true\ haben, würde der erste Feuerball sofort beim ersten Schleifendurchlauf abgeworfen werden. Wäre der Wert \false, würde der erste Feuerball erst nach $500~ms$ abgeworfen werden.
 
 In \texttt{is\_next\_stop\_reached()} wird das Erreichen des Intervallendes überprüft und ggf. das neue Intervallende festgelegt. Die Methode liefert ein \true, wenn das Intervallende erreicht/überschritten wurde und ansonsten \false.
 

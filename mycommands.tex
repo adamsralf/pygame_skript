@@ -6,6 +6,7 @@
 \newref{kap}{name=Kapitel~}
 \newref{zei}{name=Zeile~,names=Zeilen~}
 \newref{src}{name=Quelltext~,names=Quelltexte~}
+\newref{req}{name=Requirement~}
 
 
 
@@ -25,6 +26,26 @@
     \end{tiny}%
   }%
 }
+
+%Requirement
+\floatstyle{ruled}
+\newfloat{Requirement}{H}{lor}
+\newcommand{\br}[2]%
+        {\begin{Requirement}%
+                        \caption[#1]{\parbox[c][1.5ex][c]{7cm}{#1\color{White}gD}}\label{#2}\index{#1}%
+                        \begin{quote}%
+                                \begin{itshape}%
+                                \vspace{-0.7em}
+        }
+\newcommand{\er}%
+        {%
+                                \end{itshape}%
+                        \end{quote}%
+                        \vspace{-1.5ex}
+        \end{Requirement}%
+        \vspace{-1.5ex}
+        }
+
 
 
 %Definition
@@ -148,7 +169,7 @@
         {
                 \end{figure}%
         }
-\newcommand{\myezweihbild}[8]{\begin{ezweibild}{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8} \end{ezweihbild}}
+\newcommand{\myezweihbild}[8]{\begin{ezweihbild}{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8} \end{ezweihbild}}
 
 \newenvironment{ezweivbild}[8]
         {%

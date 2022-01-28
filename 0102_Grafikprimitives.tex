@@ -9,9 +9,9 @@ Unter Grafikprimitiven versteht man gezeichnete einfache grafische Figuren wie L
 \myebild{primitives.png}{0.8}{Einige Grafikprimitve}{picPrimitive}
 
 
-Der Grundaufbau ist der gleiche wie in \srcref[vref]{srcStart01}. Die Unterschiede beginnen in \zeiref{srcPrimitives01}. Die Klasse \texttt{pygame.Color}\randnotiz{Color}\myindex{pyg}{\texttt{Color}} kann Farbinformationen in verschiedenen Formaten inklusive eines \glslink{alpha}{Alpha-Kanals}\index{Alpha-Kanal} (Transparenz) kodieren; mehr dazu später. Ich verwende hier eine RGB-Kodierung mit Farbkanalwerten zwischen 0 und 255. 
+Der Grundaufbau ist der gleiche wie in \srcref[vref]{srcStart01}. Die Unterschiede beginnen in \zeiref{srcPrimitives01}. Die Klasse \texttt{pygame.Color}\randnotiz{Color}\myindex{pyg}{\texttt{Color}|underline} kann Farbinformationen in verschiedenen Formaten inklusive eines \glslink{alpha}{Alpha-Kanals}\index{Alpha-Kanal} (Transparenz) kodieren; mehr dazu später. Ich verwende hier eine RGB-Kodierung mit Farbkanalwerten zwischen 0 und 255. 
 
-Gehen wir der Reihe nach die einzelnen Figuren durch und fangen mit dem Rechteck an. Es gibt mehrere Möglichkeiten, ein Rechteck in Pygame zu bestimmen. Da wir es später auch sehr oft brauchen, möchte ich hier schonmal die Klasse \texttt{pygame.Rect}\myindex{pyg}{\texttt{Rect}}\randnotiz{Rect} einführen. Sie wird durch vier Parameter bestimmt: die linke obere Ecke, seine Breite und seine Höhe. In \zeiref{srcPrimitives02} wird also ein Rechteck an der Position $(10,10)$ mit der Breite von $20~px$ und einer Höhe von $30~px$ definiert. 
+Gehen wir der Reihe nach die einzelnen Figuren durch und fangen mit dem Rechteck an. Es gibt mehrere Möglichkeiten, ein Rechteck in Pygame zu bestimmen. Da wir es später auch sehr oft brauchen, möchte ich hier schonmal die Klasse \texttt{pygame.Rect}\myindex{pyg}{\texttt{Rect}|underline}\randnotiz{Rect} einführen. Sie wird durch vier Parameter bestimmt: die linke obere Ecke, seine Breite und seine Höhe. In \zeiref{srcPrimitives02} wird also ein Rechteck an der Position $(10,10)$ mit der Breite von $20~px$ und einer Höhe von $30~px$ definiert. 
 
 Hinweis: Die Klasse \texttt{Rect} ist kein gezeichnetes Rechteck, sondern lediglich ein Kontainer für Informationen, die für ein Rechteck interessant sind. 
 

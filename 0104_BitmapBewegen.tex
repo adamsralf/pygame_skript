@@ -89,15 +89,15 @@ In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung vo
 
 \myindex{pyg}{\texttt{Rect}!\texttt{centerx}}%
 \myindex{pyg}{\texttt{Rect}!\texttt{right}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{left}}%
+\myindex{pyg}{\texttt{Rect}!\texttt{left}|underline}%
 \myindex{pyg}{\texttt{Rect}!\texttt{centery}}%
 \myindex{pyg}{\texttt{Rect}!\texttt{bottom}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{top}}%
+\myindex{pyg}{\texttt{Rect}!\texttt{top}|underline}%
 \myindex{pyg}{\texttt{Rect}!\texttt{topleft}}%
 \myindex{pyg}{\texttt{Rect}!\texttt{bottomright}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{center}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{width}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{height}}%
+\myindex{pyg}{\texttt{Rect}!\texttt{center}|underline}%
+\myindex{pyg}{\texttt{Rect}!\texttt{width}|underline}%
+\myindex{pyg}{\texttt{Rect}!\texttt{height}|underline}%
 In der Abbildung werden Strecken in normaler Schrift und Punkte in \textit{kursiver Schrift} angegeben. Die Strecken sind eindimensional und die Punkte zweidimensional $(x,y)$. Die Koordinate~$x$ ist dabei der horizontale und~$y$ der vertikale Abstand zum 0-Punkt des Koordinatensystems. Die Bedeutung der einzelnen Angaben sollte selbsterklärend sein. Der schöne Vorteil ist, dass die Angaben sich gegenseitig berechnen. Setze ich beispielsweise \texttt{topleft = (10,10)} und \texttt{width, height = 30, 40}, so werden alle anderen Angaben für mich ermittelt. Ich muss also nicht mehr den rechten Rand mit \texttt{left + width} ausrechnen; ich kann vielmehr sofort \texttt{right} verwenden. Auch oft nützlich ist die Berechnung des Mittelpunktes \texttt{center} oder die entsprechenden Längen \texttt{centerx} und \texttt{centery}. Ändere ich nun das Zentrum durch \texttt{center = (100, 10)}, so verschieben sich alle anderen Angaben ebenfalls und müssen nicht von mir neu bestimmt werden -- sehr praktisch.
 
 Schauen wir uns dazu eine reduzierte Version des letzten Quelltextes an. In \srcref[vref]{srcInvader05} wird die \texttt{Rect}-Klasse schon verwendet.
@@ -142,7 +142,7 @@ Probieren Sie doch mal aus, das Ganze mit einer vertikalen Bewegung zu kombinier
 
 Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem \texttt{Rect-}Objekt zugewiesen, obwohl sie vielleicht schon über den Rand ragt. Bei einer Geschwindigkeit von~\texttt{1} oder \texttt{2} mag das nicht so ins Auge fallen, aber wenn wir die Geschwindigkeit auf die Raumschiffbreite einstellen, wird das Problem offensichtlich (setzen Sie kurzfristig mal \texttt{Settings.fps = 5}, damit man was sieht). Das Raumschiff verlässt zur Hälfte den Bildschirm. 
 
-Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.Rect.move()}\myindex{pyg}{\texttt{Rect}!\texttt{move()}}\randnotiz{move()}.
+Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.Rect.move()}\myindex{pyg}{\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
 
 \lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{38}{44}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
 

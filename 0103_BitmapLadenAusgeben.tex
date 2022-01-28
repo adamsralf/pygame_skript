@@ -15,13 +15,13 @@ Wir wollen nun die Bitmaps ein wenig unseren Bedürfnissen anpassen. Zunächst e
 
 Die Funktion \texttt{pygame.Surface.load()} lieferte mir ja ein \texttt{Surface}-Objekt zurück. Die Klasse \texttt{Surface} hat nun eine Methode, die mir die gewünschte Konvertierung vornimmt: \texttt{pygame.Surface.convert()}\myindex{pyg}{\texttt{Surface}!\texttt{convert()}}\randnotiz{convert()}. Beispielhaft sei hier auf \zeiref{srcInvader0201} verwiesen. 
 
-Das Verändern der Größe erfolgt durch \texttt{pygame.transform.scale()}\myindex{pyg}{\texttt{transform}!\texttt{scale()}}\randnotiz{scale()}. In \zeiref{srcInvader0202} wird das Image auf die angegeben $(width, height)$ in der Maßeinheit Pixel skaliert. Das Ergebnis an \abbref{picInvader02} entspricht nicht ganz meinen Erwartungen.  
+Das Verändern der Größe erfolgt durch \texttt{pygame.transform.scale()}\myindex{pyg}{\texttt{transform}!\texttt{scale()}|underline}\randnotiz{scale()}. In \zeiref{srcInvader0202} wird das Image auf die angegeben $(width, height)$ in der Maßeinheit Pixel skaliert. Das Ergebnis an \abbref{picInvader02} entspricht nicht ganz meinen Erwartungen.  
 
 \begin{wrapfigure}[9]{r}{5cm}
     \vspace{-1em}
 	\myfigure{invader02.png}{0.8}{Größen OK}{picInvader02}
 \end{wrapfigure}
-\label{pageTransparenz}Die Größenverhältnisse gefallen mir zwar jetzt, aber warum erscheint plötzlich ein schwarzer Hintergrund? Die Ursache dafür ist, dass durch die Konvertierung mit \texttt{convert()} die Information für die Transparenz\index{Transparenz} verloren gegangen ist. Die Transparenz steuert die \emph{Durchsichtigkeit} eines Pixels. Erreicht wird dies dadurch, dass zusätzlich zu jedem Pixel nicht nur die drei RGB-Werte, sondern auch eine Durchsichtigkeit abgespeichert wird. Diese zusätzliche Information nennt man den \emph{Alpha-Kanal}\index{Alpha-Kanal}\randnotiz{Alpha-Kanal}.
+\label{pageTransparenz}Die Größenverhältnisse gefallen mir zwar jetzt, aber warum erscheint plötzlich ein schwarzer Hintergrund? Die Ursache dafür ist, dass durch die Konvertierung mit \texttt{convert()} die Information für die Transparenz\index{Transparenz|underline} verloren gegangen ist. Die Transparenz steuert die \emph{Durchsichtigkeit} eines Pixels. Erreicht wird dies dadurch, dass zusätzlich zu jedem Pixel nicht nur die drei RGB-Werte, sondern auch eine Durchsichtigkeit abgespeichert wird. Diese zusätzliche Information nennt man den \emph{Alpha-Kanal}\index{Alpha-Kanal}\randnotiz{Alpha-Kanal}.
 
 Ich habe nun zwei Möglichkeiten, diese Transparenz wieder verfügbar zu machen:
 \begin{itemize}
