@@ -1,5 +1,5 @@
 # pygame_skript
-A Latex [script](./skript.pdf) with executable examples about Pygame for my students.
+A Latex [script](./00 skript.pdf) with executable examples about Pygame for my students.
 
 # Intention
 This script started as a help for my IT students at the TBS1 in Bochum, Germany. It is a short introduction to the main features of Pygame. You're welcome to help me out by correcting the text or source code or by adding new chapters. Why german? Because my students are german and learning programming is in their own language hard enough. 
