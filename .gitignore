@@ -278,3 +278,6 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+00 skript.synctex-DachbodenPC.gz
+*.db
+änderungen.txt
