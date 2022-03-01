@@ -86,6 +86,7 @@
   {%
     language={#4},%
     numbers={left},%
+    numberstyle=\color[gray]{0.5},%
     escapechar={§},%
     basicstyle={\ttfamily\scriptsize},%
     firstnumber={#2},%
@@ -94,8 +95,8 @@
     frame={tb},%
 %    framerule={0pt},%
     framextopmargin={1mm},%
-    xleftmargin={3mm},%
-    framexleftmargin={3mm},%
+    xleftmargin={0mm},%
+    framexleftmargin={0mm},%
     belowcaptionskip={5pt},%
     abovecaptionskip={4mm},%
     keywordstyle={\color{blue}},%
@@ -110,14 +111,7 @@
     {ä}{{\"a}}1%
     {ö}{{\"o}}1%
   }%
-\lstdefinestyle{numbers}%
-  {numbers=left,numbersep=3mm,%
-   numberstyle=\color[gray]{0.5},%
-   xleftmargin=5mm,framexleftmargin=5mm}
-\lstdefinestyle{caption}%
-  {frame=b,framerule=0pt,%
-   framexbottommargin=1mm}
-  \lstinputlisting[style=numbers,caption={#5},label={#6},firstline={#2},lastline={#3}]{#1}%
+  \lstinputlisting[caption={#5},label={#6},firstline={#2},lastline={#3}]{#1}%
 }%
 
 %Aufgaben
