@@ -50,7 +50,7 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
         self.running = True
         self.all_tiles.clear(self.screen, self.background_image)
-        self.all_tiles.set_timing_treshold(1000 / Settings.fps)
+        self.all_tiles.set_timing_threshold(1000 / Settings.fps)
         self.performance: list[float] = []
 
     def watch_for_events(self) -> None:
@@ -82,9 +82,9 @@ class Game:
             self.draw()
             duration = time.perf_counter() - start
             self.performance.append(duration)
-            with open(Settings.get_file("perf1.txt"), "w") as datei:
-                for item in self.performance:
-                    datei.write(f"{item}\n")
+        with open(Settings.get_file(f"perf1_{Settings.size}_{Settings.number}.txt"), "w") as datei:
+            for item in self.performance:
+                datei.write(f"{item}\n")
 
         pygame.quit()
 

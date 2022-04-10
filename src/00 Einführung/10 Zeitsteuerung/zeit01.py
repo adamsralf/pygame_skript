@@ -1,63 +1,72 @@
-import pygame
 import os
+from time import time
+from typing import Any, Tuple
+
+import pygame
 
 
 class Settings(object):
-    window = {'width':700, 'height':200}
+    window = {'width': 700, 'height': 200}
     fps = 60
+    deltatime = 1.0 / fps
     title = "Zeitsteuerung"
-    path = {}
+    path: dict[str, str] = {}
     path['file'] = os.path.dirname(os.path.abspath(__file__))
     path['image'] = os.path.join(path['file'], "images")
-    directions = {'stop':(0, 0), 'down':(0,  1), 'up':(0, -1), 'left':(-1, 0), 'right':(1, 0)} # §\label{srcZeit0001}§
 
     @staticmethod
-    def dim():
+    def dim() -> Tuple[int, int]:
         return (Settings.window['width'], Settings.window['height'])
 
     @staticmethod
-    def filepath(name):
+    def filepath(name: str) -> str:
         return os.path.join(Settings.path['file'], name)
 
     @staticmethod
-    def imagepath(name):
+    def imagepath(name: str) -> str:
         return os.path.join(Settings.path['image'], name)
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, filename) -> None:
+
+    def __init__(self, filename: str) -> None:
         super().__init__()
         self.image = pygame.image.load(Settings.imagepath(filename)).convert_alpha()
-        self.rect = self.image.get_rect()
+        self.rect: pygame.rect.Rect = self.image.get_rect()
         self.rect.topleft = (10, 10)
-        self.direction = Settings.directions['right']
-        self.speed = 1
+        self.direction = 1
+        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.speed = pygame.math.Vector2(150, 0)
 
-    def update(self):
-        self.rect.move_ip([self.speed*x for x in self.direction])
-        if self.rect.left < 10:
-            self.direction = Settings.directions['right']
-        elif self.rect.right >= Settings.window['width'] - 10:
-            self.direction = Settings.directions['left']
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        newpos = self.position + (self.speed * Settings.deltatime * self.direction)
+        self.rect.left = round(newpos.x)
+        if self.rect.left < 10 or self.rect.right >= Settings.window['width'] - 10:
+            self.direction *= -1
+        self.position += (self.speed * Settings.deltatime * self.direction)
+        self.rect.left = round(self.position.x)
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, picturefile) -> None:
+
+    def __init__(self, picturefile: str, startpos: Tuple[int, int]) -> None:
         super().__init__()
         self.image = pygame.image.load(Settings.imagepath(picturefile)).convert_alpha()
-        self.rect = self.image.get_rect()
-        self.rect.center = (10, 10)
-        self.direction = Settings.directions['down']
-        self.speed = 2
+        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect.center = startpos
+        self.direction = 1
+        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.speed = pygame.math.Vector2(0, 100)
 
-    def update(self):
-        self.rect.move_ip([self.speed*x for x in self.direction])
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        self.position += (self.speed * Settings.deltatime * self.direction)
+        self.rect.top = round(self.position.y)
         if self.rect.top > Settings.window['height'] - 30:
             self.kill()
 
 
-
 class Game(object):
+
     def __init__(self) -> None:
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
@@ -68,19 +77,23 @@ class Game(object):
         self.enemy = pygame.sprite.GroupSingle(Enemy("alienbig1.png"))
         self.all_bullets = pygame.sprite.Group()
         self.time_counter = 0                           # Zähler§\label{srcZeit0101}§
-        self.time_range = 30                            # Obergrenze§\label{srcZeit0102}§ 
+        self.time_range = 30                            # Obergrenze§\label{srcZeit0102}§
         self.running = False
 
-    def run(self):
+    def run(self) -> None:
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)                         
             self.watch_for_events()
             self.update()
             self.draw()
+            self.clock.tick(Settings.fps)                           # Taktung§\label{srcZeit0005}§
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
-    def watch_for_events(self):
+    def watch_for_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -88,29 +101,28 @@ class Game(object):
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
 
-    def draw(self):
+    def draw(self) -> None:
         self.screen.fill((200, 200, 200))
         self.all_bullets.draw(self.screen)
         self.enemy.draw(self.screen)
         pygame.display.flip()
 
-    def update(self):
-        self.new_bullet()
+    def update(self) -> None:
+        self.new_bullet()                                         # Feuerballabwurf§\label{srcZeit0006}§
         self.all_bullets.update()
         self.enemy.update()
 
-    def new_bullet(self):
-        self.time_counter += 1                          # Erhöhe pro Takt um 1 §\label{srcZeit0103}§ 
-        if self.time_counter >= self.time_range:        # Wenn Obergrenze erreicht§\label{srcZeit0104}§ 
-            b = Bullet("shoot.png")
-            b.rect.centerx = self.enemy.sprite.rect.centerx
-            b.rect.centery = self.enemy.sprite.rect.centery + 20
-            self.all_bullets.add(b)
-            self.time_counter = 0                       # Setze Zähler wieder zurück §\label{srcZeit0105}§ 
+    def new_bullet(self) -> None:
+        self.time_counter += 1                          # Erhöhe pro Takt um 1 §\label{srcZeit0103}§
+        if self.time_counter >= self.time_range:        # Wenn Obergrenze erreicht§\label{srcZeit0104}§
+            self.all_bullets.add(Bullet("shoot.png", self.enemy.sprite.rect.move(0, 20).center))
+            self.time_counter = 0                       # Setze Zähler wieder zurück §\label{srcZeit0105}§
 
+
+def main():
+    game = Game()
+    game.run()
 
 
 if __name__ == '__main__':
-
-    game = Game()
-    game.run()
+    main()

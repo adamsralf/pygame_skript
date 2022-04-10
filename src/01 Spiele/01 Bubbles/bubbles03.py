@@ -1,27 +1,10 @@
 import os
 from random import randint
-from typing import Tuple
+from time import time
+from typing import Any, Dict
 
 import pygame
 from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
-
-
-class Settings:
-    window = {"width": 1220, "height": 1002}
-    fps = 60
-    path = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
-    caption = 'Fingerübung "Bubbles"'
-    radius = {"min": 15}
-    distance = 50
-    playground = pygame.Rect(90, 90, 1055, 615)
-    max_bubbles = playground.height * playground.width // 10000  # Erfahrungswert§\label{srcBubble0301}§
-
-    @staticmethod
-    def get_dim() -> Tuple[int, int]:
-        return (Settings.window["width"], Settings.window["height"])
 
 
 class Timer:
@@ -39,41 +22,72 @@ class Timer:
         return False
 
 
-class Background(pygame.sprite.Sprite):
-    def __init__(self, filename: str = "aquarium.png") -> None:
+class Background(pygame.sprite.DirtySprite):
+    def __init__(self) -> None:
         super().__init__()
-        self.image = pygame.image.load(os.path.join(Settings.path["image"], filename)).convert()
-        self.image = pygame.transform.scale(self.image, Settings.get_dim())
+        imagename = Game.get_image("aquarium.png")
+        self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
+        self.image = pygame.transform.scale(self.image, Game.window.size)
         self.rect = self.image.get_rect()
+        self.dirty = 1
 
 
-class Bubble(pygame.sprite.Sprite):
-    def __init__(self, filename: str = "blase1.png") -> None:
+class Bubble(pygame.sprite.DirtySprite):
+    def __init__(self) -> None:
         super().__init__()
-        self.radius = Settings.radius["min"]
-        self.image = pygame.image.load(os.path.join(Settings.path["image"], filename)).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (Settings.radius["min"], Settings.radius["min"]))
-        self.rect = self.image.get_rect()
+        self.radius = Game.radius["min"]
+        imagename = Game.get_image("blase1.png")
+        self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (Game.radius["min"], Game.radius["min"]))
+        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.dirty = 1
 
-    def update(self) -> None:
+    def update(self, *args: Any, **kwargs: Any) -> None:
         pass
 
     def randompos(self) -> None:
-        bubbledistance = Settings.distance + Settings.radius["min"]
-        centerx = randint(Settings.playground.left + bubbledistance, Settings.playground.right - bubbledistance)
-        centery = randint(Settings.playground.top + bubbledistance, Settings.playground.bottom - bubbledistance)
+        bubbledistance = Game.distance + Game.radius["min"]
+        centerx = randint(Game.playground.left + bubbledistance, Game.playground.right - bubbledistance)
+        centery = randint(Game.playground.top + bubbledistance, Game.playground.bottom - bubbledistance)
         self.rect.center = (centerx, centery)
 
 
 class Game:
+    window = pygame.rect.Rect(0, 0, 1220, 1002)
+    fps = 60
+    deltatime = 1.0/fps
+    path: Dict[str, str] = {}
+    path["file"] = os.path.dirname(os.path.abspath(__file__))
+    path["image"] = os.path.join(path["file"], "images")
+    path["sound"] = os.path.join(path["file"], "sounds")
+    caption = 'Fingerübung "Bubbles"'
+    radius = {"min": 15}
+    distance = 50
+    playground = pygame.rect.Rect(90, 90, 1055, 615)
+    max_bubbles = playground.height * playground.width // 10000  # Erfahrungswert§\label{srcBubble0301}§
+
+    @staticmethod
+    def get_file(filename: str) -> str:
+        return os.path.join(Game.path["file"], filename)
+
+    @staticmethod
+    def get_image(filename: str) -> str:
+        return os.path.join(Game.path["image"], filename)
+
+    @staticmethod
+    def get_sound(filename: str) -> str:
+        return os.path.join(Game.path["sound"], filename)
+
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.get_dim())
-        pygame.display.set_caption(Settings.caption)
+        self._screen = pygame.display.set_mode(Game.window.size)
+        pygame.display.set_caption(Game.caption)
         self._clock = pygame.time.Clock()
-        self._background = pygame.sprite.GroupSingle(Background())
+        self._background = Background()
         self._timer_bubble = Timer(500, False)
-        self._all_bubbles = pygame.sprite.Group()
+        self._all_sprites = pygame.sprite.LayeredDirty()
+        self._all_sprites.clear(self._screen, self._background.image)
+        self._all_sprites.set_timing_treshold(1000.0/Game.fps)
         self._running = True
 
     def watch_for_events(self) -> None:
@@ -85,41 +99,47 @@ class Game:
                     self._running = False
 
     def draw(self) -> None:
-        self._background.draw(self._screen)
-        self._all_bubbles.draw(self._screen)
-        pygame.display.flip()
+        rects = self._all_sprites.draw(self._screen)
+        pygame.display.update(rects)
 
     def update(self) -> None:
         self.spawn_bubble()
 
     def spawn_bubble(self) -> None:
         if self._timer_bubble.is_next_stop_reached():
-            if len(self._all_bubbles) <= Settings.max_bubbles:  # Platz?§\label{srcBubble0306}§
+            if len(self._all_sprites) <= Game.max_bubbles:  # Platz?§\label{srcBubble0306}§
                 b = Bubble()
                 tries = 100
                 while tries > 0:
                     b.randompos()
-                    b.radius += Settings.distance
-                    collided = pygame.sprite.spritecollide(b, self._all_bubbles, False, pygame.sprite.collide_circle)
-                    b.radius -= Settings.distance
+                    b.radius += Game.distance
+                    collided = pygame.sprite.spritecollide(b, self._all_sprites, False, pygame.sprite.collide_circle)
+                    b.radius -= Game.distance
                     if collided:
                         tries -= 1
                     else:
-                        self._all_bubbles.add(b)
+                        self._all_sprites.add(b)
                         break
 
     def run(self) -> None:
+        time_previous = time()
         self._running = True
         while self._running:
-            self._clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
-
+            self._clock.tick(Game.fps)
+            time_current = time()
+            Game.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
 
-if __name__ == "__main__":
+def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
     game = Game()
     game.run()
+
+
+if __name__ == "__main__":
+    main()

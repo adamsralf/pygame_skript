@@ -78,9 +78,9 @@ class Game:
             self.draw()
             duration = time.perf_counter() - start
             self.performance.append(duration)
-            with open(Settings.get_file("perf0.txt"), "w") as datei:
-                for item in self.performance:
-                    datei.write(f"{item}\n")
+        with open(Settings.get_file(f"perf0_{Settings.size}_{Settings.number}.txt"), "w") as datei:
+            for item in self.performance:
+                datei.write(f"{item}\n")
         pygame.quit()
 
     def create_playground(self) -> None:

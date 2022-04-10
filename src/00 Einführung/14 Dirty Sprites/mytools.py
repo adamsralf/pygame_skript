@@ -1,5 +1,4 @@
 import json
-from typing import Any, Dict, Tuple
 
 import pygame
 
@@ -33,7 +32,7 @@ class Timer:
 
 
 class Animation(object):
-    def __init__(self, spritelist, endless, animationtime, colorkey=None) -> None:
+    def __init__(self, spritelist: list[pygame.surface.Surface], endless: bool, animationtime: int, colorkey: None | str | list[int] = None) -> None:
         self.images = spritelist
         self.endless = endless
         self.timer = Timer(animationtime)
@@ -59,7 +58,7 @@ class Animation(object):
 
 
 class SpriteContainer:
-    def __init__(self, rectfile: str, spritesheetfile: str, colorkey: Tuple[int, int, int] = None) -> None:
+    def __init__(self, rectfile: str, spritesheetfile: str, colorkey: None | str | list[int] = None) -> None:
         self._spritesheed = pygame.image.load(spritesheetfile).convert()
         if colorkey == None:
             self._spritesheed = self._spritesheed.convert_alpha()

@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 
 class Settings:
@@ -9,7 +10,7 @@ class Settings:
     aliens_nof = 7
 
 
-if __name__ == '__main__':
+def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
 
@@ -30,8 +31,6 @@ if __name__ == '__main__':
     space_nof = Settings.aliens_nof + 1                         # Anzahl Freiräume §\label{srcInvader0407}§
     space_between_aliens = space_availible // space_nof         # Platz Freiräume §\label{srcInvader0408}§
 
-
-
     running = True
     while running:
         clock.tick(Settings.fps)
@@ -39,7 +38,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill((255, 255, 255))
+        screen.fill("white")
         alien_top = 10                                          # Abstand von oben §\label{srcInvader0409}§
         for i in range(Settings.aliens_nof):                    # Berechnung/Ausgabe§\label{srcInvader0410}§
             alien_left = space_between_aliens + i * (space_between_aliens + 50)
@@ -49,3 +48,7 @@ if __name__ == '__main__':
         pygame.display.flip()
 
     pygame.quit()
+
+
+if __name__ == '__main__':
+    main()

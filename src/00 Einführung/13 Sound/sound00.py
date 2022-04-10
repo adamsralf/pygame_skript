@@ -1,4 +1,5 @@
 import os
+from time import time
 from typing import Any, Tuple
 
 import pygame
@@ -8,6 +9,7 @@ from pygame.constants import K_ESCAPE, KEYDOWN, KEYUP, QUIT, K_f, K_j, K_p
 class Settings:
     window: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1220, 1002)   # Rect §\label{srcSound0001}§
     fps = 60
+    deltatime = 1.0/fps
     radius = {"max": 240, "min": 5}
     speed = {"min": 1, "max": 4}
     max_bubbles = window.height * window.width // 50000
@@ -102,12 +104,12 @@ class Game:
             self.volume = 1.0
         elif self.volume < 0.0:
             self.volume = 0.0
-        pygame.mixer.music.set_volume(self.volume)                  
+        pygame.mixer.music.set_volume(self.volume)
 
     def draw(self) -> None:
-        self.screen.fill((0, 0, 0))
+        self.screen.fill("black")
 
-        volume = self.font_bigsize.render(f"Lautstärke: {round(self.volume, 2)}", True, (255, 0, 0))
+        volume = self.font_bigsize.render(f"Lautstärke: {self.volume:3.2f}", True, "red")
         rect = volume.get_rect()
         rect.center = Settings.window.center
         self.screen.blit(volume, rect)
@@ -118,13 +120,16 @@ class Game:
         pass
 
     def run(self):
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
-
+            self.clock.tick(Settings.fps)
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
 

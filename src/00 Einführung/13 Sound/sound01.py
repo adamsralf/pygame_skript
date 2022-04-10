@@ -1,13 +1,16 @@
 import os
+from time import time
 from typing import Any, Tuple
 
 import pygame
-from pygame.constants import K_DOWN, K_ESCAPE, K_LEFT, K_RIGHT, K_SPACE, K_UP, KEYDOWN, QUIT
+from pygame.constants import (K_DOWN, K_ESCAPE, K_LEFT, K_RIGHT, K_SPACE, K_UP,
+                              KEYDOWN, QUIT)
 
 
 class Settings:
     window: pygame.rect.Rect = pygame.rect.Rect(0, 0, 800, 160)
     fps = 60
+    deltatime = 1.0/fps
     path: dict[str, str] = {}
     path["file"] = os.path.dirname(os.path.abspath(__file__))
     path["image"] = os.path.join(path["file"], "images")
@@ -31,6 +34,7 @@ class Settings:
 
 
 class Ground(pygame.sprite.Sprite):
+
     def __init__(self) -> None:
         super().__init__()
         fullfilename: str = Settings.get_image("tankbrigade_part64.png")
@@ -44,6 +48,7 @@ class Ground(pygame.sprite.Sprite):
 
 
 class Tank(pygame.sprite.Sprite):
+
     def __init__(self) -> None:
         super().__init__()
         self.image_filename = (209, 190, 202, 214, 226, 238, 250, 262)
@@ -51,7 +56,7 @@ class Tank(pygame.sprite.Sprite):
         for number in self.image_filename:
             fullfilename = Settings.get_image(f"tankbrigade_part{number}.png")
             picture = pygame.image.load(fullfilename).convert()
-            picture.set_colorkey((0, 0, 0))
+            picture.set_colorkey("black")
             self.images["up"].append(picture)
             self.images["down"].append(pygame.transform.rotate(picture, 180))
             self.images["left"].append(pygame.transform.rotate(picture, +90))
@@ -67,39 +72,33 @@ class Tank(pygame.sprite.Sprite):
         self.channel: pygame.mixer.Channel = pygame.mixer.find_channel()  # Sound-Kanal finden§\label{srcSound0104}§
         self.stereo()  # §\label{srcSound0102}§
         self.channel.play(self.sound_drive, -1)  # §\label{srcSound0103}§
-        self.speed = 1
+        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.speed = 50
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "go" in kwargs.keys():
             if kwargs["go"]:
                 self.update_imageindex()
                 self.image = self.images[self.direction][self.imageindex]
-                if self.direction == "up":
-                    if self.rect.top > self.rect.height // 2:
-                        self.rect.top -= self.speed
-                    else:
+                if self.direction == "up" or self.direction == "left":
+                    self.speed = -50
+                elif self.direction == "down" or self.direction == "right":
+                    self.speed = 50
+                if self.direction == "up" or self.direction == "down":
+                    self.position.y += (self.speed * Settings.deltatime)
+                    self.rect.top = round(self.position.y)
+                    if self.rect.top <= self.rect.height // 2:
                         self.turn("down")
-                elif self.direction == "down":
-                    if self.rect.bottom < Settings.window.height - self.rect.height // 2:
-                        self.rect.bottom += self.speed
-                    else:
+                    if self.rect.bottom >= Settings.window.height - self.rect.height // 2:
                         self.turn("up")
-                elif self.direction == "left":
-                    if self.rect.left > self.rect.width // 2:
-                        self.rect.left -= self.speed
-                    else:
+                elif self.direction == "left" or self.direction == "right":
+                    self.position.x += (self.speed * Settings.deltatime)
+                    self.rect.left = round(self.position.x)
+                    if self.rect.left <= self.rect.width // 2:
                         self.turn("right")
-                elif self.direction == "right":
-                    if self.rect.right < Settings.window.width - self.rect.width // 2:
-                        self.rect.right += self.speed
-                    else:
+                    if self.rect.right >= Settings.window.width - self.rect.width // 2:
                         self.turn("left")
                 self.stereo()
-        if "move" in kwargs.keys():
-            if kwargs["move"] == "start":
-                self.speed = 1
-            elif kwargs["move"] == "stop":
-                self.speed = 0
         if "turn" in kwargs.keys():
             self.turn(kwargs["turn"])
 
@@ -119,11 +118,12 @@ class Tank(pygame.sprite.Sprite):
 
 
 class Bullet(pygame.sprite.Sprite):
+
     _sound_fire = None  # Es braucht nur einen §\label{srcSound0106}§
 
     def __init__(self, tank: Tank) -> None:
         super().__init__()
-        bulletspeed = 5
+        bulletspeed = 300
         number: dict[str, int] = {"left": 49, "right": 61, "up": 37, "down": 73}
         directions = {
             "left": (-bulletspeed, 0),
@@ -133,13 +133,14 @@ class Bullet(pygame.sprite.Sprite):
         }
         fullfilename = os.path.join(Settings.path["image"], f"tankbrigade_part{number[tank.direction]}.png")
         self.image: pygame.surface.Surface = pygame.image.load(fullfilename).convert()
-        self.image.set_colorkey((0, 0, 0))
+        self.image.set_colorkey("black")
         self.rect: pygame.rect.Rect = self.image.get_rect()
         self.direction = tank.direction
         self.rect.center = tank.rect.center
         self.speed: Tuple[int, int] = directions[tank.direction]
+        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
 
-        if Bullet._sound_fire == None:  # Es braucht nur einen §\label{srcSound0107}§
+        if Bullet._sound_fire == None:                  # Es braucht nur einen §\label{srcSound0107}§
             Bullet._sound_fire = pygame.mixer.Sound(Settings.get_sound("tank_fire1.wav"))
         volume_rechts = self.rect.centerx / Settings.window.width
         volume_links = 1 - volume_rechts
@@ -148,7 +149,10 @@ class Bullet(pygame.sprite.Sprite):
         self.channel.play(Bullet._sound_fire)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        self.rect.move_ip(self.speed)
+        self.position.x += self.speed[0] * Settings.deltatime
+        self.rect.left = round(self.position.x)
+        self.position.y += self.speed[1] * Settings.deltatime
+        self.rect.top = round(self.position.y)
         if self.rect.right <= 0:
             self.kill()
         elif self.rect.left >= Settings.window.width:
@@ -160,6 +164,7 @@ class Bullet(pygame.sprite.Sprite):
 
 
 class Game:
+
     def __init__(self) -> None:
         pygame.init()
         self._screen = pygame.display.set_mode(Settings.get_dim())
@@ -204,13 +209,16 @@ class Game:
         self.all_bullets.update()
 
     def run(self) -> None:
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
-
+            self.clock.tick(Settings.fps)
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
 

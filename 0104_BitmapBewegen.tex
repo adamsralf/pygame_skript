@@ -1,5 +1,6 @@
+\newpage
 \section{Bitmaps bewegen}\index{Bitmap!bewegen}
-%\subsection{Beispiel}
+\subsection{Grundlagen}
 In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung von Bitmaps notiert, dass wir die linke, obere Ecke als Positionsangabe und die Höhe und Breite beispielsweise für Abstandsberechnungen brauchen. Diese Angaben lassen sich gut einem Rechteck kodieren. Pygame stellt dazu die Klasse \texttt{pygame.Rect}\myindex{pyg}{\texttt{Rect}}\randnotiz{Rect} zur Verfügung. In \abbref[vref]{picRect01} finden Sie die meiner Ansicht nach wichtigsten Attribute der Klasse.
 
 \begin{figure}[H]
@@ -112,19 +113,19 @@ Das Ergebnis ist unspektakulär (siehe \abbref[vref]{picInvader05}) und hat noch
 
 Bewegung wird in Spielen durch veränderte Positionen animiert. Soll das Raumschiff sich nach rechts bewegen, muss sich daher die horizontale Koordinate des Schiffs erhöhen. Welche horizontale Koordinate Sie dazu verwenden -- \texttt{left}, \texttt{right} oder \texttt{centerx} --, können Sie von ihrer Spiellogik abhängig machen. In unserem Beispiel ist das egal; ich nehme daher \texttt{left}.
 
-\lstset{firstnumber=36}
+\lstset{firstnumber=38}
 \begin{lstlisting}
 defender_rect.left = defender_rect.left + 1
 \end{lstlisting}
 
 Allein diese kleine Ergänzung lässt unser Raumschiff nun nach rechts wandern. Die \texttt{+1} kodiert dabei zwei Informationen: 
 \begin{itemize}
-	\item \textbf{Richtung:}\randnotiz{Richtung}\index{Richtung} Hier ist das Vorzeichen \texttt{+}. Dadurch erhöht sich die Angabe \texttt{left} bei jedem Schleifendurchlauf; der linke Rand -- und damit die ganze Grafik -- der Grafik wandert damit nach rechts. Wollte man nach links wandern, müsste das Vorzeichen~\texttt{-} sein. Die horizontale Koordinate wird dadurch immer kleiner und nähert sich damit der~0. Völlig analog würde das Vorzeichen die Richtung in der Vertikalen steuern. Ein~\texttt{+} würde die Grafik nach unten und ein~\texttt{-} nach oben bewegen. Probieren Sie es aus!
+	\item \textbf{Richtung:}\randnotiz{Richtung}\index{Richtung} Hier ist das Vorzeichen \texttt{+}. Dadurch erhöht sich die Angabe \texttt{left} bei jedem Schleifendurchlauf; der linke Rand der Grafik wandert damit nach rechts. Wollte man nach links wandern, müsste das Vorzeichen ein~\texttt{-} sein. Die horizontale Koordinate wird dadurch immer kleiner und nähert sich damit der~0. Völlig analog würde das Vorzeichen die Richtung in der Vertikalen steuern. Ein~\texttt{+} würde die Grafik nach unten und ein~\texttt{-} nach oben bewegen. Probieren Sie es aus!
 	
 	\item \textbf{Geschwindigkeit:}\randnotiz{Ge\-schwin\-dig\-keit}\index{Geschwindigkeit} Die \texttt{1} legt fest, um welche Größenordnung sich \texttt{left} verändert. Je größer der Wert ist, desto größer sind die Sprünge zwischen den Frames; die Bewegung erscheint schneller. 
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{26}{38}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{28}{40}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
 
 Diese beiden Informationen werden nun in \srcref[vref]{srcInvader05b} dazu genutzt, die Bewegung erheblich flexibler zu gestalten. In \zeiref{srcInvader0505} die Geschwindigkeit nun durch die Variable \texttt{defender\_speed} repräsentiert. So könnten wir im Laufe des Spiels die Geschwindigkeit dynamisch gestalten, z.B. bei einer Beschleunigung durch Raketentreibstoffausstoß. 
 
@@ -134,7 +135,7 @@ Beide Informationen können nun in \zeiref{srcInvader0507} zur Berechnung der ne
 
 Wenn Sie das Programm laufen lassen, verabschiedet sich der Verteidiger nach einiger Zeit und verschwindet hinter dem rechten Bildschirmrand und ward nicht mehr gesehen. Nutzen wir nun unser Rechteck zu einer ersten einfachen Kollisionsprüfung. Ich möchte, dass das Raumschiff von den Rändern \emph{abprallt} und die Richtung wechselt. 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{37}{42}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{39}{44}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
 
 Ich hoffe, dass Sie die Idee hinter dem Code erkennen. Nach Berechnung der neuen horizontalen Position, wird in \zeiref{srcInvader0508} überprüft, ob der neue rechte Rand die Bildschirmbreite erreicht oder überschreitet. Wenn ja, dann wird einfach das Vorzeichen der Richtungsvariable vertauscht\index{Richtungswechsel}\randnotiz{Rich\-tungs\-wechs\-el}! Analog klappt das beim Erreichen des linken Bildschirmrandes. 
 
@@ -144,11 +145,11 @@ Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem
 
 Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.Rect.move()}\myindex{pyg}{\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{38}{44}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{39}{46}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
 
-Die neue Funktion taucht in \zeiref{srcInvader0510} zum ersten Mal auf. Sie hat zwei Parameter. Mit dem ersten wird die Verschiebung der horizontalen Koordinate angegeben und mit der zweiten die vertikale Verschieben. Da wir keine Höhenposition ändern wollen, ist dieser Parameter in unserem Beispiel konstant~0. Als Rückgabe liefert die Funktion ein neues \texttt{Rect}-Objekt mit den neuen Positionsangaben. Dieses speichern wir in \texttt{newpos} zwischen.
+Die neue Funktion taucht in \zeiref{srcInvader0510} zum ersten Mal auf. Sie hat zwei Parameter. Mit dem ersten wird die Verschiebung der horizontalen Koordinate angegeben und mit der zweiten die vertikale Verschiebung. Da wir keine Höhenposition ändern wollen, ist dieser Parameter in unserem Beispiel konstant~0. Als Rückgabe liefert die Funktion ein neues \texttt{Rect}-Objekt mit den neuen Positionsangaben. Dieses speichern wir in \texttt{newpos} zwischen.
 
-Die nachfolgenden Kollisionsprüfungen werden dann mit dem \texttt{new}-Rechteck durchgeführt. Bei einer Kollision werden wie eben die Richtungswerte verändert. Falls keine Kollision mit dem Rand vorliegt, wird \texttt{newpos} zu unserem neuen Rechteck für den Verteidiger (\zeiref{srcInvader0511}).
+Die nachfolgenden Kollisionsprüfungen werden dann mit dem \texttt{newpos}-Rechteck durchgeführt. Bei einer Kollision werden wie eben die Richtungswerte verändert. Falls keine Kollision mit dem Rand vorliegt, wird \texttt{newpos} zu unserem neuen Rechteck für den Verteidiger (\zeiref{srcInvader0511}).
 
 Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eben nicht verändert, sondern erst im nächsten Frame.
 
@@ -182,19 +183,250 @@ Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eb
 \end{center}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Geschwindigkeiten normalisieren (\emph{deltatime})}\index{deltatime}
+Die Bewegung ist derzeit nicht nur von \texttt{defender\_speed} abhängig, sondern auch von der Framerate \texttt{Settings.fps}. Um diese Abhängigkeit zu verdeurlichen, habe ich den vorherigen Quelltext für ein kleines Experiment umgebaut (siehe \srcref[vref]{srcInvader05e}).
+
+In \zeiref{srcInvader05e01} sehen Sie die unterschiedlichen Frameraten, mit denen das Experiment durchgeführt wurde. In der Zeile davor werden die Fenstermaße so eingestellt, dass das Fenster hoch und schmal ist, und in der Zeile darunter wird die absolute Anzahl der Millisekunden angegeben, die das Raumschiff nach oben steigt.
+
+\zeiref{srcInvader05e02} merkt sich die Zeit, wann das Aufsteigen des Raumschiffs begonnen hat. Dazu liefert mir die Funktion \texttt{pygame.time.get\_ticks()}\myindex{pyg}{\texttt{time}!\texttt{get\_ticks()}}\randnotiz{get\_ticks()} die Anzahl der Millisekunden seit dem Aufruf von \texttt{pygame.init()}\myindex{pyg}{\texttt{init()}}; also beispielsweise~$5~ms$.
+
+Innerhalb der Hauptprogrammschleife wandert das Raumschiff nun pro Frame eine gewisse Anzahl von Pixel nach oben. Dabei wird die neue Position dadurch ermittelt, dass auf die \texttt{top}-Koordinate der alten Position das Produkt aus Richtung und Geschwindigkeit addiert wird (\zeiref{srcInvader05e03}) -- also nix Neues an dieser Stelle.
+
+Nach einer festen Zeitspanne (\texttt{Settings.limit}, hier $500~ms$) wird die Richtung in \texttt{defender\_direction} auf~0 gesetzt, so dass die Bewegung stoppt. Dazu wird in \zeiref{srcInvader05e04} abgefragt, ob die aktuelle Anzahl von Millisekunden seit dem Start des Programmes größer als \texttt{start\_time} plus \texttt{Settings.limit} ist. Oder in Zahlen: Beim ersten Schleifendurchlauf (Frame~1) stünde dort beispielsweise die Abfrage \emph{Sind $17~ms$ größer als $5~ms + 500~ms$}. Die Antwort ist \emph{Nein}, so dass das Raumschiff sich nach oben bewegt. Bei Frame~61 stünde dort die Abfrage \emph{Sind $508~ms$ größer als $5~ms + 500~ms$}. Nun ist die Antwort \emph{Ja} und die Richtungsvariable wird deshalb auf~0 gesetzt, die Bewegung stoppt.
+
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05e.py}{1}{57}{python}{Nicht normalisierte Bewegung}{srcInvader05e}
+
+In \abbref[vref]{fpsbewegung00} können Sie Bildschirmfotos der Strecken sehen, die das Raumschiff nach einer halben Sekunde zurückgelegt hat. In allen Experimenten blieb die Geschwindigkeit \texttt{defender\_speed} immer gleich -- nämlich 2. Nur die Framerate hat sich erhöht.
+
+Wie kommen diese unterschiedlichen Höhen zustande? Soll doch eigentlich nur \texttt{de\-fen\-der\-\_speed} die Geschwindigkeit definieren. In \tabref[vref]{tabFpsBewegung01} wird der Zusammenhang hoffentlich deutlich. In der ersten Spalte ist die Geschwindigkeit eines Objektes zu sehen; in unserem Beispiel ist dies die Variable \texttt{defender\_speed}. Dieser Wert gibt an, um wie viele Pixel pro Frame das Objekt bewegt wird; dieser Wert wird nicht verändert. Die zweite Spalte gibt die Framerate an, also die Anzahl der Frames pro Sekunde. In unserem Beispiel ist dieser Wert in \texttt{Settings.fps} definiert. Die Dauer der Bewegung ist in der dritten Spalte zu sehen. Wir haben eine Dauer von $500~ms$ also $0.5~s$. In unserem Beispiels liegt der Wert in \texttt{Settings.limit} und ist ebenfalls für alle Experimente gleich. 
+
+In der letzten Spalte steht die errechnete Wegstrecke in Pixel, die das bewegliche Objekt dann zurückgelegt hat. Nun ist Zusammenhang offensichtlich: Da wir die Hauptprogrammschleife wegen der unterschiedlichen Framerate unterschiedlich oft wiederholen, wird bei konstanter Zeit eine unterschiedliche Strecke zurückgelegt.
+
+\begin{figure}[hbtp] 
+\begin{center}
+\begin{tikzpicture}
+\node (fps010) at (0.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_010_00.png}}};
+\node (fps030) at (2.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_030_00.png}}};
+\node (fps060) at (4.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_060_00.png}}};
+\node (fps120) at (6.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_120_00.png}}};
+\node (fps240) at (8.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_240_00.png}}};
+\node (fps300) at (10.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_300_00.png}}};
+\node (fps600) at (12.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05e_600_00.png}}};
+\end{tikzpicture}
+	\caption[Nicht normalisierte Bewegung]{Nicht normalisierte Bewegung bei gleicher Geschwindigkeit aber unterschiedlichen Frameraten (von links nach rechts: 10, 30, 60, 120, 240, 300, 600)}\label{fpsbewegung00}
+\end{center}
+\end{figure}
+
+\begin{longtable}{r@{ * }r@{ * }r@{ = }r}
+	\caption{Strecke bei nicht normalisierter Geschwindigkeit}\label{tabFpsBewegung01} \\[1em]
+	% Definition des Tabellenkopfes auf der ersten Seite
+    Geschw. ($\frac{px}{f}$) & fps ($\frac{f}{s}$) & Zeit ($s$)& Strecke ($px$) \\[0.5em]\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Strecke bei nicht normalisierter Geschwindigkeit (Fortsetzung)}\\[1em]
+	Geschw. ($\frac{px}{f}$) & fps ($\frac{f}{s}$) & Zeit ($s$)& Strecke ($px$)\\[0.5em]\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+	2  &   10 & 0.5 &  10 \\ \hline
+	2  &   30 & 0.5 &  30 \\ \hline
+	2  &   60 & 0.5 &  60 \\ \hline
+	2  &  120 & 0.5 & 120 \\ \hline
+	2  &  240 & 0.5 & 240 \\ \hline
+	2  &  300 & 0.5 & 300 \\ \hline
+\end{longtable} 
+
+Was wir also brauchen, ist eine Mechanismus, der die Framerate wieder rausrechnet. Dieser Faktor müsste so gebaut sein, dass er mit der Framerate multipliziert immer eine~1 als Ergebnis auswirft. Damit würde die Framerate im Gesamtprodukt wie eine Multiplikation mit~1 wirken, also keinen Einfluss mehr haben. Der naheliegende Weg wäre das Inverse der Framerate zu nehmen, also $\frac{1}{fps}$. Dieser Korrekturwert wird \emph{deltatime~(dt)}\index{deltatime}\randnotiz{deltatime} genannt. Die Berechnung würde dann beispielsweise wie in \tabref[vref]{tabFpsBewegung02} aussehen. Die zweite und die dritte Spalte heben sich auf, so dass die Strecke immer -- unabhängig von der gewählten Framerate -- gleich bleibt. 
+
+\begin{longtable}{r@{ * }r@{ * }r@{ * }r@{ = }r}
+	\caption{Strecke bei normalisierter Geschwindigkeit}\label{tabFpsBewegung02} \\[1em]
+	% Definition des Tabellenkopfes auf der ersten Seite
+    Geschw. ($\frac{px}{s}$) & fps ($\frac{f}{s}$) & dt ($\frac{s}{f}$) & Zeit ($s$) & Strecke ($px$) \\[0.5em]\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Strecke bei normalisierter Geschwindigkeit (Fortsetzung)}\\[1em]
+	Geschw. ($\frac{px}{s}$) & fps ($\frac{f}{s}$) & dt ($\frac{s}{f}$) & Zeit ($s$) & Strecke ($px$)\\[0.5em]\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+	2  &   10 &  $\frac{1}{10}$   & 0.5 &  2 \\ \hline
+	2  &   30 &  $\frac{1}{30}$   & 0.5 &  2 \\ \hline
+	2  &   60 &  $\frac{1}{60}$   & 0.5 &  2 \\ \hline
+	2  &  120 &  $\frac{1}{120}$  & 0.5 &  2 \\ \hline
+	2  &  240 &  $\frac{1}{240}$  & 0.5 &  2 \\ \hline
+	2  &  300 &  $\frac{1}{300}$  & 0.5 &  2 \\ \hline
+\end{longtable} 
+
+
+In diesem Zusammenhang fällt auf, dass die Strecke erschreckend kurz ist: Nur~$2~px$ pro Sekunde. Bitte beachten Sie, dass sich auch die Maßeinheit der ersten Spalte geändert hat. Die Geschwindigeit gibt nun nicht mehr die Anzahl der Pixel pro Frame, sondern pro Sekunde an! Setzen wir daher eine andere Geschwindigeit fest; ich habe mich passend zu unserer Fenstgergröße mal für~$600~px/s$ entschieden. Nach einer Sekunde kommt unser Raumschiff also oben an. 
+
+In \tabref[vref]{tabFpsBewegung03} habe ich mal berechnet, welche Endposition (\texttt{.top}) wir nach einer halben Sekunde erwarten können. In der linken Hälfte wird die Wegstrecke ausgerechnet. Überraschung: Sie beträgt immer $300~px$. Von der Fensterhöhe (\texttt{window[height]}) müssen wir diese Wegstrecke abziehen. Ebenso die Höhe unseres Raumschiffs ($30~px$) und den kleinen Offset von $5~px$, da wir unser Raumschiff nicht ganz unten Rand starten lassen wollten. Wir erwarten also, dass unser Raumschiff nach einer halben Sekunde die in \tabref[vref]{tabFpsBewegung03} berechnete Endposition einnimmt.
+
+
+\begin{longtable}{r@{ * }r@{ * }r@{ * }r@{ = }r@{ $\rightarrow$ }c@{ - }r@{ - }r@{ = }r}%{r@{ * }r@{ * }r@{ * }r@{ + }r@{ + }r@{ = }r@{ $\rightarrow$ }r}
+	\caption{Pixelkoordinaten bei normalisierter Geschwindigkeit}\label{tabFpsBewegung03} \\[1em]
+	% Definition des Tabellenkopfes auf der ersten Seite
+    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{window[height]} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Pixelkoordinaten bei normalisierter Geschwindigkeit (Fortsetzung)}\\[1em]
+    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{window[height]} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+	600  &   10 &  $\frac{1}{10}$   & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+	600  &   30 &  $\frac{1}{30}$   & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+	600  &   60 &  $\frac{1}{60}$   & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+	600  &  120 &  $\frac{1}{120}$  & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+	600  &  240 &  $\frac{1}{240}$  & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+	600  &  300 &  $\frac{1}{300}$  & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
+\end{longtable} 
+
+\tabref{tabFpsBewegung03} sieht zwar kompliziert aus, die Umsetzung ist aber überraschend einfach. In \zeiref{srcInvader05f01} wird der Korrekturwert -- wie oben besprochen -- als Inverses von der Framerate definiert. Die Geschwindigkeit wird von~2 auf~600 in \zeiref{srcInvader05f02} angepasst und in \zeiref{srcInvader05f03} wird der Korrekturwert \texttt{deltatime} in Berechnung als Faktor eingebaut. Das war's; in \abbref[vref]{fpsbewegung01} können wir das \emph{perfekte} Ergebnis auf einem meineren langsameren Rechner bewundern. 
+
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05f.py}{7}{59}{python}{Normalisierte Bewegung mit $1/fps$}{srcInvader05f}
+
+Zwei Probleme verursachen diese Fehler:
+
+\begin{itemize}
+    \item Rundungsfehler: Eigentlich sollte die Multiplikation der Framerate mit der Deltatime immer~$1.0$ ergeben. Das passiert leider aber nicht. Bei der Berechnung der Deltatime wird wegen des Formats einer \gls{float}\randnotiz{Rundungsfehler} ein Wert nahe des tatsächlichen Wertes abgespeichert; also beispielsweise bei $\frac{1.0}{30.0}$ nicht $0.0\overline{3}$, sondern $0.03333333333333330$. Dieser Rundungsfehler addiert sich im Laufe der Zeit zu wahrnehmbaren Größen auf.
+
+    \item Falsches Verständnis von $fps$: Die Framerate definiert nicht, dass \emph{immer} die Hauptprogrammschleife beispielsweise 60 mal in der Sekunde durchlaufen wird, sondern dass sie \emph{maximal} 60 mal in der Sekunde durchlaufen wird. Nimmt die Spiellogik oder das Zeichnen der Oberfläche mehr Zeit in Anspruch als $1/60~s$, so wird mindestens ein Frame übersprungen. Dies tritt auch auf, wenn der Rechner durch andere Operationen (z.B. einer Cloud-Sync) Performance verliert. 
+\end{itemize}
+
+Das erste Problem können wir nicht ohne erheblichen Performaceverlust lösen und wird daher nicht weiter betrachtet. Das zweite Problem schon. Wir brauchen anstelle der festen Deltatime einen Wert, der sich aus der tatsächlichen Dauer eines Frames ergibt. Die Methode \texttt{pygame.clock.tick()}\myindex{pyg}{\texttt{clock}!\texttt{tick()}}\randnotiz{tick()} in \zeiref{srcInvader05g01} liefert mir nämlich eine gute Schätzung über die Laufzeit des Frames. Dieses Feature ist zum Glück schon eingebaut und kann daher einfach so verwendet werden (siehe \srcref[vref]{srcInvader05g}). Das Ergebnis in \abbref[vref]{fpsbewegung02} ist zwar besser aber trotzdem noch nicht befriedigend~{:-(}. In \abbref[vref]{picFehlerInvers} können Sie sehen, dass die rote Linie mehr oder weniger um die grüne herumtanzt und keine eindeutige Tendenz sichtbar ist.
+
+\myebild{fehler_invers.pdf}{1.0}{Vergleich des Positionsfehlers von $1/fps$ und \texttt{pygame.clock.tick()}}{picFehlerInvers}
+
+\newpage
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05g.py}{51}{56}{python}{Normalisierte Bewegung mit \texttt{pygame.clock.tick()}}{srcInvader05g}
+
+Ursache ist ein Problem, welches wir hätten sofort lösen müssen. Bei der Zuweisung in \zeiref{srcInvader05f03} in \srcref[vref]{srcInvader05f} steht auf der rechten Seite eine Fließkommazahl\index{float} und auf der linken ein \gls{int}\index{int}. Dies führt dazu, dass die Nachkommastellen bei jedem Schleifendurchlauf abgeschnitten werden. Würde beispielsweise in jedem Frame das Raumschiff sich um $5.8~px$ bewegen müssen, entstünden diese Werte:
+
+\begin{longtable}{lrrrrrrrrr}
+	\caption{Fehlerfortpflanzung}\label{tabFpsBewegung04} \\[1em]
+	% Definition des Tabellenkopfes auf der ersten Seite
+    Frame & 1 & 2  & 3  & 4 & 5 &  6 & 7 & 8 & 9 \\[0.5em]\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Fehlerfortpflanzung (Fortsetzung)}\\[1em]
+    Frame & 1 & 2  & 3  & 4 & 5 &  6 & 7 & 8 & 9 \\[0.5em]\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+	Tatsächlicher Wert  & 5.0 & 10.0 & 15.0 & 20.0 & 25.0 & 30.0 & 35.0 & 40.0 & 45.0 \\ \hline
+	Richtiger Wert      & 5.8 & 11.6 & 14.4 & 23.2 & 29.0 & 34.8 & 40.6 & 46.4 & 52.2 \\ \hline
+	Fehler              & 0.8 & 1.3 & 2.4 & 3.2 & 4.0 & 4.8 & 5.6 & 6.4 & 7.2 \\ \hline
+\end{longtable} 
+
+Wir müssen die Positionswerte also unabhängig vom \texttt{Rect}-Objekt in einer zusätzlichen float-Variablen abspeichern, damit die Nachkommastellen erhalten bleiben. In \zeiref{srcInvader05h01} wird die aktuelle Position in einem \texttt{pygame.math.Vector2}\randnotiz{Vector2}\myindex{pyg}{\texttt{math}!\texttt{Vector2}|underline}-Objekt abgespeichert. Diese Klasse ist sehr gut dafür geeignet, Positionsangaben zu speichern. Mit Hilfe von \texttt{Vector2} und seinem Verwandten \texttt{pygame.math.Vector3}\randnotiz{Vector3}\myindex{pyg}{\texttt{math}!\texttt{Vector3}|underline} können Operationen wie Addition und Multiplikation einfacher implementiert werden. Mehr dazu später. 
+
+\newpage
+Auch werden die errechneten Positionswerte nicht einfach den Integer-Attributen des \texttt{Rect}-Objektes zugewiesen, sondern mit Hilfe von \texttt{round}\randnotiz{round()}\index{\texttt{round}} wird die Ganzzahl passend zu den Nachkommawerten nach den üblichen Rundungsregeln ermittelt (siehe \zeiref{srcInvader05h02}). 
+
+
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{18}{61}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
+
+In \abbref[vref]{fpsbewegung03}  können wir sehen, dass das Ergebnis schon deutlich besser geworden ist. Auch hat sich die Abweichung von optimalen Wert~315 dramatisch verbessert. In \abbref[vref]{picFehlerFloat} wird der Unterschied sichtbar gemacht.
+
+\myebild{fehler_float.pdf}{1.0}{Vergleich des Positionsfehlers ohne und mit Vector2}{picFehlerFloat}
+
+Es gibt aber noch eine weitere Fehlerquelle: \texttt{pygame.clock.tick()}\myindex{pyg}{\texttt{clock}!\texttt{tick()}} liefert mir nicht genug Nachkommastellen. Bei langen Laufzeiten multipilizieren sich diese fehlenden Angaben nach vorne und führen wiederum zu Fehlern. Es gibt bessere Python-Funktionen zur Ermittlung von Laufzeiten.
+
+In \zeiref{srcInvader05i01} von \srcref[vref]{srcInvader05i} wird mit Hilfe von \texttt{time.time()}\randnotiz{time()}\index{\texttt{time}!\texttt{time()}|underline} die Anzahl der Sekunden nach dem 01.01.1970 als eine Fließkommazahl (float) zurückgeliefert. Die Nachkommastellen geben dabei die Sekundenbruchteile an. Diese Messung ist genauer als die durch \texttt{pygame.clock.tick()} und liefert mir je nach Zeitmessungsmöglichkeiten der Rechnerarchitektur und des Betriebssystems mehr Nachkommastellen -- bis in den Nanosekundenbereich.
+
+In \zeiref{srcInvader05i02} wird nach Ablauf eines Frame die aktuelle Zeit gemessen und in der Zeile danach der Zeitverbrauch ermittelt. Dieser ist dann die tatsächliche \emph{deltatime}\index{deltatime} des Frames, nun mit mehr Nachkommastellen. Anschließend wird in \zeiref{srcInvader05i04} dei neue Startzeit des nächsten Frames festgehalten, um nach dem nächsten Frame wieder den Zeitverbrauch ermitteln zu können.
+
+\abbref[vref]{fpsbewegung04} zeigt uns, dass die Zielpositionen bei allen Frameraten nahezu perfekt getroffen wurden. Der Vergleich der Positionsfehler in \abbref[vref]{picFehlerFunktion} lässt aber keine eindeutige Bewertung zu. Ich denke mir aber, dass hier Experimente mit deutlich längeren Laufzeiten einen Unterschied erkennbar machen würden. Mit dem Restfehler müssen -- und können -- wir leben.
+
+\myebild{fehler_funktion.pdf}{1.0}{Vergleich der Positionsfehler mit unterschiedlichen Genauigkeiten}{picFehlerFunktion}
+
+\newpage 
+\begin{figure}[p] 
+	\begin{center}
+		\begin{tikzpicture}
+			\node (fps010) at (0.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_010_00.png}}};
+			\node (fps030) at (2.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_030_01.png}}};
+			\node (fps060) at (4.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_060_02.png}}};
+			\node (fps120) at (6.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_120_09.png}}};
+			\node (fps240) at (8.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_240_04.png}}};
+			\node (fps300) at (10.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_300_09.png}}};
+			\node (fps600) at (12.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05f_600_09.png}}};
+		\end{tikzpicture}
+		\caption[Normalisierte Bewegung mit $1/fps$]{Normalisierte Bewegung mit $1/fps$ bei gleicher Geschwindigkeit aber unterschiedlichen Frameraten (von links nach rechts: 10, 30, 60, 120, 240, 300, 600)}\label{fpsbewegung01}
+	\end{center}
+\end{figure}
+
+
+\begin{figure}[p] 
+	\begin{center}
+		\begin{tikzpicture}
+			\node (fps010) at (0.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_010_08.png}}};
+			\node (fps030) at (2.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_030_07.png}}};
+			\node (fps060) at (4.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_060_05.png}}};
+			\node (fps120) at (6.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_120_04.png}}};
+			\node (fps240) at (8.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_240_08.png}}};
+			\node (fps300) at (10.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_300_08.png}}};
+			\node (fps600) at (12.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05g_600_06.png}}};
+		\end{tikzpicture}
+		\caption[Normalisierte Bewegung mit \texttt{pygame.clock.tick()}]{Normalisierte Bewegung  mit \texttt{pygame.clock.tick()} bei gleicher Geschwindigkeit aber unterschiedlichen Frameraten (von links nach rechts: 10, 30, 60, 120, 240, 300, 600)}\label{fpsbewegung02}
+	\end{center}
+\end{figure}
+
+\newpage
+\begin{figure}[p] 
+	\begin{center}
+		\begin{tikzpicture}
+			\node (fps010) at (0.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_010_09.png}}};
+			\node (fps030) at (2.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_030_05.png}}};
+			\node (fps060) at (4.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_060_05.png}}};
+			\node (fps120) at (6.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_120_04.png}}};
+			\node (fps240) at (8.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_240_05.png}}};
+			\node (fps300) at (10.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_300_06.png}}};
+			\node (fps600) at (12.0, 0)  {\fbox{\includegraphics[scale=0.35]{fps_05h_600_09.png}}};
+		\end{tikzpicture}
+		\caption[Normalisierte Bewegung mit \texttt{pygame.clock.tick()} (float)]{Normalisierte Bewegung mit \texttt{pygame.clock.tick()} (float) bei gleicher Geschwindigkeit aber unterschiedlichen Frameraten (von links nach rechts: 10, 30, 60, 120, 240, 300, 600)}\label{fpsbewegung03}%
+	\end{center}
+\end{figure}
+
+\begin{figure}[p] 
+	\begin{center}
+		\begin{tikzpicture}
+			\node (fps010) at (0.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_010_00.png}}};
+			\node (fps030) at (2.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_030_05.png}}};
+			\node (fps060) at (4.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_060_03.png}}};
+			\node (fps120) at (6.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_120_07.png}}};
+			\node (fps240) at (8.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_240_00.png}}};
+			\node (fps300) at (10.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_300_00.png}}};
+			\node (fps600) at (12.0, 0) {\fbox{\includegraphics[scale=0.35]{fps_05i_600_00.png}}};
+		\end{tikzpicture}
+		\caption[Normalisierte Bewegung mit \texttt{time.time()}]{Normalisierte Bewegung mit \texttt{time.time()} bei gleicher Geschwindigkeit aber unterschiedlichen Frameraten (von links nach rechts: 10, 30, 60, 120, 240, 300, 600), Version 3}\label{fpsbewegung04}%
+	\end{center}
+\end{figure}
+\newpage
+
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05i.py}{19}{64}{python}{Normalisierte Bewegung mit \texttt{time.time()}}{srcInvader05i}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Was war neu?}
+Die Position eines Objektes wird in einem \texttt{Rect}-Objekt abgelegt. In jedem Frame wird die Position überprüft und ggf. verändert. Bei einer Bildschirmausgabe entsteht dadurch der Eindruck einer Bewegung. Das Ergebnis einer Bewegung wird in der Regel zunächst in einer Variablen zwischengespeichert und überprüft, bevor es zur Positionsänderung verwendt wird.
+
+Die Bewegungsrichtung wird durch das Vorzeichen und die Geschwindigkeit durch den Wert der Geschwindigkeitsvariablen kodiert. Dabei werden die horizontale und vertikale Richtung getrennt verarbeitet.
+
+Um unabhängig von der tatsächlichen Framerate zu werden, muss bei der Berechnung der neuen Position ein Korrekturwert (Deltatime) verwendet werden. Dieser kann selbst berechnet werden oder aus dem Aufruf von \texttt{pygame.time.Clock.tick()} verwendet werden.
+
+Das Rechteck des Bitmaps speichert seine Werte als Ganzzahlen ab. Dadurch gehen die Nachkommastellen verloren und führen zu Positionsfehlern. Parallel zum Rechteck sollte daher ein \texttt{Vector2}-Objekt zur Speicherung der Positionskoordinaten verwendet werden. Dieses speichert die Werte als Fließkommazahlen ab.
+
+Es wurden folgende Pygame-Elemente eingeführt:
 
 \begin{itemize}
-	\item Richtung und Geschwindigkeit in Variablen kodieren.
 
-	\item Richtungswechsel durch Vorzeichenwechsel
-	
-	\item Kollisionserkennung kann durch Vergleich von Positionsangaben erfolgen.
-	
-	\item \texttt{blit()} verwendet ein \texttt{Rect}-Objekt.
-	
 	\item \texttt{pygame.Rect}:
 	\myindex{pyg}{\texttt{Rect}}\\
 	\url{https://www.pygame.org/docs/ref/rect.html}
@@ -207,5 +439,16 @@ Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eb
 	\myindex{pyg}{\texttt{Surface}!\texttt{get\_rect()}}\\
 	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.get_rect}
 
+	\item \texttt{pygame.time.get\_ticks()}:
+    \myindex{pyg}{\texttt{time}!\texttt{get\_ticks()}}\\
+    \url{https://www.pygame.org/docs/ref/surface.html#pygame.time.get_ticks}
+
+    \item \texttt{pygame.math.Vector2}:
+    \myindex{pyg}{\texttt{math}!\texttt{Vector2}}\\
+    \url{https://www.pygame.org/docs/ref/math.html#pygame.math.Vector2}
+
+    \item \texttt{pygame.math.Vector3}:
+    \myindex{pyg}{\texttt{math}!\texttt{Vector3}}\\
+    \url{https://www.pygame.org/docs/ref/math.html#pygame.math.Vector3}
 \end{itemize}
 

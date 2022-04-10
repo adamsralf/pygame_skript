@@ -1,10 +1,13 @@
-import pygame
 import os
+from time import time
+
+import pygame
 
 
 class Settings:
     window = {'width': 600, 'height': 100}
     fps = 60
+    deltatime = 1.0 / fps
 
     @staticmethod
     def window_dim():
@@ -17,26 +20,23 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect = self.image.get_rect()
+        self.rect: pygame.rect.Rect = self.image.get_rect()
         self.rect.centerx = Settings.window['width'] // 2
         self.rect.bottom = Settings.window['height'] - 5
-        self.speed = 2
-        self.direction = 1
+        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.speed = pygame.math.Vector2(300, 0)
 
     def update(self) -> None:
-        # Vereinfacht §\label{srcInvader0609}§
-        self.rect.move_ip(self.direction * self.speed, 0)
-
-    def draw(self, screen) -> None:
-        screen.blit(self.image, self.rect)
+        self.position = self.position + (self.speed * Settings.deltatime)
+        self.rect.left = round(self.position.x)
 
     def change_direction(self) -> None:
-        self.direction *= -1
+        self.speed.x *= -1
 
 
 class Border(pygame.sprite.Sprite):
 
-    def __init__(self, leftright) -> None:
+    def __init__(self, leftright: str) -> None:
         super().__init__()
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
         self.image = pygame.transform.scale(
@@ -44,9 +44,6 @@ class Border(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         if leftright == 'right':
             self.rect.left = Settings.window['width'] - self.rect.width
-
-    def update(self) -> None:
-        pass
 
 
 class Game(object):
@@ -64,12 +61,16 @@ class Game(object):
         self.running = False
 
     def run(self) -> None:
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
+            self.clock.tick(Settings.fps)
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
     def watch_for_events(self) -> None:
@@ -79,7 +80,7 @@ class Game(object):
 
     def update(self) -> None:
         if pygame.sprite.spritecollide(self.defender.sprite, self.all_border, False):
-            self.defender.sprite.change_direction()
+            self.defender.sprite.change_direction()  # Gefällt mir nicht! §\label{srcInvader0612}§
         self.defender.update()
 
     def draw(self) -> None:

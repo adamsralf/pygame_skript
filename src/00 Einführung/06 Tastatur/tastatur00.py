@@ -1,10 +1,14 @@
-import pygame
 import os
+from time import time
+from typing import Any
+
+import pygame
 
 
 class Settings:
     window = {'width': 150, 'height': 150}
     fps = 60
+    deltatime = 1.0 / fps
 
     @staticmethod
     def window_dim():
@@ -17,47 +21,44 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect = self.image.get_rect()
-        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2) # Zentrum §\label{srcTastatur0001}§
-        self.direction = (0, 0)                         # 2 Dimensionen §\label{srcTastatur0002}§
-        self.start()
-        self.move_right()
+        self.rect : pygame.rect.Rect = self.image.get_rect()
+        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2) # §\label{srcTastatur0001}§
+        self.position : pygame.math.Vector2 = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.direction : pygame.math.Vector2 = pygame.math.Vector2(1, 0)   # 2 Dimensionen §\label{srcTastatur0002}§
+        self.change_direction("right")
+        self.change_direction("start")
 
-    def update(self) -> None:
-        self.rect.move_ip(self.direction[0] * self.speed, self.direction[1] * self.speed)
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        if "action" in kwargs.keys():
+            if kwargs["action"] == "move":
+                self.position = self.position + self.speed * Settings.deltatime * self.direction
+                self.rect.left, self.rect.top = round(self.position.x) , round(self.position.y)
+            elif kwargs["action"] == "switch":
+                self.direction *= -1
+        elif "direction" in kwargs.keys():
+            self.change_direction(kwargs["direction"])
 
-    def draw(self, screen) -> None:
-        screen.blit(self.image, self.rect)
-
-    def move_right(self) -> None:
-        self.direction = (1, 0)
-
-    def move_left(self) -> None:
-        self.direction = (-1, 0)
-
-    def move_up(self) -> None:
-        self.direction = (0, -1)
-
-    def move_down(self) -> None:
-        self.direction = (0, 1)
-
-    def stop(self) -> None:
-        self.speed = 0
-
-    def start(self) -> None:
-        self.speed = 2
-
-    def change_direction(self) -> None:
-        self.direction = (self.direction[0] * -1, self.direction[1] * -1)
-
+    def change_direction(self, direction:str) -> None:
+        if direction == "right":
+            self.direction.x, self.direction.y  = (1, 0)
+        elif direction == "left":
+            self.direction.x, self.direction.y = (-1, 0)
+        elif direction == "up":
+            self.direction.x, self.direction.y = (0, -1)
+        elif direction == "down":
+            self.direction.x, self.direction.y = (0, 1)
+        elif direction == "stop":
+            self.speed = 0
+        elif direction == "start":
+            self.speed = 100
 
 
 
 class Border(pygame.sprite.Sprite):
 
-    def __init__(self, whichone) -> None:
+    def __init__(self, whichone:str) -> None:
         super().__init__()
-        self.image = pygame.image.load("images/brick01.png").convert_alpha()
+        self.image = pygame.image.load("images/brick1.png").convert_alpha()
         if whichone == 'right':
             self.image = pygame.transform.scale(self.image, (10, Settings.window['height']))
             self.rect = self.image.get_rect()
@@ -74,9 +75,6 @@ class Border(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, (Settings.window['width'], 10))
             self.rect = self.image.get_rect()
             self.rect.bottom = Settings.window['height']
-
-    def update(self) -> None:
-        pass
 
 
 class Game(object):
@@ -96,12 +94,16 @@ class Game(object):
         self.running = False
 
     def run(self) -> None:
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
+            self.clock.tick(Settings.fps)
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
     def watch_for_events(self) -> None:
@@ -112,34 +114,36 @@ class Game(object):
                 if event.key == pygame.K_ESCAPE:        # Boss-Taste §\label{srcTastatur0004}§
                     self.running = False
                 elif event.key == pygame.K_RIGHT:       # Pfeiltasten §\label{srcTastatur0005}§
-                    self.defender.sprite.move_right()
+                    self.defender.update(direction="right")
                 elif event.key == pygame.K_LEFT:
-                    self.defender.sprite.move_left()
+                    self.defender.update(direction="left")
                 elif event.key == pygame.K_UP:
-                    self.defender.sprite.move_up()
+                    self.defender.update(direction="up")
                 elif event.key == pygame.K_DOWN:
-                    self.defender.sprite.move_down()
+                    self.defender.update(direction="down")
                 elif event.key == pygame.K_SPACE:       # Leerzeichen-Taste §\label{srcTastatur0006}§
-                    self.defender.sprite.stop()
+                    self.defender.update(direction="stop")
                 elif event.key == pygame.K_r:
                     if event.mod & pygame.KMOD_LSHIFT:  # Shift-Taste §\label{srcTastatur0007}§
-                        self.defender.sprite.stop()
+                        self.defender.update(direction="stop")
                     else: 
-                        self.defender.sprite.start()
+                        self.defender.update(direction="start")
 
 
     def update(self) -> None:
         if pygame.sprite.spritecollide(self.defender.sprite, self.all_border, False):
-            self.defender.sprite.change_direction()
-        self.defender.update()
+            self.defender.sprite.update(action="switch")
+        self.defender.update(action="move")
 
     def draw(self) -> None:
-        self.screen.fill((255, 255, 255))
+        self.screen.fill("white")
         self.defender.draw(self.screen)
         self.all_border.draw(self.screen)
         pygame.display.flip()
 
-
-if __name__ == '__main__':
+def main():
     game = Game()
     game.run()
+
+if __name__ == '__main__':
+    main()

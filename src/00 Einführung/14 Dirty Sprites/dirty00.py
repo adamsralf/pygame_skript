@@ -10,9 +10,9 @@ from settings import Settings
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, topleft: tuple[int, int]) -> None:
+    def __init__(self, topleft: Tuple[int, int]) -> None:
         super().__init__()
-        self.rect : pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
+        self.rect: pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
         self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
         self.image.fill("white")                                # Vordefinierte Farbnamen§\label{srcDirty0001}§

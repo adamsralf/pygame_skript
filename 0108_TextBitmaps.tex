@@ -1,3 +1,4 @@
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Textausgabe mit Bitmaps}
 %\subsection{Ein Beispiel}
@@ -5,13 +6,13 @@ Oft erfolgen Textausgaben nicht über Fonts, sondern über eine \gls{spritelib}.
 
 Die Idee ist nun, die einzelnen Buchstaben aus der Spritelib auszustanzen und in einer geschickten Datenstruktur abzulegen. Soll nun ein Text ausgegeben werden, wird der Text in seine Buchstaben zerlegt und die dazu passenden Buchstabensprites aus der Datenstruktur auf ein Zielbitmap -- beispielsweise Screen -- ausgegeben. Ich möchte das ganze hier an einem einfachen Beispiel aufzeigen. Basis ist eine Spritelib mit einem Zeichensatz in fünf verschiedenen Farben (siehe \abbref[vref]{picTextbitmaps01}).
 
-\myebild{1945}{0.55}{Beispiel für eine Spritelib}{picSpritelib01}
+\myebild{1945}{0.53}{Beispiel für eine Spritelib}{picSpritelib01}
 
 Der erste Teil von \srcref[vref]{srcTextbitmaps00a} sollte bekannt vorkommen und ist nur um einige Bequemlichkeiten erweitert worden. Die Pfadangaben lasse ich mir nun in den statischen Methoden \texttt{filepath()} und \texttt{imagepath()} ermitteln.
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{1}{22}{python}{Textbitmaps (1), Präambel und \texttt{Settings}}{srcTextbitmaps00a} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{1}{25}{python}{Textbitmaps (1), Präambel und \texttt{Settings}}{srcTextbitmaps00a} 
 
-Die Klasse \texttt{Spritelib} wird eigentlich nur als Kontainer gebraucht. Sie lädt sich die Spritelib der Buchstaben und Symbole und enthält einige Angaben, die ich brauche, um ganz gezielt einzelne Buchstaben oder Symbole auszustanzen:
+Die Klasse \texttt{Spritelib} wird eigentlich nur als Container gebraucht. Sie lädt sich die Spritelib der Buchstaben und Symbole und enthält einige Angaben, die ich brauche, um ganz gezielt einzelne Buchstaben oder Symbole auszustanzen:
 
 \begin{itemize}
     \item \texttt{nof}: Enthält die Anzahl der Zeilen und Spalten. Unser Symbolsatz ist im Bitmap in 4~Zeilen und 10~Spalten angeordnet. Da ich mich immer nur für eine Farbe interessiere, reicht mir das.
@@ -92,11 +93,11 @@ Die Klasse \texttt{Spritelib} wird eigentlich nur als Kontainer gebraucht. Sie l
 \end{figure}
 
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{25}{39}{python}{Textbitmaps (2), \texttt{Spritelib}}{srcTextbitmaps00b} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{28}{40}{python}{Textbitmaps (2), \texttt{Spritelib}}{srcTextbitmaps00b} 
 
 Kommen wir jetzt zur eigentlich interessanten Klasse: \texttt{Letters}. Diese stanzt aus der Spritelib alle Sprites einer Farbe aus und stellt sie in einem \gls{dictionary}\index{Dictionary} als \texttt{Surface}-Objekte zur Verfügung. Dabei wird eine Menge rumgerechnet, was Sie aber nicht abschrecken sollte; es ist letztlich Grundschulmathematik. Fangen wir mit dem Konstruktor an. Der Konstruktor hat zwei Übergabeparameter: Der erste Parameter \texttt{spritelib} ist ein Verweis auf das \texttt{Spritelib}-Objekt, welches das originale Bitmap geladen hat und einige Abstandsinformationen enthält. Der zweite Parameter \texttt{colornumber} ermöglicht es mir später nur für eine Farbe den vollständigen Symbolsatz auszulesen: \texttt{0} steht für die weißen Sprites, \texttt{1} für die gelben usw..
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{40}{45}{python}{Textbitmaps (3): Konstruktor von \texttt{Letters}}{srcTextbitmaps00c} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{43}{49}{python}{Textbitmaps (3): Konstruktor von \texttt{Letters}}{srcTextbitmaps00c} 
 
 In der Methode \texttt{create\_letter\_bitmap()} werden nun die einzelnen Sprites ausgestanzt und in ein Dictionary abgelegt. Die Indizes des Dictionaries werden in \zeiref{srcTextbitmaps0000} definiert. Hier muss die Reihenfolge natürlich der entsprechen, mit der man die Sprites ausstanzt. Die Variable \texttt{index} sorgt genau dafür, dass bei jedem Schleifendurchlauf der nächste \texttt{lettername} als Schlüssel für das Dictionary verwendet wird.
 
@@ -104,11 +105,11 @@ In \zeiref{srcTextbitmaps0001} wird die Position, also die Pixelkoordinaten des 
 
 Ab \zeiref{srcTextbitmaps0002} beginnt eine verschachtelte \forSchleife. Die äußere Schleife durchläuft alle Zeilen der Spritelib und die innere die Spalten. Ziel dieser Konstruktion ist es, für jedes Sprite ein \texttt{Rect}-Objekt zu erzeugen, in welchem ich die Position und die Größe des Sprites abspeichere. In \zeiref{srcTextbitmaps0003} wird die obere Koordinate und in \zeiref{srcTextbitmaps0005} die linke Koordinate der Position berechnet. Wenn Sie \zeiref{srcTextbitmaps0001} verstanden haben, sollten diese beiden Berechnungen keine Schwierigkeiten mehr bereiten. Höhe und Breite in \zeiref{srcTextbitmaps0005} sind einfach, da alle Sprites immer die gleichen Größen haben. Anschließend wird das \texttt{Rect}-Objekt erzeugt und zum Ausstanzen des Bitmap mit Hilfe von \texttt{subsurface()}\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}} verwendet. Dieses ausgestanzte Bitmap wird dann unter seinem Symbolnamen im Dictionary abgelegt.
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{47}{59}{python}{Textbitmaps (4): \texttt{create\_letter\_bitmap()} von \texttt{Letters}}{srcTextbitmaps00d} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{51}{66}{python}{Textbitmaps (4): \texttt{create\_letter\_bitmap()} von \texttt{Letters}}{srcTextbitmaps00d} 
 
 Die Methode \texttt{get\_text()} liefert mir letztlich die passende Bitmap-Folge zu einem Text. Dabei bedient sie sich der Methode \texttt{get\_letter()}, die notwendig ist, damit das Programm nicht bei undefinierten Buchstaben/Symbolen abstürzt. Wenn Sie jetzt beispielsweise ein \texttt{ü} eintippen, wird das Quadrat ausgegeben.
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{60}{73}{python}{Textbitmaps (5): \texttt{get\_letter()} und \texttt{get\_text()} von \texttt{Letters}}{srcTextbitmaps00e} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{68}{81}{python}{Textbitmaps (5): \texttt{get\_letter()} und \texttt{get\_text()} von \texttt{Letters}}{srcTextbitmaps00e} 
 
 
 Das eigentliche Hauptprogramm ist in der Klasse \texttt{TextBitmaps} gekapselt. Da die Quelltexte hier nichts neues beinhalten, sollte der Quelltext verstanden werden. Nur zwei Zeilen möchte ich näher besprechen:
@@ -119,23 +120,25 @@ Das eigentliche Hauptprogramm ist in der Klasse \texttt{TextBitmaps} gekapselt. 
     \item \zeiref{srcTextbitmaps0009}: Das Attribut \texttt{unicode}\myindex{pyg}{\texttt{event}!\texttt{Event}!\texttt{unicode}}\randnotiz{unicode} liefert mir, sofern dies sinnvoll ist, den Wert der gedrückten Tastatur im \gls{unicode}-Format. Somit werden sinnvolle Buchstaben, Ziffern usw. als Zeichen meinem String hinzugefügt.
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{76}{110}{python}{Textbitmaps (6): \texttt{TextBitmaps}}{srcTextbitmaps00f}
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{84}{119}{python}{Textbitmaps (6): \texttt{TextBitmaps}}{srcTextbitmaps00f}
 
 Und der Vollständigkeit halber:
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{113}{117}{python}{Textbitmaps (7): Hauptprogramm}{srcTextbitmaps00g}
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{122}{999}{python}{Textbitmaps (7): Hauptprogramm}{srcTextbitmaps00g}
 
-\myebild{textbitmaps00}{0.8}{Textausgabe mit Bitmaps}{picTextbitmaps01}
+\myebild{textbitmaps00}{0.7}{Textausgabe mit Bitmaps}{picTextbitmaps01}
 
 \subsection*{Was war neu?}
 
+Textausgaben werden nicht nur über Fonts erzeugt, sondern auch über Spritlibs, die Zeichenbitmaps enthalten. Diese werden ausgestanzt und neuen Bitmaps zusammengesetzt.
+
+Es wurden folgende Pygame-Elemente eingeführt:
 
 \begin{itemize}
-	\item \texttt{pygame.Surface.subsurface()}:
-	\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\\ \url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.subsurface}
-	
 	\item \texttt{pygame.event.Event.unicode}:
 	\myindex{pyg}{\texttt{event}!\texttt{Event}!\texttt{unicode}}\\ \url{https://www.pygame.org/docs/ref/event.html}
 
+	\item \texttt{pygame.Surface.subsurface()}:
+	\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\\ \url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.subsurface}
+	
 \end{itemize}
-

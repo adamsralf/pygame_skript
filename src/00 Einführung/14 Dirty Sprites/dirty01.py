@@ -12,10 +12,10 @@ from settings import Settings
 class Tile(pygame.sprite.DirtySprite):                          # Erstmaliges Zeichnen§\label{srcDirty0100}§
     def __init__(self, topleft: tuple[int, int]) -> None:
         super().__init__()
-        self.rect : pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
+        self.rect: pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
         self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
-        self.image.fill("white")                                
+        self.image.fill("white")
         self.timer: Timer
         self.status = 0
         self.dirty = 1                                          # Erstmaliges Zeichnen§\label{srcDirty0101}§
@@ -24,7 +24,7 @@ class Tile(pygame.sprite.DirtySprite):                          # Erstmaliges Ze
         if "action" in kwargs.keys():
             if kwargs["action"] == "switch" and self.status == 0:
                 self.timer = Timer(500, False)
-                self.image.fill("red")                          
+                self.image.fill("red")
                 self.status = 1
                 self.dirty = 1                                  # Muss neu gezeichnet werden§\label{srcDirty0102}§
             if kwargs["action"] == "kill" and self.status == 1:
@@ -45,7 +45,7 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
         self.all_tiles = pygame.sprite.LayeredDirty()       # Gruppenklasse für DirtySprite§\label{srcDirty0104}§
         self.all_tiles.clear(self.screen, self.background_image)    # Hintergrund setzen§\label{srcDirty0105}§
-        self.all_tiles.set_timing_treshold(1000.0/Settings.fps) # Schwelwert festlegen§\label{srcDirty0106}§
+        self.all_tiles.set_timing_treshold(1000.0/Settings.fps)  # Schwelwert festlegen§\label{srcDirty0106}§
         self.create_playground()
         self.timer = Timer(1000, False)
         self.running = True

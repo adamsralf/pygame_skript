@@ -12,10 +12,10 @@ from settings import Settings
 class Tile(pygame.sprite.DirtySprite):
     def __init__(self, topleft: tuple[int, int]) -> None:
         super().__init__()
-        self.rect : pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
+        self.rect: pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
         self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
-        self.image.fill("white")                                
+        self.image.fill("white")
         self.timer: Timer
         self.status = 0
         self.dirty = 1
@@ -24,7 +24,7 @@ class Tile(pygame.sprite.DirtySprite):
         if "action" in kwargs.keys():
             if kwargs["action"] == "switch" and self.status == 0:
                 self.timer = Timer(500, False)
-                self.image.fill("red")                          
+                self.image.fill("red")
                 self.status = 1
                 self.dirty = 1
             if kwargs["action"] == "kill" and self.status == 1:
@@ -60,7 +60,7 @@ class Game:
                     self.klick(pygame.mouse.get_pos())
 
     def draw(self) -> None:
-        rects = self.all_tiles.draw(self.screen, self.background_image) # §\label{srcDirty0201}§
+        rects = self.all_tiles.draw(self.screen, self.background_image)  # §\label{srcDirty0201}§
         pygame.display.update(rects)    # Kein flip() mehr §\label{srcDirty0202}§
 
     def update(self):

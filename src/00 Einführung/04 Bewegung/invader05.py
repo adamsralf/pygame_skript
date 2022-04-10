@@ -1,16 +1,18 @@
-import pygame
 import os
+
+import pygame
 
 
 class Settings:
-    window = {'width':600, 'height':100}
+    window = {'width': 600, 'height': 100}
     fps = 60
+
     @staticmethod
     def window_dim():
         return (Settings.window['width'], Settings.window['height'])
 
 
-if __name__ == '__main__':
+def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
 
@@ -33,10 +35,14 @@ if __name__ == '__main__':
                 running = False
 
         # Update
-        
+
         # Draw
-        screen.fill((255, 255, 255))
+        screen.fill("white")
         screen.blit(defender_image, defender_rect)          # blit kann auch rect §\label{srcInvader0504}§
         pygame.display.flip()
 
     pygame.quit()
+
+
+if __name__ == '__main__':
+    main()

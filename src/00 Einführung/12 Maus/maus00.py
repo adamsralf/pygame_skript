@@ -1,4 +1,5 @@
 import os
+from time import time
 from typing import Any, Dict, Tuple
 
 import pygame
@@ -6,6 +7,7 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 
 
 class Ball(pygame.sprite.Sprite):
+
     def __init__(self) -> None:
         super().__init__()
         fullfilename = os.path.join(Game.path["image"], "blue2.png")
@@ -21,10 +23,10 @@ class Ball(pygame.sprite.Sprite):
                 self.rect.right = min(self.rect.right, Game.inner_rect.right)
                 self.rect.top = max(self.rect.top, Game.inner_rect.top)
                 self.rect.bottom = min(self.rect.bottom, Game.inner_rect.bottom)
-                c = self.rect.center  # remember old center
+                c = self.rect.center                            # altes Zentrum merken
                 self.image = pygame.transform.scale(self.image_orig, (self._scale, self._scale))
                 self.rect = self.image.get_rect()
-                self.rect.center = c  # set center to old position
+                self.rect.center = c                            # Zentrum zurücksetzen
 
         if "rotate" in kwargs.keys():                           # §\label{srcMaus0010}§
             self.rotate(kwargs["rotate"])
@@ -56,6 +58,8 @@ class Game:
     path["file"] = os.path.dirname(os.path.abspath(__file__))
     path["image"] = os.path.join(path["file"], "images")
     inner_rect = pygame.rect.Rect(100, 100, window["width"] - 200, window["height"] - 200)
+    fps = 60
+    deltatime = 1.0/fps
 
     @staticmethod
     def get_dim() -> Tuple[int, int]:
@@ -64,7 +68,6 @@ class Game:
     def __init__(self) -> None:
         os.environ["SDL_VIDEO_WINDOW_POS"] = "650, 70"
         pygame.init()
-        self._fps = 60
         self._clock = pygame.time.Clock()
         self._screen = pygame.display.set_mode(Game.get_dim())
         pygame.display.set_caption("Mausaktionen")
@@ -72,11 +75,15 @@ class Game:
         self._running = True
 
     def run(self) -> None:
+        time_previous = time()
         while self._running:
-            self._clock.tick(self._fps)
             self.watch_for_events()
             self.update()
             self.draw()
+            self._clock.tick(Game.fps)
+            time_current = time()
+            Game.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
     def watch_for_events(self) -> None:
@@ -87,15 +94,15 @@ class Game:
                 if event.key == K_ESCAPE:
                     self._running = False
             elif event.type == MOUSEBUTTONDOWN:                 # Maustaste gedrückt§\label{srcMaus0002}§
-                if event.button == 1:    # left§\label{srcMaus0004}§
+                if event.button == 1:                           # left§\label{srcMaus0004}§
                     self._ball.update(rotate=90)
-                elif event.button == 2:  # middle§\label{srcMaus0005}§
+                elif event.button == 2:                         # middle§\label{srcMaus0005}§
                     self._running = False
-                elif event.button == 3:  # right§\label{srcMaus0006}§
+                elif event.button == 3:                         # right§\label{srcMaus0006}§
                     self._ball.update(rotate=-90)
-                elif event.button == 4:  # scroll up§\label{srcMaus0007}§
+                elif event.button == 4:                         # scroll up§\label{srcMaus0007}§
                     self._ball.update(scale=2)
-                elif event.button == 5:  # scroll down§\label{srcMaus0008}§
+                elif event.button == 5:                         # scroll down§\label{srcMaus0008}§
                     self._ball.update(scale=-2)
 
     def update(self):
@@ -107,11 +114,15 @@ class Game:
 
     def draw(self) -> None:
         self._screen.fill((250, 250, 250))
-        pygame.draw.rect(self._screen, (255, 0, 0), Game.inner_rect, 1)
+        pygame.draw.rect(self._screen, "red", Game.inner_rect, 1)
         self._ball.draw(self._screen)
         pygame.display.flip()
 
 
-if __name__ == "__main__":
+def main():
     game = Game()
     game.run()
+
+
+if __name__ == "__main__":
+    main()

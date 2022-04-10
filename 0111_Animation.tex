@@ -1,7 +1,8 @@
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Animation}\index{Animation}
 %\subsection{Beispiele}
-Eine Animation ist eigentlich eine Art \emph{Filmchen} innerhalb eines Spiels. Beispiele für sinnvolle Animationen sind Bewegungen oder Explosionen, Pulsieren, Übergänge von Aussehen usw.. Ich möchte hier zwei Beispiele vorstellen: ein kleine Bewegung und eine Explosion.
+Eine Animation ist eigentlich eine Art \emph{Filmchen} innerhalb eines Spiels. Beispiele für sinnvolle Animationen sind Bewegungen, Explosionen, Pulsieren, Übergänge von Aussehen usw.. Ich möchte hier zwei Beispiele vorstellen: ein kleine Bewegung und eine Explosion.
 
 \subsection{Die laufende Katze}
 
@@ -11,25 +12,25 @@ Die Einzelbilder des Bewegungsbeispiels können Sie in \abbref[vref]{picAnimatio
 
 Der \srcref[vref]{srcAnimation00a} unterscheidet sich nur um ein Feature zum letzten Kapitel. Die \texttt{Timer}-Klasse wurde um die Methode \texttt{change\_duration()} erweitert. Diese Methode ermöglicht es zur Laufzeit die Dauer des Zeitintervalls zu verändern, wobei die untere Grenze bei ~$0~ms$ festgelegt wird. Wir werden dieses Feature gleich dazu verwenden, die Animationsgeschwindigkeit manuell einzustellen. 
 
-\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{1}{46}{python}{Animation einer Katze (1), Version 1.0: Präambel, \texttt{Timer} und \texttt{Settings}}{srcAnimation00a} 
+\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{1}{49}{python}{Animation einer Katze (1), Version 1.0: Präambel, \texttt{Timer} und \texttt{Settings}}{srcAnimation00a} 
 
 Wenn wir etwas animieren wollen, so benötigt diese Animation nicht nur ein Sprite zur Darstellung, sondern mehrere. Ich habe deshalb neben dem Attribut \texttt{image} ein weiteres: das Array \texttt{images}. In dieses lade ich nun mit Hilfe der \forSchleife\ ab \zeiref{srcAnimation0001} alle Bitmaps der Animation. Ich brauche nun ein Attribut, das sich merkt, welches der 6~Sprites nun eigentlich angezeigt werden soll: \texttt{imageindex}; Wenn die Bilder in der Reihenfolge in das Array \texttt{images} abgelegt werden, in welcher sie auch ausgegeben werden sollen, so muss \texttt{imageindex} nur noch hochgezählt werden. Auch brauchen wir ein \texttt{Timer}-Objekt, damit die Animation nicht absurd schnell abläuft -- wir starten hier mit $100~ms$.
 
 In der Methode \texttt{update()} wird nun abhängig vom \texttt{Timer}-Objekt das Attribut \texttt{imageindex} immer um~1 erhöht und dieses Bitmap dann dem Attribut \texttt{image} zugewiesen, damit die schon bekannten \texttt{Sprite}-Features genutzt werden können. Die Methode \texttt{change\_\-ani\-ma\-tion\_\-time()} reicht seinen Übergabeparameter einfach nur an das \texttt{Timer}-Objekt weiter. Damit sind eigentlich alle vorbereitenden Aktiväten abgeschlossen.
 
-\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{49}{72}{python}{Animation einer Katze (2), Version 1.0: \texttt{Cat}}{srcAnimation00b} 
+\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{52}{78}{python}{Animation einer Katze (2), Version 1.0: \texttt{Cat}}{srcAnimation00b} 
 
-Die Klasse \texttt{CarAnimation} ist nur die übliche Kapselung des Hauptprogramms. In \zeiref{srcAnimation0002} wird das \texttt{Cat}-Objekt erzeugt und in ein \texttt{GroupSingle} gestopft.
+Die Klasse \texttt{CatAnimation} ist nur die übliche Kapselung des Hauptprogramms. In \zeiref{srcAnimation0002} wird das \texttt{Cat}-Objekt erzeugt und in ein \texttt{GroupSingle} gestopft.
 
-\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{75}{94}{python}{Animation einer Katze (3), Version 1.0: Konstruktor und \texttt{run()}}{srcAnimation00c} 
+\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{81}{105}{python}{Animation einer Katze (3), Version 1.0: Konstruktor und \texttt{run()}}{srcAnimation00c} 
 
 In \texttt{watch\_for\_events()} ist nur erwähnenswert, dass die \texttt{+}-Taste und die \texttt{-}-Taste für die Manipulation der Animationsgeschwindigkeit verwendet werden. Um die Animationsgeschwindigkeit zu erhöhen, muss das Zeitintervall des \texttt{Timer}-Objekts verkleinert werden, daher $-10$. Um die Animationsgeschwindigkeit zu verlangsamen, muss das Zeitintervall des \texttt{Timer}-Objekts verlängert werden, daher $+10$. 
 
-\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{96}{106}{python}{Animation einer Katze (4), Version 1.0: \texttt{watch\_for\_events()}}{srcAnimation00d} 
+\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{107}{117}{python}{Animation einer Katze (4), Version 1.0: \texttt{watch\_for\_events()}}{srcAnimation00d} 
 
-Der restliche Quelltext (\srcref[vref]{srcAnimation00e}) sollte selbsterklärend sein. Wenn Sie das Programm nun starten, sollte eine animierte Katzenbewegung zu sehen sein. Probieren Sie doch mal aus, die Animationsgeschwindigkeit zu verändern. 
+Der restliche Quelltext (\srcref[vref]{srcAnimation00e}) sollte selbsterklärend sein. Wenn Sie das Programm nun starten, ist eine animierte Katzenbewegung zu sehen. Probieren Sie doch mal aus, die Animationsgeschwindigkeit zu verändern. 
 
-\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{108}{999}{python}{Animation einer Katze (5), Version 1.0: \texttt{update()} und \texttt{draw()}}{srcAnimation00e} 
+\lstsource{SRC/00 Einführung/11 Animation/animation00.py}{119}{130}{python}{Animation einer Katze (5), Version 1.0: \texttt{update()} und \texttt{draw()}}{srcAnimation00e} 
 
 Wie bei der Zeitsteuerung stört mich, dass die Animationslogik über die Klasse \texttt{Cat} verteilt ist, was meiner Ansicht nach ein Verstoß gegen das SRP ist. Bauen wir doch eine einfache Animationklasse (siehe \srcref[vref]{srcAnimation01a}).
 
@@ -50,12 +51,12 @@ Frage ins Plenum: Warum wurde im Konstruktor \texttt{imageindex} auf~$-1$ gesetz
 
 Ein Feature, was man immer wieder mal braucht, wurde in der Methode \texttt{is\_ended()} implementiert. Oft braucht derjenige, der die Animation aufgerufen hat, die Information darüber, ob die Animation beendet ist. Wir weden das später noch in Gebrauch sehen.
 
-\lstsource{SRC/00 Einführung/11 Animation/animation01.py}{49}{79}{python}{Animation (6), Version 1.1: \texttt{Animation}}{srcAnimation01a} 
+\lstsource{SRC/00 Einführung/11 Animation/animation01.py}{31}{59}{python}{Animation (6), Version 1.1: \texttt{Animation}}{srcAnimation01a} 
 
-Die Klasse \texttt{Cat} hat sich damit vereinfacht und kann sich wieder mehr auf ihre -- hier natürlich noch nicht vorhandene -- Spiellogik konzentrieren. Das Erzeugen des \texttt{Animation}-Objekts erfolgt hier in \zeiref{srcAnimation0102}. Die Dateinamen lassen sich schön einfach generieren, da sie durchnummeriert wurden. Die Katze solle endlos laufen und dabei 1~$100~ms$ zeitlichen Abstand zwischen den Sprites haben. In \texttt{update()} wird dann einfach die Methode \texttt{next()} aufgerufen.
+Die Klasse \texttt{Cat} hat sich damit vereinfacht und kann sich wieder mehr auf ihre -- hier natürlich noch nicht vorhandene -- Spiellogik konzentrieren. Das Erzeugen des \texttt{Animation}-Objekts erfolgt hier in \zeiref{srcAnimation0102}. Die Dateinamen lassen sich schön einfach generieren, da sie durchnummeriert wurden. Die Katze solle endlos laufen und dabei $100~ms$ zeitlichen Abstand zwischen den Sprites haben. In \texttt{update()} wird dann einfach die Methode \texttt{next()} aufgerufen.
+\newpage
 
-
-\lstsource{SRC/00 Einführung/11 Animation/animation01.py}{84}{93}{python}{Animation einer Katze (7), Version 1.1: \texttt{Cat}}{srcAnimation01b} 
+\lstsource{SRC/00 Einführung/11 Animation/animation01.py}{83}{99}{python}{Animation einer Katze (7), Version 1.1: \texttt{Cat}}{srcAnimation01b} 
 
 \subsection{Der explodierende Felsen}
 
@@ -67,13 +68,13 @@ Die Methode \texttt{update()} ist nun recht spannend geworden. Zuerst wird über
 
 Zum Schluss wird noch festgestellt, ob die Animation fertig ist. Wenn ja, dann brauche ich das Sprite nicht mehr und es kann aus der Spritegroup mit \texttt{kill()}\randnotiz{kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}} entfernt werden.
 
-\lstsource{SRC/00 Einführung/11 Animation/animation02.py}{84}{105}{python}{Animation einer Explosion (1): \texttt{Rock}}{srcAnimation02a} 
+\lstsource{SRC/00 Einführung/11 Animation/animation02.py}{84}{106}{python}{Animation einer Explosion (1): \texttt{Rock}}{srcAnimation02a} 
 
 \myebild{animation01.png}{0.8}{Animation einer Explosion: Einzelsprites}{picAnimation01}
 
 Die Klasse \texttt{ExplosionAnimation} sollte keine Schwierigkeit mehr für Sie sein. Es gibt nur wenige Stellen, die ich kurz ansprechen möchte. In \zeiref{srcAnimation0205} wird ein \texttt{Timer}-Objekt angelegt, welches zwei Felsen pro Sekunde erstellen soll und in \zeiref{srcAnimation0206} wird dieser abgefragt.
 
-\lstsource{SRC/00 Einführung/11 Animation/animation02.py}{109}{146}{python}{Animation einer Explosion (2): \texttt{ExplosionAnimation}}{srcAnimation02b} 
+\lstsource{SRC/00 Einführung/11 Animation/animation02.py}{109}{151}{python}{Animation einer Explosion (2): \texttt{ExplosionAnimation}}{srcAnimation02b} 
 
 Hinweis: Es gibt auch den Quelltext \texttt{animation03.py}. In dieser Variante bewegen sich die Felsen und explodieren, falls sie aufeinander treffen. Schauen Sie mal rein!
 
@@ -81,4 +82,4 @@ Hinweis: Es gibt auch den Quelltext \texttt{animation03.py}. In dieser Variante 
 
 Ups! Hier wurde überhaupt kein neues Pygame-Element vorgestellt. Alles wurde mit bereits bekannten Hilfsmitteln umgesetzt. 
 
-
+Die Animation besteht aus einer Abfolge von Einzelbilder, die in gewissen zeitlichen Abstand ausgegeben werden. Dabei wird zwischen einer endlosen Animation wie bei der Katze und einer endlichen wie bei der Explosion unterschieden.

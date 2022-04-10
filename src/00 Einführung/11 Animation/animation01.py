@@ -1,54 +1,37 @@
-import pygame
-from pygame.constants import (QUIT, K_KP_PLUS, K_KP_MINUS, K_ESCAPE, KEYDOWN)
 import os
+from time import time
+from typing import Any, Tuple
+
+import pygame
+from pygame.constants import K_ESCAPE, K_KP_MINUS, K_KP_PLUS, KEYDOWN, QUIT
 
 
-
-class Settings(object):
-    window = {'width':300, 'height':200}
+class Settings():
+    window = {'width': 300, 'height': 200}
     fps = 60
+    deltatime = 1.0 / fps
     title = "Animation"
-    path = {}
+    path: dict[str, str] = {}
     path['file'] = os.path.dirname(os.path.abspath(__file__))
     path['image'] = os.path.join(path['file'], "images")
-    directions = {'stop':(0, 0), 'down':(0,  1), 'up':(0, -1), 'left':(-1, 0), 'right':(1, 0)}
 
     @staticmethod
-    def dim():
+    def dim() -> Tuple[int, int]:
         return (Settings.window['width'], Settings.window['height'])
 
     @staticmethod
-    def filepath(name):
+    def filepath(name: str) -> str:
         return os.path.join(Settings.path['file'], name)
 
     @staticmethod
-    def imagepath(name):
+    def imagepath(name: str) -> str:
         return os.path.join(Settings.path['image'], name)
 
 
-class Timer(object):
-    def __init__(self, duration, with_start = True):
-        self.duration = duration
-        if with_start:
-            self.next = pygame.time.get_ticks()
-        else:
-            self.next = pygame.time.get_ticks() + self.duration
+class Animation():
 
-    def is_next_stop_reached(self):
-        if pygame.time.get_ticks() > self.next:
-            self.next = pygame.time.get_ticks() + self.duration
-            return True
-        return False
-
-    def change_duration(self, delta=10):
-        self.duration += delta
-        if self.duration < 0:
-            self.duration = 0
-
-
-class Animation(object):
-    def __init__(self, namelist, endless, animationtime, colorkey=None):
-        self.images = []
+    def __init__(self, namelist: list[str], endless: bool, animationtime: int, colorkey: tuple[int, int, int] | None = None) -> None:
+        self.images: list[pygame.surface.Surface] = []
         self.endless = endless
         self.timer = Timer(animationtime)
         for filename in namelist:
@@ -60,7 +43,7 @@ class Animation(object):
             self.images.append(bitmap)
         self.imageindex = -1
 
-    def next(self):
+    def next(self) -> pygame.surface.Surface:
         if self.timer.is_next_stop_reached():
             self.imageindex += 1
             if self.imageindex >= len(self.images):
@@ -70,31 +53,54 @@ class Animation(object):
                     self.imageindex = len(self.images) - 1
         return self.images[self.imageindex]
 
-    def is_ended(self):
+    def is_ended(self) -> bool:
         if self.endless:
             return False
-        elif self.imageindex >= len(self.images) - 1:
-            return True
-        else:
-            return False
-        
+        return self.imageindex >= len(self.images) - 1
 
+
+class Timer():
+
+    def __init__(self, duration: int, with_start: bool = True):
+        self.duration = duration
+        if with_start:
+            self.next = pygame.time.get_ticks()
+        else:
+            self.next = pygame.time.get_ticks() + self.duration
+
+    def is_next_stop_reached(self) -> bool:
+        if pygame.time.get_ticks() > self.next:
+            self.next = pygame.time.get_ticks() + self.duration
+            return True
+        return False
+
+    def change_duration(self, delta: int = 10):
+        self.duration += delta
+        if self.duration < 0:
+            self.duration = 0
 
 
 class Cat(pygame.sprite.Sprite):
-    def __init__(self):
+
+    def __init__(self) -> None:
         super().__init__()
-        self.animation=Animation([f"cat{i}.bmp" for i in range(6)], True, 100, (0,0,0)) # §\label{srcAnimation0102}§
-        self.image = self.animation.next()
-        self.rect = self.image.get_rect()
+        self.animation = Animation([f"cat{i}.bmp" for i in range(6)], True, 100, (0, 0, 0))  # §\label{srcAnimation0102}§
+        self.image: pygame.surface.Surface = self.animation.next()
+        self.rect: pygame.rect.Rect = self.image.get_rect()
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
 
-    def update(self):
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        if "animation_delta" in kwargs.keys():
+            self.change_animation_time(kwargs["animation_delta"])
         self.image = self.animation.next()
+        # implement game logic here
+
+    def change_animation_time(self, delta: int) -> None:
+        self.animation.timer.change_duration(delta)
 
 
+class CatAnimation():
 
-class CatAnimation(object):
     def __init__(self) -> None:
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
@@ -102,16 +108,21 @@ class CatAnimation(object):
         self.screen = pygame.display.set_mode(Settings.dim())
         pygame.display.set_caption(Settings.title)
         self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.cat = pygame.sprite.GroupSingle(Cat())
         self.running = False
 
     def run(self) -> None:
+        time_previous = time()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
+            self.clock.tick(Settings.fps)
+            time_current = time()
+            Settings.deltatime = time_current - time_previous
+            time_previous = time_current
         pygame.quit()
 
     def watch_for_events(self) -> None:
@@ -121,19 +132,29 @@ class CatAnimation(object):
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.running = False
-
+                elif event.key == K_KP_PLUS:
+                    self.cat.sprite.update(animation_delta=-10)
+                elif event.key == K_KP_MINUS:
+                    self.cat.sprite.update(animation_delta=10)
 
     def update(self) -> None:
         self.cat.update()
 
     def draw(self) -> None:
-        self.screen.fill((200, 200, 200))
+        self.screen.fill("gray")
         self.cat.draw(self.screen)
+        text_image = self.font.render(f"animation time: {self.cat.sprite.animation.timer.duration}", True, "white")
+        text_rect = text_image.get_rect()
+        text_rect.centerx = Settings.window['width'] // 2
+        text_rect.bottom = Settings.window['height'] - 50
+        self.screen.blit(text_image, text_rect)
         pygame.display.flip()
 
 
-
-if __name__ == '__main__':
+def main():
     anim = CatAnimation()
     anim.run()
 
+
+if __name__ == '__main__':
+    main()

@@ -1,8 +1,9 @@
-import pygame
-from pygame.constants import (
-    K_MINUS, QUIT, K_ESCAPE, KEYDOWN, K_KP_PLUS, K_KP_MINUS, K_PLUS, K_MINUS, K_r, K_g, K_b, KMOD_SHIFT
-)
 import os
+from typing import Tuple
+
+import pygame
+from pygame.constants import (K_ESCAPE, K_KP_MINUS, K_KP_PLUS, K_MINUS, K_PLUS,
+                              KEYDOWN, KMOD_SHIFT, QUIT, K_b, K_g, K_r)
 
 
 class Settings:
@@ -14,45 +15,45 @@ class Settings:
         return (Settings.window['width'], Settings.window['height'])
 
 class TextSprite(pygame.sprite.Sprite):
-    def __init__(self, fontsize, fontcolor, center, text='Hello World!') -> None:
+    def __init__(self, fontsize:int, fontcolor:list[int], center:Tuple[int,int], text:str='Hello World!') -> None:
         super().__init__()
         self.image = None
         self.rect = None
         self.fontsize = fontsize
-        self.fontcolor = fontcolor
+        self.fontcolor :list[int] = fontcolor
         self.fontsize_update(0)                     # 0! §\label{srcTextoutputSimple02}§
         self.text = text
         self.center = center
         self.render()                               # Alle Infos zusammen §\label{srcTextoutputSimple03}§
 
-    def render(self):
+    def render(self) -> None:
         self.image = self.font.render(self.text, True, self.fontcolor) # Bitmap §\label{srcTextoutputSimple04}§
         self.rect = self.image.get_rect()
         self.rect.center = self.center
 
 
-    def fontsize_update(self, step=1):
+    def fontsize_update(self, step:int=1) -> None:
         self.fontsize += step
         self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize) # §\label{srcTextoutputSimple01}§
 
-    def fontcolor_update(self, delta):
+    def fontcolor_update(self, delta:Tuple[int, int, int]) -> None:
         for i in range(3):
             self.fontcolor[i] = (self.fontcolor[i] + delta[i]) % 256
 
-    def update(self):
+    def update(self) -> None:
         self.render()
 
 
 
-if __name__ == '__main__':
+def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "500, 150"
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(Settings.get_dim())
     pygame.display.set_caption("Textausgabe mit Fonts")
 
-    hello = TextSprite(24, [255,255,255], (Settings.window['width']//2, Settings.window['height']//2))  # Gruß§\label{srcTextoutputSimple07}§
-    info =  TextSprite(12, [255,0,0], (Settings.window['width']//2, Settings.window['height']-20))      # Fontinfo§\label{srcTextoutputSimple08}§
+    hello = TextSprite(24, [255, 255, 255], (Settings.window['width']//2, Settings.window['height']//2))  # Gruß§\label{srcTextoutputSimple07}§
+    info =  TextSprite(12, [255, 0, 0], (Settings.window['width']//2, Settings.window['height']-20))      # Fontinfo§\label{srcTextoutputSimple08}§
     all_sprites = pygame.sprite.Group()
     all_sprites.add(hello, info)
 
@@ -92,3 +93,6 @@ if __name__ == '__main__':
         pygame.display.flip()
 
     pygame.quit()
+
+if __name__ == '__main__':
+    main()

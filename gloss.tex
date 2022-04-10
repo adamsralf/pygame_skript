@@ -262,9 +262,30 @@
 
 \newglossaryentry{tradeoff}
 {
-name={Trade-off},
-description={Jeder Vorteil wird durch einen Nachteil erkauft. Algorithmisch muss dann anhand der Datenlage abgewägt werden, ob in der Gesamtbetrachtung der Nutzen die Kosten überwiegt. Beispiel: Durch die Verwendung von Indizes werden Zugriffe auf Datenbankinhalte dramatisch beschleunigt (Nutzen). Um diese Beschleunigung zu erreichen, müssen Dateien angelegt werden, und das Anlegen, Ändern und Löschen von Daten wird langsamer, da diese Dateien dann mitgepflegt werden müssen (Kosten)} 
+    name={Trade-off},
+    description={Jeder Vorteil wird durch einen Nachteil erkauft. Algorithmisch muss dann anhand der Datenlage abgewägt werden, ob in der Gesamtbetrachtung der Nutzen die Kosten überwiegt. Beispiel: Durch die Verwendung von Indizes werden Zugriffe auf Datenbankinhalte dramatisch beschleunigt (Nutzen). Um diese Beschleunigung zu erreichen, müssen Dateien angelegt werden, und das Anlegen, Ändern und Löschen von Daten wird langsamer, da diese Dateien dann mitgepflegt werden müssen (Kosten)} 
 }
+
+\newglossaryentry{float}
+{
+    name={Fließkommazahl},
+    description={Bei einer Fließkommazahl werden Zahlen als Summen von Zweierpotenzen dargestellt, wobei der Exponent auch negativ sein kein. Beispiel: $6,75 = 2^2 + 2^1 + 2^1{-1} + 2^{-2}$. Da der Speicherplatz beschränkt ist oder es für bestimmte Zahlen keine endliche Darstellung gibt, bricht die Summenbildung zu irgendeinem Zeitpunkt ab. Die dabei nicht mehr berücksichtigten Summanden führen zu den Rundungsfehlern}
+}
+
+\newglossaryentry{int}
+{
+    name={Ganzzahl},
+    description={Bei einer Ganzkommazahl werden Zahlen als Summen von Zweierpotenzen dargestellt, wobei der Exponent Null oder positiv ist. Beispiel: $17 = 2^4 + 2^0$. Der Wertebereich ist durch den Speicherplatz, den man einer ganzen Zahl zur Verfügung stellt, definiert. Stehen~$n$ Bits zur Verfügung, können ohne Vorzeichen Zahlen im Bereich $[0, 2^n-1]$ und mit Vorzeichen im Bereich $[2^{n-1}, 2^{n-1}-1]$ dargestellt werden} 
+}
+
+
+\newglossaryentry{signatur}
+{
+	name={Signatur},
+	description={Die Signatur einer Funktion/Methode beschreibt die formalen Eigenschaften, die von einer Funktion/Methode von außen sichtbar ist. Dazu gehören die Sichtbarkeit, der Rückgabetyp, der Name und die Übergabeparameter} 
+}
+
+
 
 %\newacronym{mAn}{m.A.n.}{Meiner Ansicht nach}
 

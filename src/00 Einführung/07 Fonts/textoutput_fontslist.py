@@ -1,8 +1,7 @@
-import pygame
-from pygame.constants import (
-    QUIT, K_ESCAPE, KEYDOWN, K_UP, K_DOWN
-)
 import os
+
+import pygame
+from pygame.constants import K_DOWN, K_ESCAPE, K_UP, KEYDOWN, QUIT
 
 
 class Settings:
@@ -15,10 +14,9 @@ class Settings:
 
 
 class TextSprite(pygame.sprite.Sprite):
-    def __init__(self, fontname, fontsize=24, fontcolor=[255,255,255], text='') -> None:
+    def __init__(self, fontname:str, fontsize:int=24, fontcolor:list[int]=[255,255,255], text:str='') -> None:
         super().__init__()
         self.image = None
-        self.rect = None
         self.fontname = fontname
         self.fontsize = fontsize
         self.fontcolor = fontcolor
@@ -26,19 +24,19 @@ class TextSprite(pygame.sprite.Sprite):
         self.text = f"{self.fontname}: abcdefghijklmnopqrstxyzßöäü0123456789"
         self.render()          
 
-    def render(self):
+    def render(self) -> None:
         self.image = self.font.render(self.text, True, self.fontcolor)
-        self.rect = self.image.get_rect()
+        self.rect : pygame.rect.Rect = self.image.get_rect()
 
-    def fontsize_update(self, step=1):
+    def fontsize_update(self, step:int=1) -> None:
         self.fontsize += step
         self.font = pygame.font.Font(pygame.font.match_font(self.fontname), self.fontsize) # §\label{srcTextoutputFontlist03}§
 
-    def fontcolor_update(self, delta):
+    def fontcolor_update(self, delta:list[int]) -> None:
         for i in range(3):
             self.fontcolor[i] = (self.fontcolor[i] + delta[i]) % 256
 
-    def update(self):
+    def update(self) -> None:
         self.render()
 
 
@@ -47,12 +45,12 @@ class BigImage(pygame.sprite.Sprite):
         super().__init__()
         self.offset = pygame.Rect((0, 0), Settings.get_dim())
 
-    def create_image(self, width, height):
+    def create_image(self, width:int, height:int) -> None:
         self.image_total = pygame.Surface((width, height))
         self.image_total.fill((200, 200, 200))
         self.update(0)
 
-    def update(self, delta):                        # Ermittle der Ausschnitt §\label{srcTextoutputFontlist01}§
+    def update(self, delta:int) -> None:                        # Ermittle der Ausschnitt §\label{srcTextoutputFontlist01}§
         if self.offset.top + delta >= 0:
             if self.offset.bottom + delta <= self.image_total.get_rect().height:
                 self.offset.move_ip(0, delta)
@@ -64,7 +62,7 @@ class BigImage(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-if __name__ == '__main__':
+def main():
 
     os.environ['SDL_VIDEO_WINDOW_POS'] = "650, 40"
 
@@ -112,3 +110,6 @@ if __name__ == '__main__':
         pygame.display.flip()
 
     pygame.quit()
+
+if __name__ == '__main__':
+    main()

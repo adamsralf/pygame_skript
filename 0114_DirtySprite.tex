@@ -1,5 +1,6 @@
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Dirty Sprites}\index{Dirty Sprite}
+\section{Dirty Sprites}\label{secDirtySprites}\index{Dirty Sprite}
 Derzeit wird in jedem Frame\index{Frame} der gesamte Bildschirm -- also Hintergrund und Sprites -- neu gezeichnet. Dies ist, besonders wenn sich eigentlich nur wenige Sprites bewegen oder ihr Aussehen verändern, Rechenzeitverschwendung. 
 
 Pygame stellt dafür das Konzept der \emph{Dirty Sprites}\randnotiz{Dirty Sprite} zur Verfügung. Dabei wird über das Flag \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}} gesteuert, ob das Sprite neu gezeichnet werden muss oder nicht. Auch muss der Sprite irgendwie mitgeteilt werden, was auf die alte Position gezeichnet werden soll, wenn sich sie sich bewegt oder verschwindet; wird doch der Hintergrund eben nicht in jedem Frame neu gezeichnet.
@@ -14,16 +15,16 @@ Wir haben hier ein kleines, relativ simples Spiel (siehe \abbref[vref]{picDirty0
 	\item Vor dem Hintergrund erscheinen weiße Quadrate. 
 	\item Diese Quadrate werden per Zufall rot.
 	\item Nach einer gewissen Zeitspanne werden die Quadrate wieder weiß.
-	\item Mauklickt man ein rotes Quadrat, verschwindet es.
+	\item Mausklickt man ein rotes Quadrat, verschwindet es.
 	\item Das Spiel beendet sich, wenn alle Quadrate verschwunden sind.
 	\item Ziel ist es, die Quadrate in möglichst kurzer Zeit wegzuklicken.
 \end{itemize}
 
 Das eigentliche Spiel ist etwas anspruchsvoller. Dabei werden die Quadrate in einer gewissen Reihenfolge die Farbe ändern und die Quadrate müssen in dieser Reihenfolge (Kette) angeklickt werden. Mit jedem Level werden die Ketten länger und die Quadrate kleiner. Aber das wäre für unsere Einführung  nur überflüssiger Ballast.
 
-Zunächst ein paar Worte über das noch nicht umgebaute Spiel. Die Klassen \texttt{Settings} \texttt{Timer} werde ich nicht mehr kommentieren, da die schon ausführlich besprochen wurden. Zunächst die Klasse \texttt{Tile}. Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. 
+Zunächst ein paar Worte über das noch nicht umgebaute Spiel. Die Klassen \texttt{Settings} und \texttt{Timer} werde ich nicht mehr kommentieren, da die schon ausführlich besprochen wurden. 
 
-In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von $500~ms$ gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch anklicken zerstört werden kann.
+Zunächst die Klasse \texttt{Tile}. Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von $500~ms$ gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch anklicken zerstört werden kann.
 
 Wird ein Kill-Signal gesendet (\texttt{action='kill'}), wird die Kachel nur dann gelöscht, wenn der Status den Wert~1 hat, also rot eingefärbt ist. Ansonsten wird der Timer überprüft und ggf. Status und Farbe wieder zurückgesetzt.
 
@@ -40,7 +41,9 @@ Für unser eigentliches Thema ist die Methode \texttt{Game.draw()} interessant. 
 Aber Rettung naht; wie oben schon erwähnt, wird uns von Pygame die Klasse \texttt{pygame\-.sprite\-.Dirty\-Sprite}\randnotiz{DirtySprite}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}|underline} zur Verfügung gestellt. Diese Klasse wird von \texttt{pygame\-.sprite\-.Sprite} abgeleitet und hat insbesondere ein zusätzliches Attribut, welches steuert, ob der Sprite neu gezeichnet werden muss oder nicht: \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}|underline}. Dieses Attribut kann drei verschiedene Werte annehmen. In \tabref[vref]{tabDirty} werden die Bedeutungen angegeben. 
 
 
-Fangen wir also mit dem Umbau an, und machen aus \texttt{Tile} eine Kindklasse von \texttt{Dirty\-Sprite}. In \zeiref{srcDirty0100} wird der Name der Elternklasse angepasst. Im Konstruktor sollte man \texttt{self.dirty} auf~\texttt{1} setzen, damit der Sprite auf jeden Fall beim ersten \texttt{draw()} ausgegeben wird (siehe \zeiref{srcDirty0101}). Anschließend müssen Sie die Stellen im Quelltext finden, die das Aussehen oder die Position ihres Sprites verändern. Wird eine solche Veränderung vorgenommen, muss \texttt{self.dirty} auf~\texttt{1} gesetzt werden. Dies ist in der Regel die Methode \texttt{update()} oder solche, die von ihr aufgerufen werden. In unserem Beispiel werden an zwei Stellen das Aussehen verändert. Zum einen, wenn das Signal \texttt{'switch'} gesendet wird (siehe \zeiref{srcDirty0102}) und zum anderen, wenn der interne Timer die Farbe wieder von rot nach weiß abändert (siehe \zeiref{srcDirty0103}). Wie in \tabref[vref]{tabDirty} beschrieben, wird der Wert automatisch nach der Ausgabe wieder auf~\texttt{0} gesetzt.
+Fangen wir also mit dem Umbau an, und machen aus \texttt{Tile} eine Kindklasse von \texttt{Dirty\-Sprite}. In \zeiref{srcDirty0100} wird der Name der Elternklasse angepasst. Im Konstruktor sollte man \texttt{self.dirty} auf~\texttt{1} setzen, damit der Sprite auf jeden Fall beim ersten \texttt{draw()} ausgegeben wird (siehe \zeiref{srcDirty0101})\footnote{Der Wert~1 ist die Vorbelegung für dieses Attribut; ein Setzen ist daher nicht zwingend nötig, aber wegen der besseren Verständlichkeit angebracht.}. Anschließend müssen Sie die Stellen im Quelltext finden, die das Aussehen oder die Position ihres Sprites verändern. Wird eine solche Veränderung vorgenommen, muss \texttt{self.dirty} auf~\texttt{1} gesetzt werden. Dies ist in der Regel die Methode \texttt{update()} oder solche, die von ihr aufgerufen werden. 
+
+In unserem Beispiel wird an zwei Stellen das Aussehen verändert. Zum einen, wenn das Signal \texttt{'switch'} gesendet wird (siehe \zeiref{srcDirty0102}) und zum anderen, wenn der interne Timer die Farbe wieder von rot nach weiß abändert (siehe \zeiref{srcDirty0103}). Wie in \tabref[vref]{tabDirty} beschrieben, wird der Wert automatisch nach der Ausgabe wieder auf~\texttt{0} gesetzt.
 
 Stellt sich noch die Frage, warum nicht auch beim Kill das \texttt{self.dirty} angepasst wird. Wird der Sprite entfernt, soll er ja gerade nicht neu gezeichnet werden; stattdessen soll ja der Hintergrund an dieser Stelle nachgezeichnet werden. Wie das geschieht, wird in \texttt{Game} geregelt.
 
@@ -48,7 +51,7 @@ Stellt sich noch die Frage, warum nicht auch beim Kill das \texttt{self.dirty} a
 
 Für die Liste der Kacheln, können wir nun kein \texttt{pygame.sprite.Group}-Objekt\myindex{pyg}{\texttt{sprite}!\texttt{Group}} mehr nehmen, da diese Liste keine Attribute und Methoden von \texttt{pygame.sprite.DirtySprite} kennt. Die passende Alternative zur \texttt{Group}-Klasse ist \texttt{pygame.sprite.LayeredDirty}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}|underline}\randnotiz{LayeredDirty}. Diese Klasse enthält alle Mechanismen, die wir für die Unterstützung von \texttt{DirtySprite} brauchen. Bauen wir daher erstmal das entsprechende Attribut in \zeiref{srcDirty0104} um.
 
-\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty01.py}{38}{49}{python}{Dirty Sprite -- Konstruktor von \texttt{Game} (Umbau)}{srcDirty01b} 
+\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty01.py}{38}{51}{python}{Dirty Sprite -- Konstruktor von \texttt{Game} (Umbau)}{srcDirty01b} 
 
 Würden wir dieses Programm nun ausführen, bekämen wir ein sehr unbefriedigendes Ergebnis zu sehen. Einmal erscheinen ganz kurz (nur für ein Frame) alle Kacheln in weiß und danach ist nur noch der Hintergrund zu sehen. Ab und zu blitzen weiße und rote Kacheln auf, und zwar immer dann, wenn ein Farbwechsel erfolgt, also \texttt{dirty} auf~\texttt{1} gesetzt wurde. Wir müssen hier also noch weitere Veränderungen vornehmen. 
 
@@ -59,11 +62,11 @@ Ein weiterer Unterschied von \texttt{LayeredDirty.draw()} ist, dass es eine List
 \lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty02.py}{62}{64}{python}{Dirty Sprite -- \texttt{Game.draw()} (Umbau)}{srcDirty02a} 
 
 
-Wenn wir jetzt das Programm ausführen, sieht alles soweit ganz gut aus. Es verbleiben mir aber noch zwei Kleinigkeiten. In \texttt{draw()} wird jetzt bei jedem Aufruf in \{zeiref{srcDirty0201} das Backgroundimage mitgeliefert. Das passiert immerhin 60 mal pro Sekunde. Wäre es nicht schöner, wir würden einmal das den Hintergrund setzen und könnten dann auf den zweiten Paramter in der Zeile verzichten? Na klar wäre das schöner und deshalb geht das auch ;-)
+Wenn wir jetzt das Programm ausführen, sieht alles soweit ganz gut aus. Es verbleiben mir aber noch zwei Kleinigkeiten. In \texttt{draw()} wird jetzt bei jedem Aufruf in \zeiref{srcDirty0201} das Backgroundimage mitgeliefert. Das passiert immerhin 60 mal pro Sekunde. Wäre es nicht schöner, wir würden einmal das den Hintergrund setzen und könnten dann auf den zweiten Paramter in der Zeile verzichten? Na klar wäre das schöner und deshalb geht das auch ;-)
 
-In \zeiref{srcDirty0301} wird der Hintergrund mit \texttt{pygame.sprite.LayeredDirty.clear()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{clear()}|underline} gesetzt. Auch wird festgelegt, auf welches Surface der Hintergrund gezeichnet werden soll, hier eben auf \texttt{self.screen}.
+In \zeiref{srcDirty0301} wird der Hintergrund mit \texttt{pygame.sprite.LayeredDirty.clear()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{clear()}|underline}\randnotiz{clear()} gesetzt. Auch wird festgelegt, auf welches Surface der Hintergrund gezeichnet werden soll, hier eben auf \texttt{self.screen}.
 
-\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty03.py}{46}{49}{python}{Dirty Sprite -- Konstruktor von \texttt{Game)} (Umbau)}{srcDirty03a} 
+\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty03.py}{46}{49}{python}{Dirty Sprite -- Konstruktor von \texttt{Game} (Umbau)}{srcDirty03a} 
 
 Deshalb kann in \texttt{draw()} auf den zweiten Parameter verzichtet werden (\zeiref{srcDirty0303}).
 
@@ -109,18 +112,24 @@ Doch leider meinte ich, das Experiment zu Hause wiederholen zu müssen, da das P
 
 Nach vielen Wiederholungstest auf den drei Rechnern, kam mir der Gedanke, dass der PC zu Hause und der Surface~Pro vielleicht nicht die Framerate von $60~fps$ schaffen und daher das Zeitfenster zu klein ist. Also den Test mit kleinerer Framerate wiederholt und siehe da, dann waren die Ergebnisse wieder eindeutig (siehe \abbref[vref]{picDirtyPerformance03}). Ein Performancetest zwischen den einzelnen Rechnern bestätigte im Nachgang diese Vermutung. In \abbref[vref]{picDirtyPerformance04} sehen Sie, das der Schul-PC definitiv die beste Grafikverarbeitungsgeschwindigkeit hat.
 
-\myebild{zuhause_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem privatem PC}{picDirtyPerformance01}
+\myezweihbild{zuhause_05_4000.pdf}{0.55}{Testkonfiguration~2 mit privatem PC}{picDirtyPerformance01}{surface_05_4000.pdf}{0.55}{Testkonfiguration~2 mit Surface Pro}{picDirtyPerformance02}
+%\myebild{zuhause_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem privatem PC}{picDirtyPerformance01}
+%\myebild{surface_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem Surface Pro}{picDirtyPerformance02}
 
-\myebild{surface_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem privatem PC}{picDirtyPerformance02}
+\myezweihbild{fps_05_4000.pdf}{0.55}{Testkonfiguration~2 mit privatem PC und reduzierter fps}{picDirtyPerformance03}{ohne_05_100.pdf}{0.55}{Bestätigung der Unterschiede}{picDirtyPerformance04}
+%\myebild{fps_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem privatem PC mit reduzierter fps}{picDirtyPerformance03}
 
-\myebild{fps_05_4000.pdf}{1.0}{Testkonfiguration~2 auf einem privatem PC mit reduzierter fps}{picDirtyPerformance03}
-
-\myebild{ohne_05_100.pdf}{1.0}{Bestätigung der Rechenleistungsunterschiede der Testrechner}{picDirtyPerformance04}
+%\myebild{ohne_05_100.pdf}{1.0}{Bestätigung der Rechenleistungsunterschiede der Testrechner}{picDirtyPerformance04}
 
 Es ist somit eine ernst zu nehmende Aufgabe, die maximale Framerate\index{Framerate} auf dem Rechner zu ermitteln. Nur dann können die Mechanismen des DirtySprite-Konzepts greifen. Auch ist nicht auszuschließen, dass die Rechner deshalb kein schönes ruckelfreies Bewegungsbild erzeugen, wenn die Framerate für den Rechner zu hoch eingestellt ist.
 
 \subsection*{Was war neu?}
 
+Mit Hilfe von entsprechenden Klassen, kann die Zeichenausgabe pro Frame auf die Bereiche eingeschränkt werden, die sich tatsächlich verändert haben. Der Performanceverbrauch reduziert sich dabei erheblich. 
+
+Es muss allerdings darauf geachtet werden, dass die Framerate der Leistungsfähigkeit der Rechnerkonfiguration angepasst wird. 
+
+Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
 	\item Vordefnierte Farbnamen:\index{Farbennamen}\\ 
 	\url{http://www.pygame.org/docs/ref/color_list.html}
@@ -133,22 +142,7 @@ Es ist somit eine ernst zu nehmende Aufgabe, die maximale Framerate\index{Framer
 
 	\item\texttt{pygame.sprite.DirtySprite.dirty}:
 	\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.DirtySprite}\\
-	\begin{longtable}{lp{12cm}}
-	\caption{Bedeutung von \texttt{dirty}}\label{tabDirty} \\
-	% Definition des Tabellenkopfes auf der ersten Seite
-	Konstante & Beschreibung \\\hline\hline
-	\hline
-	\endfirsthead % Erster Kopf zu Ende
-	% Definition des Tabellenkopfes auf den folgenden Seiten
-	\caption{Bedeutung von \texttt{dirty} (Fortsetzung)}\\
-	Konstante & Beschreibung \\\hline\hline
-	\hline
-	\endhead % Zweiter Kopf ist zu Ende
-	% Ab hier kommt der Inhalt der Tabelle
-	\texttt{0}  & Der Sprite ist noch aktuell und muss nicht neu gezeichnet werden.\\ \hline
-	\texttt{1}  & (Default) Der Sprite ist veraltet (Aussehen oder Position haben sich verändert) und muss neu gezeichnet werden. Nach dem Neuzeichnen wird \texttt{dirty} automatisch wieder auf~\texttt{0} gesetzt. \\ \hline
-	\texttt{2}  & Der Sprite wird immer neu gezeichnet. Sie wird nicht nach dem Zeichnen auf \texttt{0} gesetzt.\\ \hline
-    \end{longtable} 
+	Bedeutung siehe \tabref[vref]{tabDirty}.
 
 	\item \texttt{pygame.sprite.LayeredDirty}:
 	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty}
@@ -165,6 +159,21 @@ Es ist somit eine ernst zu nehmende Aufgabe, die maximale Framerate\index{Framer
 	\item \texttt{pygame.sprite.LayeredDirty.set\_timing\_threshold()}:
 	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_threshold()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty.set\_timing\_threshold}
 
-
 \end{itemize}
 
+	\begin{longtable}{lp{12cm}}
+	\caption{Bedeutung von \texttt{dirty}}\label{tabDirty} \\
+	% Definition des Tabellenkopfes auf der ersten Seite
+	Konstante & Beschreibung \\\hline\hline
+	\hline
+	\endfirsthead % Erster Kopf zu Ende
+	% Definition des Tabellenkopfes auf den folgenden Seiten
+	\caption{Bedeutung von \texttt{dirty} (Fortsetzung)}\\
+	Konstante & Beschreibung \\\hline\hline
+	\hline
+	\endhead % Zweiter Kopf ist zu Ende
+	% Ab hier kommt der Inhalt der Tabelle
+	\texttt{0}  & Der Sprite ist noch aktuell und muss nicht neu gezeichnet werden.\\ \hline
+	\texttt{1}  & (Default) Der Sprite ist veraltet (Aussehen oder Position haben sich verändert) und muss neu gezeichnet werden. Nach dem Neuzeichnen wird \texttt{dirty} automatisch wieder auf~\texttt{0} gesetzt. \\ \hline
+	\texttt{2}  & Der Sprite wird immer neu gezeichnet. Sie wird nicht nach dem Zeichnen auf \texttt{0} gesetzt.\\ \hline
+\end{longtable} 

@@ -1,33 +1,28 @@
 import os
 from math import sqrt
-from pdb import Restart
 from random import randint
-from typing import Tuple
+from time import time
+from typing import Any, Dict, Tuple
 
 import pygame
 from pygame.constants import (K_ESCAPE, KEYDOWN,  # §\label{srcBubble1201}§
-                              KEYUP, QUIT, K_j, K_n, K_p)
+                              KEYUP, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, K_j,
+                              K_n, K_p)
 
 
-class Settings:
-    window = {"width": 1220, "height": 1002}
-    fps = 60
-    path = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
-    caption = 'Fingerübung "Bubbles"'
-    radius = {"min": 15, "max": 240}
-    distance = 50
-    playground = pygame.Rect(90, 90, 1055, 615)
-    max_bubbles = playground.height * playground.width // 10000
-    box = pygame.Rect(90, 770, 1055, 1300)
-    points = 0
-    bubble_container = {}
+class BubbleContainer:
+    def __init__(self, filename: str) -> None:
+        imagename = Game.get_image(filename)
+        image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
+        self._images = {
+            i: pygame.transform.scale(image, (i * 2, i * 2))
+            for i in range(Game.radius["min"], Game.radius["max"] + 1)
+        }
 
-    @staticmethod
-    def get_dim() -> Tuple[int, int]:
-        return (Settings.window["width"], Settings.window["height"])
+    def get(self, radius: int) -> pygame.surface.Surface:
+        radius = max(Game.radius["min"], radius)
+        radius = min(Game.radius["max"], radius)
+        return self._images[radius]
 
 
 class Timer:
@@ -45,113 +40,129 @@ class Timer:
         return False
 
 
-class Background(pygame.sprite.Sprite):
-    def __init__(self, filename: str = "aquarium.png") -> None:
-        super().__init__()
-        self.image = pygame.image.load(os.path.join(Settings.path["image"], filename)).convert()
-        self.image = pygame.transform.scale(self.image, Settings.get_dim())
-        self.rect = self.image.get_rect()
-
-
-class Foreground:
-    def __init__(self, message: str) -> None:                   # Nachrichtentext§\label{srcBubble1202}§
-        super().__init__()
-        self._image = pygame.image.load(os.path.join(Settings.path["image"], "hintergrund.png")).convert_alpha()
-        self._image = pygame.transform.scale(self._image, Settings.get_dim())
-        self._image.set_alpha(150)
-        self._rect_image = self._image.get_rect()
-        font_bigsize = pygame.font.Font(pygame.font.get_default_font(), 40)
-        self._text = font_bigsize.render(message, True, (255, 0, 0))  # rendern§\label{srcBubble1203}§
-        self._rect_text = self._text.get_rect()
-        self._rect_text.centerx = Settings.window["width"] // 2
-        self._rect_text.centery = Settings.window["height"] // 2 - 50
-
-    def draw(self, screen: pygame.surface.Surface) -> None:
-        screen.blit(self._image, self._rect_image)
-        screen.blit(self._text, self._rect_text)
-
-
-class BubbleContainer:
-    def __init__(self, filename: str) -> None:
-        image = pygame.image.load(os.path.join(Settings.path["image"], filename)).convert_alpha()
-        self._images = {
-            i: pygame.transform.scale(image, (i * 2, i * 2))
-            for i in range(Settings.radius["min"], Settings.radius["max"] + 1)
-        }
-
-    def get(self, radius: int) -> pygame.surface.Surface:
-        radius = max(Settings.radius["min"], radius)
-        radius = min(Settings.radius["max"], radius)
-        return self._images[radius]
-
-
-class Bubble(pygame.sprite.Sprite):
+class Background:
     def __init__(self) -> None:
         super().__init__()
-        self.mode = "blue"
-        self.radius = Settings.radius["min"]
-        self.image = Settings.bubble_container[self.mode].get(self.radius)
+        imagename = Game.get_image("aquarium.png")
+        self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
+        self.image = pygame.transform.scale(self.image, Game.window.size)
         self.rect = self.image.get_rect()
-        self._timer_growth = Timer(100, False)
 
-    def update(self) -> None:
-        if self._timer_growth.is_next_stop_reached():
-            self.radius = min(self.radius + 1, Settings.radius["max"])
-            center = self.rect.center
-            self.image = Settings.bubble_container[self.mode].get(self.radius)
-            self.rect = self.image.get_rect()
-            self.rect.center = center
+
+class Message(pygame.sprite.DirtySprite):
+    def __init__(self, filename: str) -> None:      # §\label{srcBubble1202}§
+        super().__init__()
+        imagename = Game.get_image(filename)
+        self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.dirty = 1
+
+
+class Bubble(pygame.sprite.DirtySprite):
+    def __init__(self, speed: int) -> None:
+        super().__init__()
+        self.mode = "blue"
+        self.radius = Game.radius["min"]
+        self.image = Game.bubble_container[self.mode].get(self.radius)
+        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.dirty = 1
+        self.fradius = float(self.radius)
+        self.speed = speed
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        if "action" in kwargs.keys():
+            if kwargs["action"] == "grow":
+                self.fradius += self.speed * Game.deltatime
+                self.fradius = min(self.fradius, Game.radius["max"])
+                self.radius = round(self.fradius)
+                center = self.rect.center
+                self.image = Game.bubble_container[self.mode].get(self.radius)
+                self.rect = self.image.get_rect()
+                self.rect.center = center
+                self.dirty = 1
+            elif kwargs["action"] == "sting":
+                self.stung()
+        elif "mode" in kwargs.keys():
+            self.set_mode(kwargs["mode"])
 
     def set_mode(self, mode: str) -> None:
-        self.mode = mode
-        self.image = Settings.bubble_container[self.mode].get(self.radius)
+        if mode != self.mode:
+            self.dirty = 1
+            self.mode = mode
+            self.image = Game.bubble_container[self.mode].get(self.radius)
 
     def randompos(self) -> None:
-        bubbledistance = Settings.distance + Settings.radius["min"]
-        centerx = randint(Settings.playground.left + bubbledistance, Settings.playground.right - bubbledistance)
-        centery = randint(Settings.playground.top + bubbledistance, Settings.playground.bottom - bubbledistance)
+        bubbledistance = Game.distance + Game.radius["min"]
+        centerx = randint(Game.playground.left + bubbledistance, Game.playground.right - bubbledistance)
+        centery = randint(Game.playground.top + bubbledistance, Game.playground.bottom - bubbledistance)
         self.rect.center = (centerx, centery)
-
-    def collidepoint(self, point: Tuple[int, int]) -> bool:
-        deltax = point[0] - self.rect.centerx
-        deltay = point[1] - self.rect.centery
-        return sqrt(deltax * deltax + deltay * deltay) <= self.radius
 
     def stung(self):
         self.kill()
-        Settings.points += self.radius
+        Game.points += self.radius
 
 
-class Points(pygame.sprite.Sprite):
+class Points(pygame.sprite.DirtySprite):
     def __init__(self) -> None:
         super().__init__()
         self._font = pygame.font.Font(pygame.font.get_default_font(), 18)
+        self.oldpoints = -1
+        self.dirty = 1
 
-    def update(self) -> None:
-        self.image = self._font.render(f"Points: {Settings.points}", True, (255, 0, 0))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = Settings.box.topleft
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        if self.oldpoints != Game.points:
+            self.image = self._font.render(f"Points: {Game.points}", True, "red")
+            self.rect = self.image.get_rect()
+            self.rect.left = Game.box.left
+            self.rect.top = Game.box.top
+            self.dirty = 1
 
 
 class Game:
+    window = pygame.rect.Rect(0, 0, 1220, 1002)
+    fps = 60
+    deltatime = 1.0/fps
+    path: Dict[str, str] = {}
+    path["file"] = os.path.dirname(os.path.abspath(__file__))
+    path["image"] = os.path.join(path["file"], "images")
+    path["sound"] = os.path.join(path["file"], "sounds")
+    caption = 'Fingerübung "Bubbles"'
+    radius = {"min": 15, "max": 240}
+    distance = 50
+    playground = pygame.rect.Rect(90, 90, 1055, 615)
+    max_bubbles = playground.height * playground.width // 10000
+    box = pygame.rect.Rect(90, 770, 1055, 1300)
+    points = 0
+    bubble_container: Dict[str, BubbleContainer] = {}
+
+    @staticmethod
+    def get_file(filename: str) -> str:
+        return os.path.join(Game.path["file"], filename)
+
+    @staticmethod
+    def get_image(filename: str) -> str:
+        return os.path.join(Game.path["image"], filename)
+
+    @staticmethod
+    def get_sound(filename: str) -> str:
+        return os.path.join(Game.path["sound"], filename)
+
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.get_dim())
-        pygame.display.set_caption(Settings.caption)
+        self._screen = pygame.display.set_mode(Game.window.size)
+        pygame.display.set_caption(Game.caption)
         self._clock = pygame.time.Clock()
-        Settings.bubble_container["blue"] = BubbleContainer("blase1.png")
-        Settings.bubble_container["red"] = BubbleContainer("blase2.png")
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._points = pygame.sprite.GroupSingle(Points())
-        self._timer_bubble = Timer(1000, False)
-        self._timer_bubble_duration = Timer(10000, False)
-        self._all_bubbles = pygame.sprite.Group()
+        Game.bubble_container["blue"] = BubbleContainer("blase1.png")
+        Game.bubble_container["red"] = BubbleContainer("blase2.png")
+        self._background = Background()
+        self._all_sprites = pygame.sprite.LayeredDirty()
+        self._all_sprites.clear(self._screen, self._background.image)
+        self._all_sprites.set_timing_treshold(1000.0/Game.fps)
         self._running = True
-        self._pause = Foreground("PAUSE")
         self._pausing = False
-        self._restart = Foreground("Neustart (J/N)?")
-        self._restarting = False
-        self._do_start = False
+        self._pause = Message("pause.png")                  # §\label{srcBubble1203}§
+        self._restart = Message("neustart.png")
+        self.restart()
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
@@ -162,73 +173,86 @@ class Game:
                     self._running = False
             elif event.type == KEYUP:
                 if event.key == K_p:
-                    self._pausing = not self._pausing
+                    self.setpause()
                 elif event.key == K_j:                          # §\label{srcBubble1205}§
                     self._do_start = True
                 elif event.key == K_n:                          # §\label{srcBubble1206}§
                     self._running = False
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
+            elif event.type == MOUSEBUTTONUP:
+                if event.button == 3:
+                    self.setpause()
+            elif event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:                           # left
                     self.sting(pygame.mouse.get_pos())
-                elif event.button == 3:
-                    self._pausing = not self._pausing
 
     def draw(self) -> None:
-        self._background.draw(self._screen)
-        self._all_bubbles.draw(self._screen)
-        self._points.draw(self._screen)
-        # pygame.draw.rect(self._screen, (255, 0, 0), Settings.playground, 2)
+        rects = self._all_sprites.draw(self._screen)
+        # pygame.draw.rect(self._screen, "red", Game.playground, 2)
         # for b in self._all_bubbles:
-        #     pygame.draw.rect(self._screen, (255, 0, 0), b.rect, 2)
-        if self._pausing:
-            self._pause.draw(self._screen)
-        elif self._restarting:                                  # Abfragebildschirm?§\label{srcBubble1207}§
-            self._restart.draw(self._screen)
-
-        pygame.display.flip()
-
-        pygame.display.flip()
+        #     pygame.draw.rect(self._screen, "red", b.rect, 2)  # type: ignore
+        pygame.display.update(rects)  # type: ignore
 
     def update(self) -> None:
         if self._do_start:                                      # Neustart?§\label{srcBubble1208}§
-            Settings.points = 0
-            self._all_bubbles.empty()
-            self._timer_bubble = Timer(1000, False)
-            self._timer_bubble_duration = Timer(10000, False)
-            self._do_start = False
-            self._restarting = False
+            self.restart()
         if not self._pausing and self._running:
             if self.check_bubblecollision():
-                self._restarting = True
+                if not self._restarting:
+                    self._all_sprites.add(self._restart)
+                    self._restarting = True
             else:
-                self._all_bubbles.update()
-                self._points.update()
+                self._all_sprites.update(action="grow")
                 self.spawn_bubble()
             self.set_mousecursor()
 
+    def restart(self):
+        Game.points = 0
+        self._all_sprites.empty()
+        self._all_sprites.add(Points())
+        self._bubble_speed = 10
+        self._timer_bubble = Timer(500, False)
+        self._timer_bubble_speed = Timer(10000, False)
+        self._do_start = False
+        self._restarting = False
+
+    def setpause(self):
+        if not self._pausing:
+            self._all_sprites.add(self._pause)
+        else:
+            self._pause.kill()
+        self._pausing = not self._pausing
+
     def spawn_bubble(self) -> None:
-        if self._timer_bubble_duration.is_next_stop_reached():
-            self._timer_bubble.duration = max(self._timer_bubble.duration - 100, 400)
+        if self._timer_bubble_speed.is_next_stop_reached():
+            if self._bubble_speed < 100:
+                self._bubble_speed += 5
         if self._timer_bubble.is_next_stop_reached():
-            if len(self._all_bubbles) <= Settings.max_bubbles:
-                b = Bubble()
+            if len(self._all_sprites) <= Game.max_bubbles:
+                b = Bubble(self._bubble_speed)
                 tries = 100
                 while tries > 0:
                     b.randompos()
-                    b.radius += Settings.distance
-                    collided = pygame.sprite.spritecollide(b, self._all_bubbles, False, pygame.sprite.collide_circle)
-                    b.radius -= Settings.distance
+                    b.radius += Game.distance
+                    collided = pygame.sprite.spritecollide(b, self._all_sprites, False, pygame.sprite.collide_circle)
+                    b.radius -= Game.distance
                     if collided:
                         tries -= 1
                     else:
-                        self._all_bubbles.add(b)
+                        self._all_sprites.add(b)
                         break
+
+    def collidepoint(self, point: Tuple[int, int], sprite: pygame.sprite.Sprite) -> bool:
+        if hasattr(sprite, 'radius'):
+            deltax = point[0] - sprite.rect.centerx  # type: ignore
+            deltay = point[1] - sprite.rect.centery  # type: ignore
+            return (sqrt(deltax * deltax + deltay * deltay) <= sprite.radius)  # type: ignore
+        return False
 
     def set_mousecursor(self) -> None:
         is_over = False
         pos = pygame.mouse.get_pos()
-        for b in self._all_bubbles:
-            if b.collidepoint(pos):
+        for b in self._all_sprites:
+            if self.collidepoint(pos, b):
                 is_over = True
                 break
         if is_over:
@@ -236,41 +260,49 @@ class Game:
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
 
-    def sting(self, mousepos) -> None:
-        for bubble in self._all_bubbles:
-            if bubble.collidepoint(mousepos):
-                bubble.stung()
+    def sting(self, mousepos: Tuple[int, int]) -> None:
+        for bubble in self._all_sprites:
+            if self.collidepoint(mousepos, bubble):
+                bubble.update(action="sting")
 
     def check_bubblecollision(self) -> bool:
-        for index1 in range(0, len(self._all_bubbles) - 1):
-            for index2 in range(index1 + 1, len(self._all_bubbles)):
-                bubble1 = self._all_bubbles.sprites()[index1]
-                bubble2 = self._all_bubbles.sprites()[index2]
-                if pygame.sprite.collide_circle(bubble1, bubble2):
-                    bubble1.set_mode("red")
-                    bubble2.set_mode("red")
-                    return True
-                if not Settings.playground.contains(bubble1):
-                    bubble1.set_mode("red")
-                    return True
-                if not Settings.playground.contains(bubble2):
-                    bubble2.set_mode("red")
-                    return True
+        for index1 in range(0, len(self._all_sprites) - 1):
+            for index2 in range(index1 + 1, len(self._all_sprites)):
+                bubble1 = self._all_sprites.sprites()[index1]
+                bubble2 = self._all_sprites.sprites()[index2]
+                if type(bubble1).__name__ == "Bubble" and type(bubble2).__name__ == "Bubble":
+                    if pygame.sprite.collide_circle(bubble1, bubble2):
+                        bubble1.update(mode="red")
+                        bubble2.update(mode="red")
+                        return True
+                    if not Game.playground.contains(bubble1):
+                        bubble1.update(mode="red")
+                        return True
+                    if not Game.playground.contains(bubble2):
+                        bubble2.update(mode="red")
+                        return True
         return False
 
     def run(self) -> None:
+        time_previous = time()
         self._running = True
         while self._running:
-            self._clock.tick(Settings.fps)
             self.watch_for_events()
             self.update()
             self.draw()
-
-        # pygame.time.wait(2000)                                # §\label{srcBubble1209}§
+            self._clock.tick(Game.fps)
+            time_current = time()
+            Game.deltatime = time_current - time_previous
+            time_previous = time_current
+        # pygame.time.wait(2000)                    # Neustart?§\label{srcBubble1209}§
         pygame.quit()
 
 
-if __name__ == "__main__":
+def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
     game = Game()
     game.run()
+
+
+if __name__ == "__main__":
+    main()
