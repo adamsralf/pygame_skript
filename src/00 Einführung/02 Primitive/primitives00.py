@@ -13,8 +13,8 @@ def main():
 
     mygrey = pygame.Color(200, 200, 200)                     # Eigene Farben §\label{srcPrimitives01}§
 
-    myrectangle1 = pygame.Rect(10, 10, 20, 30)               # Ein Rechteck-Objekt §\label{srcPrimitives02}§
-    myrectangle2 = pygame.Rect(60, 10, 20, 30)
+    myrectangle1 = pygame.rect.Rect(10, 10, 20, 30)          # Ein Rechteck-Objekt §\label{srcPrimitives02}§
+    myrectangle2 = pygame.rect.Rect(60, 10, 20, 30)
     points1 = ((120, 10), (160, 10), (140, 90))              # Punkteliste §\label{srcPrimitives05}§
     points2 = ((180, 10), (220, 10), (200, 90))
 

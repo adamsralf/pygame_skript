@@ -51,7 +51,7 @@ Stellt sich noch die Frage, warum nicht auch beim Kill das \texttt{self.dirty} a
 
 Für die Liste der Kacheln, können wir nun kein \texttt{pygame.sprite.Group}-Objekt\myindex{pyg}{\texttt{sprite}!\texttt{Group}} mehr nehmen, da diese Liste keine Attribute und Methoden von \texttt{pygame.sprite.DirtySprite} kennt. Die passende Alternative zur \texttt{Group}-Klasse ist \texttt{pygame.sprite.LayeredDirty}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}|underline}\randnotiz{LayeredDirty}. Diese Klasse enthält alle Mechanismen, die wir für die Unterstützung von \texttt{DirtySprite} brauchen. Bauen wir daher erstmal das entsprechende Attribut in \zeiref{srcDirty0104} um.
 
-\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty01.py}{38}{51}{python}{Dirty Sprite -- Konstruktor von \texttt{Game} (Umbau)}{srcDirty01b} 
+\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty01.py}{38}{49}{python}{Dirty Sprite -- Konstruktor von \texttt{Game} (Umbau)}{srcDirty01b} 
 
 Würden wir dieses Programm nun ausführen, bekämen wir ein sehr unbefriedigendes Ergebnis zu sehen. Einmal erscheinen ganz kurz (nur für ein Frame) alle Kacheln in weiß und danach ist nur noch der Hintergrund zu sehen. Ab und zu blitzen weiße und rote Kacheln auf, und zwar immer dann, wenn ein Farbwechsel erfolgt, also \texttt{dirty} auf~\texttt{1} gesetzt wurde. Wir müssen hier also noch weitere Veränderungen vornehmen. 
 
@@ -70,11 +70,12 @@ In \zeiref{srcDirty0301} wird der Hintergrund mit \texttt{pygame.sprite.LayeredD
 
 Deshalb kann in \texttt{draw()} auf den zweiten Parameter verzichtet werden (\zeiref{srcDirty0303}).
 
+\newpage
 \lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty03.py}{64}{66}{python}{Dirty Sprite -- \texttt{Game.draw()} (Umbau)}{srcDirty03b} 
 
 Ich sprach aber von zwei Kleinigkeiten. Für die zweite muss ich ein wenig was erklären. Die ganze Idee um den \texttt{DirtySprite} herum ist ja, Performance dadurch einzusparen, dass man nur noch die veränderten Bildschirmbereiche aktualisiert. Nun kostet aber das Ermitteln und Ausschneiden dieser Bereiche ebenfalls Rechenzeit. In der Informatik spricht man dabei von einem \gls{tradeoff}. Diese Rechenzeit kann das Zeitfenster, welches dafür innerhalb eines Frames zur Verfügung steht, überschreiten und damit die Bildschirmausgabe verlangsamen bzw. qualitativ verschlechtern. Daher wird während der Ausführung von \texttt{draw()} in \texttt{LayeredDirty} die Ausführungszeit gemessen\footnote{Siehe \url{https://github.com/pygame/pygame/blob/main/src_py/sprite.py}.}. Wird das Zeitfenster überschritten, merkt sich das \texttt{LayeredDirty} und blittet beim nächsten mal Hintergründe und Sprites, als ob keine DirtySprite-Logik verwendet wird. 
 
-Aber woher soll nun \texttt{DirtyLayer} wissen, wie lang das verfügbare Zeitfenster ist? Eben dafür ist die Methode \texttt{pygame.sprite.LayeredDirty.set\-\_tim\-ing\-\_tres\-hold()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_treshold()}|underline}\randnotiz{set\-\_tim\-ing\-\_tres\-hold()}\footnote{Der Methodenname enthält einen Rechtschreibfehler und soll im nächsten Pygame-Release auf \texttt{set\_timing\_threshold()} korrigiert werden.} zuständig (siehe \zeiref{srcDirty0302}). Im Handbuch wird vorgeschlagen, den Wert $1000.0 / fps$ zu nehmen. Warum? Eine Sekunde besteht aus $1000$ Millisekunden. Teilt man diese $1000$ durch die Anzahl der Frames pro Sekunde, erhält man die Anzahl der Millisekunden, die ein Frame zur Verfügung hat; bei uns sind es ca.~$16~ms$.
+Aber woher soll nun \texttt{DirtyLayer} wissen, wie lang das verfügbare Zeitfenster ist? Eben dafür ist die Methode \texttt{pygame.sprite.LayeredDirty.set\-\_tim\-ing\-\_thres\-hold()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_threshold()}|underline}\randnotiz{set\-\_tim\-ing\-\_thres\-hold()} zuständig (siehe \zeiref{srcDirty0302}). Im Handbuch wird vorgeschlagen, den Wert $1000.0 / FPS$ zu nehmen. Warum? Eine Sekunde besteht aus $1000$ Millisekunden. Teilt man diese $1000$ durch die Anzahl der Frames pro Sekunde, erhält man die Anzahl der Millisekunden, die ein Frame zur Verfügung hat; bei uns sind es ca.~$16~ms$.
 
 \subsection{Performancemessungen}
 

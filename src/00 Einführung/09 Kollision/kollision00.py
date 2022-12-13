@@ -6,38 +6,34 @@ import pygame
 
 class Settings(object):
 
-    window = {'width': 700, 'height': 200}
-    fps = 60
-    title = "Kollisionsarten"
-    path: dict[str, str] = {}
-    path['file'] = os.path.dirname(os.path.abspath(__file__))
-    path['image'] = os.path.join(path['file'], "images")
-    modus = "rect"
-
-    @staticmethod
-    def dim() -> Tuple[int, int]:
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (700, 200))
+    FPS = 60
+    TITLE = "Kollisionsarten"
+    PATH: dict[str, str] = {}
+    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
+    PATH['image'] = os.path.join(PATH['file'], "images")
+    MODUS = "rect"
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.path['file'], name)
+        return os.path.join(Settings.PATH['file'], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.path['image'], name)
+        return os.path.join(Settings.PATH['image'], name)
 
 
 class Obstacle(pygame.sprite.Sprite):
 
     def __init__(self, filename1: str, filename2: str) -> None:
         super().__init__()
-        self.image_normal: pygame.surface.Surface = pygame.image.load(Settings.imagepath(filename1)).convert_alpha()
-        self.image_hit: pygame.surface.Surface = pygame.image.load(Settings.imagepath(filename2)).convert_alpha()
+        self.image_normal = pygame.image.load(Settings.imagepath(filename1)).convert_alpha()
+        self.image_hit = pygame.image.load(Settings.imagepath(filename2)).convert_alpha()
         self.image = self.image_normal
-        self.rect: pygame.rect.Rect = self.image.get_rect()  # Rechteck §\label{srcKollision01}§
-        self.mask = pygame.mask.from_surface(self.image)     # Maske §\label{srcKollision02}§
-        self.radius = self.rect.width // 2                   # Innenkreis §\label{srcKollision03}§
-        self.rect.centery = Settings.window['height'] // 2
+        self.rect = self.image.get_rect()                   # Rechteck §\label{srcKollision01}§
+        self.mask = pygame.mask.from_surface(self.image)    # Maske §\label{srcKollision02}§
+        self.radius = self.rect.centerx                     # Innenkreis §\label{srcKollision03}§
+        self.rect.centery = Settings.WINDOW.centery
         self.hit = False
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -50,13 +46,12 @@ class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, picturefile: str) -> None:
         super().__init__()
-        self.image: pygame.surface.Surface = pygame.image.load(Settings.imagepath(picturefile)).convert_alpha()
-        self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.radius = self.rect.width // 2
+        self.image = pygame.image.load(Settings.imagepath(picturefile)).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.radius = self.rect.centery
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (10, 10)
-        self.directions = {'stop': (0, 0), 'down': (0,  1),
-                           'up': (0, -1), 'left': (-1, 0), 'right': (1, 0)}
+        self.directions = {'stop': (0, 0), 'down': (0,  1), 'up': (0, -1), 'left': (-1, 0), 'right': (1, 0)}
         self.set_direction('stop')
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -76,9 +71,9 @@ class Game(object):
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        pygame.display.set_caption(Settings.title)
+        pygame.display.set_caption(Settings.TITLE)
         self.font = pygame.font.Font(pygame.font.get_default_font(), 24)
-        self.screen = pygame.display.set_mode(Settings.dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         self.clock = pygame.time.Clock()
         self.bullet = pygame.sprite.GroupSingle(Bullet("shoot.png"))
         self.all_obstacles = pygame.sprite.Group()
@@ -91,7 +86,7 @@ class Game(object):
         self.resize()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             self.watch_for_events()
             self.update()
             self.draw()
@@ -113,11 +108,11 @@ class Game(object):
                 elif event.key == pygame.K_RIGHT:
                     self.bullet.sprite.update(direction='right')
                 elif event.key == pygame.K_r:
-                    Settings.modus = "rect"
+                    Settings.MODUS = "rect"
                 elif event.key == pygame.K_c:
-                    Settings.modus = "circle"
+                    Settings.MODUS = "circle"
                 elif event.key == pygame.K_m:
-                    Settings.modus = "mask"
+                    Settings.MODUS = "mask"
             elif event.type == pygame.KEYUP:
                 self.bullet.sprite.update(direction='stop')
 
@@ -130,15 +125,15 @@ class Game(object):
         self.screen.fill("white")
         self.all_obstacles.draw(self.screen)
         self.bullet.draw(self.screen)
-        text_surface_modus = self.font.render(f"Modus: {Settings.modus}", True, "blue")
-        self.screen.blit(text_surface_modus, dest=(10, Settings.window['height']-30))
+        text_surface_modus = self.font.render(f"Modus: {Settings.MODUS}", True, "blue")
+        self.screen.blit(text_surface_modus, dest=(10, Settings.WINDOW.bottom-30))
         pygame.display.flip()
 
     def resize(self) -> None:
         total_width = 0
         for s in self.all_obstacles:
             total_width += s.rect.width
-        padding = (Settings.window['width'] - total_width) // 4     # Abstand §\label{srcKollision04}§
+        padding = (Settings.WINDOW.width - total_width) // 4     # Abstand §\label{srcKollision04}§
         for i in range(len(self.all_obstacles)):
             if i == 0:
                 self.all_obstacles.sprites()[i].rect.left = padding
@@ -146,10 +141,10 @@ class Game(object):
                 self.all_obstacles.sprites()[i].rect.left = self.all_obstacles.sprites()[i-1].rect.right + padding
 
     def check_for_collision(self) -> None:
-        if Settings.modus == "circle":
+        if Settings.MODUS == "circle":
             for s in self.all_obstacles:
                 s.update(hit=pygame.sprite.collide_circle(self.bullet.sprite, s))
-        elif Settings.modus == "mask":
+        elif Settings.MODUS == "mask":
             for s in self.all_obstacles:
                 s.update(hit=pygame.sprite.collide_mask(self.bullet.sprite, s))
         else:

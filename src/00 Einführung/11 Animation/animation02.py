@@ -8,25 +8,21 @@ from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
 
 
 class Settings(object):
-    window = {'width': 300, 'height': 300}
-    fps = 60
-    title = "Animation"
-    deltatime = 1.0 / fps
-    path: dict[str, str] = {}
-    path['file'] = os.path.dirname(os.path.abspath(__file__))
-    path['image'] = os.path.join(path['file'], "images")
-
-    @staticmethod
-    def dim() -> Tuple[int, int]:
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (300, 300))
+    FPS = 60
+    TITLE = "Animation"
+    DELTATIME = 1.0 / FPS
+    PATH: dict[str, str] = {}
+    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
+    PATH['image'] = os.path.join(PATH['file'], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.path['file'], name)
+        return os.path.join(Settings.PATH['file'], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.path['image'], name)
+        return os.path.join(Settings.PATH['image'], name)
 
 
 class Timer():
@@ -61,7 +57,7 @@ class Animation():
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert_alpha()
             else:
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert()
-                bitmap.set_colorkey(colorkey)           # Transparenz herstellen §\label{srcAnimation0101}§
+                bitmap.set_colorkey(colorkey)
             self.images.append(bitmap)
         self.imageindex = -1
 
@@ -86,10 +82,10 @@ class Rock(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         rocknb = random.randint(6, 9)                                    # Felsennummer §\label{srcAnimation0201}§
-        self.image: pygame.surface.Surface = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
-        self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.rect.centerx = random.randint(self.rect.width, Settings.window['width']-self.rect.width)
-        self.rect.centery = random.randint(self.rect.height, Settings.window['height']-self.rect.height)
+        self.image = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width-self.rect.width)
+        self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height-self.rect.height)
         self.anim = Animation([f"explosion0{i}.png" for i in range(1, 5)], False, 50)  # §\label{srcAnimation0202}§
         self.timer_lifetime = Timer(random.randint(100, 2000), False)   # Lebenszeit §\label{srcAnimation0203}§
         self.bumm = False
@@ -112,8 +108,8 @@ class ExplosionAnimation(object):
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.dim())
-        pygame.display.set_caption(Settings.title)
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
+        pygame.display.set_caption(Settings.TITLE)
         self.clock = pygame.time.Clock()
         self.all_rocks = pygame.sprite.Group()
         self.timer_newrock = Timer(500)                                  # Timer §\label{srcAnimation0205}§
@@ -126,9 +122,9 @@ class ExplosionAnimation(object):
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             time_current = time()
-            Settings.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 

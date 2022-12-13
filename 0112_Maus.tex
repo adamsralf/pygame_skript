@@ -19,11 +19,11 @@ Die eigentliche Musik spielt in der Hauptklasse \texttt{Game}, da dort die Mausa
 
 \newpage
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{55}{75}{python}{Mausaktionen: Statics und Konstruktor von \texttt{Game}}{srcMaus00a} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{55}{71}{python}{Mausaktionen: Statics und Konstruktor von \texttt{Game}}{srcMaus00a} 
 
 Auch die Methode \texttt{run()} birgt keine Überraschungen.
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{77}{87}{python}{Mausaktionen: \texttt{Game.run()}}{srcMaus00b} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{73}{83}{python}{Mausaktionen: \texttt{Game.run()}}{srcMaus00b} 
 
 In \texttt{watch\_for\_events()} kommen uns die ersten interessanten Stellen unter. Wie bei den Tasten ein \texttt{KEYUP} und ein \texttt{KEYDOWN} das Drücken und Loslassen markieren, gibt es auch Entsprechungen bei der Maus:\ \randnotiz{MOUSEBUTTONDOWN} \randnotiz{MOUSEBUTTONUP}\texttt{MOUSEBUTTONDOWN}\myindex{pyg}{\texttt{MOUSEBUTTONDOWN}|underline} und \texttt{MOUSEBUTTONUP}\myindex{pyg}{\texttt{MOUSEBUTTONUP}|underline}. In \zeiref{srcMaus0002} wird der \texttt{event.type} abgefragt und anschließend wird ermittelt, welche Maustaste denn gedrückt wurde. 
 
@@ -33,13 +33,13 @@ Wird also die linke Maustaste gedrückt (\zeiref{srcMaus0004}), wird an den Ball
 
 Mit \texttt{event.pos}\myindex{pyg}{\texttt{event}!\texttt{pos}} könnte man jetzt sofort die Mausposition abfragen -- was wir hier nicht tun.\randnotiz{event.pos}
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{89}{106}{python}{Mausaktionen: \texttt{Game.watch\_for\_events()}}{srcMaus00c} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{85}{102}{python}{Mausaktionen: \texttt{Game.watch\_for\_events()}}{srcMaus00c} 
 
 Eine Anforderung war, dass der Systemmauszeiger nur außerhalb des inneren Rechtecks sichtbar ist. Innerhalb des Rechtecks soll ja der Ball als Mauszeiger herhalten. In \zeiref{srcMaus0003} wird dies durch die Methode \texttt{\texttt{pygame.mouse.set\_visible()}}\randnotiz{set\_visible()}\myindex{pyg}{\texttt{mouse}!\texttt{set\_visible()}|underline} erreicht. Diese steuert, ob der Systemmauszeiger -- welcher Ausprägung auch immer -- angezeigt werden soll oder nicht. 
 
 Als Entscheider dient dabei, ob die aktuelle Mausposition innerhalb des inneren Rechtecks liegt. Die Methode \texttt{pygame.mouse.get\_pos()}\randnotiz{get\_pos()}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}|underline} liefert mir dazu die aktuelle Mausposition. Diese wird nun einfach in eine schon vorhandene Kollisionsprüfung gesteckt: \texttt{pygame.Rect.collidepoint()}\randnotiz{collidepoint()}\myindex{pyg}{\texttt{Rect}!\texttt{collidepoint()}|underline}. Ist die Mausposition innerhalb des Rechtecks, liefert diese den Wert \true, ansonsten \false; daher muss der Wahrheitswert noch mit \texttt{not} negiert werden.
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{108}{119}{python}{Mausaktionen: \texttt{Game.update()} und \texttt{Game.draw()}}{srcMaus00d} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{104}{115}{python}{Mausaktionen: \texttt{Game.update()} und \texttt{Game.draw()}}{srcMaus00d} 
 
 Verbleibt noch die Klasse \texttt{Ball}. Diese enthält zwar keine direkten Mausaktionen mehr, aber die Methode \texttt{update()} sieht nun ganz anders als bei den vorherigen Beispielen aus. In früheren Beispielen wurden Methoden wie \texttt{rotate()} oder \texttt{resize()} direkt aus \texttt{watch\_for\_events()} oder vergleichbaren Methoden von \texttt{Game} aufgerufen. Das ist auch soweit in Ordnung, aber wenn man diese Kindklassen von \texttt{pygame.sprite.Sprite} einer \texttt{pygame.sprite.Group} oder \texttt{pygame.sprite.GroupSingle} hinzugefügt hat, kriegt man ein Problem. Diese Klassen erwarten nur \texttt{Sprite}-Objekt als Elemente. Deshalb kann man eigentlich im Sinne der objektorientierten Programmierung nur Methoden und Attribute verwwenden, die der Elternklasse \texttt{pygame.sprite.Sprite} bekannt sind -- also beispielsweise \texttt{update()}. Methoden wie \texttt{rotate()} wären dann der Spritegruppe unbekannt.
 

@@ -15,7 +15,7 @@ class Tile(pygame.sprite.Sprite):
         super().__init__()
         self.rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
-        self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
+        self.image = pygame.surface.Surface(self.rect.size)
         self.image.fill("white")
         self.timer_color: Timer
         self.counter = 1
@@ -38,13 +38,13 @@ class Tile(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.get_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Simple ohne Dirty Sprites")
         self.clock = pygame.time.Clock()
         self.all_tiles = pygame.sprite.Group()
         self.create_playground()
         self.background_image = pygame.image.load(Settings.get_image("background.png"))
-        self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
+        self.background_image = pygame.transform.scale(self.background_image, (Settings.WINDOW.size))
         self.running = True
         self.performance: list[float] = []
 
@@ -71,7 +71,7 @@ class Game:
     def run(self):
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             start = time.perf_counter()
             self.watch_for_events()
             self.update()
@@ -84,21 +84,22 @@ class Game:
         pygame.quit()
 
     def create_playground(self) -> None:
-        for i in range(Settings.number):
-            ok = False
-            while not ok:
-                x = randint(0, Settings.window.width - Settings.size)
-                y = randint(0, Settings.window.height - Settings.size)
-                t = Tile((x, y))
-                l = pygame.sprite.spritecollide(t, self.all_tiles, False)
-                ok = len(l) == 0
-            self.all_tiles.add(t)
+        for _ in range(Settings.number):
+            tries = 10
+            while tries > 0:
+                left = randint(0, Settings.WINDOW.width - Settings.size)
+                top = randint(0, Settings.WINDOW.height - Settings.size)
+                tile = Tile((left, top))
+                collided = pygame.sprite.spritecollide(tile, self.all_tiles, False)
+                if len(collided) == 0:
+                    self.all_tiles.add(tile)
+                    break
+                tries -= 1
 
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

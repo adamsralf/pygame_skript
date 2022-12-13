@@ -6,25 +6,21 @@ import pygame
 
 
 class Settings(object):
-    window = {'width': 700, 'height': 200}
-    fps = 60
-    deltatime = 1.0 / fps
-    title = "Zeitsteuerung"
-    path: dict[str, str] = {}
-    path['file'] = os.path.dirname(os.path.abspath(__file__))
-    path['image'] = os.path.join(path['file'], "images")
-
-    @staticmethod
-    def dim() -> Tuple[int, int]:
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (700, 200))
+    FPS = 60
+    DELTATIME = 1.0 / FPS
+    TITLE = "Zeitsteuerung"
+    PATH: dict[str, str] = {}
+    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
+    PATH['image'] = os.path.join(PATH['file'], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.path['file'], name)
+        return os.path.join(Settings.PATH['file'], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.path['image'], name)
+        return os.path.join(Settings.PATH['image'], name)
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -39,11 +35,11 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = pygame.math.Vector2(150, 0)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        newpos = self.position + (self.speed * Settings.deltatime * self.direction)
+        newpos = self.position + (self.speed * Settings.DELTATIME * self.direction)
         self.rect.left = round(newpos.x)
-        if self.rect.left < 10 or self.rect.right >= Settings.window['width'] - 10:
+        if self.rect.left < 10 or self.rect.right >= Settings.WINDOW.right - 10:
             self.direction *= -1
-        self.position += (self.speed * Settings.deltatime * self.direction)
+        self.position += (self.speed * Settings.DELTATIME * self.direction)
         self.rect.left = round(self.position.x)
 
 
@@ -59,9 +55,9 @@ class Bullet(pygame.sprite.Sprite):
         self.speed = pygame.math.Vector2(0, 100)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        self.position += (self.speed * Settings.deltatime * self.direction)
+        self.position += (self.speed * Settings.DELTATIME * self.direction)
         self.rect.top = round(self.position.y)
-        if self.rect.top > Settings.window['height'] - 30:
+        if self.rect.top > Settings.WINDOW.bottom - 30:
             self.kill()
 
 
@@ -71,8 +67,8 @@ class Game(object):
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        pygame.display.set_caption(Settings.title)
-        self.screen = pygame.display.set_mode(Settings.dim())
+        pygame.display.set_caption(Settings.TITLE)
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         self.clock = pygame.time.Clock()
         self.enemy = pygame.sprite.GroupSingle(Enemy("alienbig1.png"))
         self.all_bullets = pygame.sprite.Group()
@@ -87,9 +83,9 @@ class Game(object):
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             time_current = time()
-            Settings.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 
@@ -113,9 +109,9 @@ class Game(object):
         self.enemy.update()
 
     def new_bullet(self) -> None:
-        if pygame.time.get_ticks() >= self.time_stamp + self.time_duration:  # Intervallgrenze?§\label{srcZeit0204}§
+        if pygame.time.get_ticks() >= self.time_stamp + self.time_duration:  # §\label{srcZeit0204}§
             self.all_bullets.add(Bullet("shoot.png", self.enemy.sprite.rect.move(0, 20).center))
-            self.time_stamp = pygame.time.get_ticks()                        # Intervallstart §\label{srcZeit0205}§
+            self.time_stamp = pygame.time.get_ticks()       # Intervallstart §\label{srcZeit0205}§
 
 
 def main():

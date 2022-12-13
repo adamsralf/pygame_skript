@@ -12,9 +12,9 @@ from settings import Settings
 class Tile(pygame.sprite.DirtySprite):
     def __init__(self, topleft: tuple[int, int]) -> None:
         super().__init__()
-        self.rect: pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
+        self.rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
-        self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
+        self.image = pygame.surface.Surface((self.rect.width, self.rect.height))
         self.image.fill("white")
         self.timer: Timer
         self.status = 0
@@ -38,11 +38,11 @@ class Tile(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.get_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Dirty Sprites Demo")
         self.clock = pygame.time.Clock()
         self.background_image = pygame.image.load(Settings.get_image("background.png"))
-        self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
+        self.background_image = pygame.transform.scale(self.background_image, (Settings.WINDOW.size))
         self.all_tiles = pygame.sprite.LayeredDirty()
         self.create_playground()
         self.timer = Timer(1000, False)
@@ -73,7 +73,7 @@ class Game:
     def run(self):
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             self.watch_for_events()
             self.update()
             self.draw()
@@ -82,14 +82,16 @@ class Game:
 
     def create_playground(self) -> None:
         for _ in range(Settings.number):
-            ok = False
-            while not ok:
-                left = randint(0, Settings.window.width - Settings.size)
-                top = randint(0, Settings.window.height - Settings.size)
+            tries = 10
+            while tries > 0:
+                left = randint(0, Settings.WINDOW.width - Settings.size)
+                top = randint(0, Settings.WINDOW.height - Settings.size)
                 tile = Tile((left, top))
                 collided = pygame.sprite.spritecollide(tile, self.all_tiles, False)
-                ok = len(collided) == 0
-            self.all_tiles.add(tile)
+                if len(collided) == 0:
+                    self.all_tiles.add(tile)
+                    break
+                tries -= 1
 
     def klick(self, mousepos: Tuple[int, int]) -> None:
         for tile in self.all_tiles.sprites():
@@ -99,8 +101,7 @@ class Game:
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

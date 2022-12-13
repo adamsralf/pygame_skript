@@ -6,13 +6,9 @@ import pygame
 
 
 class Settings:
-    window = {'width': 150, 'height': 150}
-    fps = 60
-    deltatime = 1.0 / fps
-
-    @staticmethod
-    def window_dim():
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (600, 100))
+    FPS = 60
+    DELTATIME = 1.0 / FPS
 
 
 class Defender(pygame.sprite.Sprite):
@@ -21,26 +17,26 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect : pygame.rect.Rect = self.image.get_rect()
-        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2) # §\label{srcTastatur0001}§
-        self.position : pygame.math.Vector2 = pygame.math.Vector2(self.rect.left, self.rect.top)
-        self.direction : pygame.math.Vector2 = pygame.math.Vector2(1, 0)   # 2 Dimensionen §\label{srcTastatur0002}§
+        self.rect = self.image.get_rect()
+        self.rect.center = Settings.WINDOW.center  # §\label{srcTastatur0001}§
+        self.position: pygame.math.Vector2 = pygame.math.Vector2(self.rect.left, self.rect.top)
+        self.direction: pygame.math.Vector2 = pygame.math.Vector2(1, 0)   # 2 Dimensionen §\label{srcTastatur0002}§
         self.change_direction("right")
         self.change_direction("start")
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
-                self.position = self.position + self.speed * Settings.deltatime * self.direction
-                self.rect.left, self.rect.top = round(self.position.x) , round(self.position.y)
+                self.position = self.position + self.speed * Settings.DELTATIME * self.direction
+                self.rect.left, self.rect.top = round(self.position.x), round(self.position.y)
             elif kwargs["action"] == "switch":
                 self.direction *= -1
         elif "direction" in kwargs.keys():
             self.change_direction(kwargs["direction"])
 
-    def change_direction(self, direction:str) -> None:
+    def change_direction(self, direction: str) -> None:
         if direction == "right":
-            self.direction.x, self.direction.y  = (1, 0)
+            self.direction.x, self.direction.y = (1, 0)
         elif direction == "left":
             self.direction.x, self.direction.y = (-1, 0)
         elif direction == "up":
@@ -53,28 +49,27 @@ class Defender(pygame.sprite.Sprite):
             self.speed = 100
 
 
-
 class Border(pygame.sprite.Sprite):
 
-    def __init__(self, whichone:str) -> None:
+    def __init__(self, whichone: str) -> None:
         super().__init__()
         self.image = pygame.image.load("images/brick1.png").convert_alpha()
         if whichone == 'right':
-            self.image = pygame.transform.scale(self.image, (10, Settings.window['height']))
+            self.image = pygame.transform.scale(self.image, (10, Settings.WINDOW.height))
             self.rect = self.image.get_rect()
-            self.rect.left = Settings.window['width'] - self.rect.width
+            self.rect.left = Settings.WINDOW.right - self.rect.width
         elif whichone == 'left':
-            self.image = pygame.transform.scale(self.image, (10, Settings.window['height']))
+            self.image = pygame.transform.scale(self.image, (10, Settings.WINDOW.height))
             self.rect = self.image.get_rect()
-            self.rect.left = 0
+            self.rect.left = Settings.WINDOW.left
         elif whichone == 'top':
-            self.image = pygame.transform.scale(self.image, (Settings.window['width'], 10))
+            self.image = pygame.transform.scale(self.image, (Settings.WINDOW.width, 10))
             self.rect = self.image.get_rect()
-            self.rect.top = 0
+            self.rect.top = Settings.WINDOW.top
         elif whichone == 'down':
-            self.image = pygame.transform.scale(self.image, (Settings.window['width'], 10))
+            self.image = pygame.transform.scale(self.image, (Settings.WINDOW.width, 10))
             self.rect = self.image.get_rect()
-            self.rect.bottom = Settings.window['height']
+            self.rect.bottom = Settings.WINDOW.bottom
 
 
 class Game(object):
@@ -82,7 +77,7 @@ class Game(object):
     def __init__(self) -> None:
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.window_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Sprite")
         self.clock = pygame.time.Clock()
         self.defender = pygame.sprite.GroupSingle(Defender())
@@ -100,9 +95,9 @@ class Game(object):
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             time_current = time()
-            Settings.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 
@@ -126,9 +121,8 @@ class Game(object):
                 elif event.key == pygame.K_r:
                     if event.mod & pygame.KMOD_LSHIFT:  # Shift-Taste §\label{srcTastatur0007}§
                         self.defender.update(direction="stop")
-                    else: 
+                    else:
                         self.defender.update(direction="start")
-
 
     def update(self) -> None:
         if pygame.sprite.spritecollide(self.defender.sprite, self.all_border, False):
@@ -141,9 +135,11 @@ class Game(object):
         self.all_border.draw(self.screen)
         pygame.display.flip()
 
+
 def main():
     game = Game()
     game.run()
+
 
 if __name__ == '__main__':
     main()

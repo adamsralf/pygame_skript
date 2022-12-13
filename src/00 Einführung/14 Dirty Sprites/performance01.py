@@ -15,7 +15,7 @@ class Tile(pygame.sprite.DirtySprite):
         super().__init__()
         self.rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
-        self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
+        self.image = pygame.surface.Surface(self.rect.size)
         self.image.fill("white")
         self.timer: Timer
         self.status = 0
@@ -41,16 +41,16 @@ class Tile(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.get_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Simple mit Dirty Sprites")
         self.clock = pygame.time.Clock()
         self.all_tiles = pygame.sprite.LayeredDirty()
         self.create_playground()
         self.background_image = pygame.image.load(Settings.get_image("background.png"))
-        self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
+        self.background_image = pygame.transform.scale(self.background_image, (Settings.WINDOW.size))
         self.running = True
         self.all_tiles.clear(self.screen, self.background_image)
-        self.all_tiles.set_timing_threshold(1000 / Settings.fps)
+        self.all_tiles.set_timing_threshold(1000 / Settings.FPS)
         self.performance: list[float] = []
 
     def watch_for_events(self) -> None:
@@ -75,7 +75,7 @@ class Game:
     def run(self):
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             start = time.perf_counter()
             self.watch_for_events()
             self.update()
@@ -90,20 +90,21 @@ class Game:
 
     def create_playground(self) -> None:
         for _ in range(Settings.number):
-            ok = False
-            while not ok:
-                x = randint(0, Settings.window.width - Settings.size)
-                y = randint(0, Settings.window.height - Settings.size)
-                t = Tile((x, y))
-                l = pygame.sprite.spritecollide(t, self.all_tiles, False)
-                ok = len(l) == 0
-            self.all_tiles.add(t)
+            tries = 10
+            while tries > 0:
+                left = randint(0, Settings.WINDOW.width - Settings.size)
+                top = randint(0, Settings.WINDOW.height - Settings.size)
+                tile = Tile((left, top))
+                collided = pygame.sprite.spritecollide(tile, self.all_tiles, False)
+                if len(collided) == 0:
+                    self.all_tiles.add(tile)
+                    break
+                tries -= 1
 
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

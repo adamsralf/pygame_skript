@@ -9,16 +9,16 @@ from mytools import Timer
 from settings import Settings
 
 
-class Tile(pygame.sprite.DirtySprite):                          # Erstmaliges Zeichnen§\label{srcDirty0100}§
+class Tile(pygame.sprite.DirtySprite):                      # Neue Super-Klasse§\label{srcDirty0100}§
     def __init__(self, topleft: tuple[int, int]) -> None:
         super().__init__()
-        self.rect: pygame.rect.Rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
+        self.rect = pygame.rect.Rect(0, 0, Settings.size, Settings.size)
         self.rect.topleft = topleft
-        self.image: pygame.surface.Surface = pygame.surface.Surface((self.rect.width, self.rect.height))
+        self.image = pygame.surface.Surface((self.rect.width, self.rect.height))
         self.image.fill("white")
         self.timer: Timer
         self.status = 0
-        self.dirty = 1                                          # Erstmaliges Zeichnen§\label{srcDirty0101}§
+        self.dirty = 1                                      # Erstmaliges Zeichnen§\label{srcDirty0101}§
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
@@ -26,26 +26,24 @@ class Tile(pygame.sprite.DirtySprite):                          # Erstmaliges Ze
                 self.timer = Timer(500, False)
                 self.image.fill("red")
                 self.status = 1
-                self.dirty = 1                                  # Muss neu gezeichnet werden§\label{srcDirty0102}§
+                self.dirty = 1                              # Muss neu gezeichnet werden§\label{srcDirty0102}§
             if kwargs["action"] == "kill" and self.status == 1:
                 self.kill()
         if self.status == 1 and self.timer.is_next_stop_reached():
             self.image.fill("white")
             self.status = 0
-            self.dirty = 1                                      # Muss neu gezeichnet werden§\label{srcDirty0103}§
+            self.dirty = 1                                  # Muss neu gezeichnet werden§\label{srcDirty0103}§
 
 
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.get_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Dirty Sprites Demo")
         self.clock = pygame.time.Clock()
         self.background_image = pygame.image.load(Settings.get_image("background.png"))
-        self.background_image = pygame.transform.scale(self.background_image, (Settings.get_dim()))
+        self.background_image = pygame.transform.scale(self.background_image, (Settings.WINDOW.size))
         self.all_tiles = pygame.sprite.LayeredDirty()       # Gruppenklasse für DirtySprite§\label{srcDirty0104}§
-        self.all_tiles.clear(self.screen, self.background_image)    # Hintergrund setzen§\label{srcDirty0105}§
-        self.all_tiles.set_timing_treshold(1000.0/Settings.fps)  # Schwelwert festlegen§\label{srcDirty0106}§
         self.create_playground()
         self.timer = Timer(1000, False)
         self.running = True
@@ -76,7 +74,7 @@ class Game:
     def run(self):
         self.running = True
         while self.running:
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             self.watch_for_events()
             self.update()
             self.draw()
@@ -85,14 +83,16 @@ class Game:
 
     def create_playground(self) -> None:
         for _ in range(Settings.number):
-            ok = False
-            while not ok:
-                left = randint(0, Settings.window.width - Settings.size)
-                top = randint(0, Settings.window.height - Settings.size)
+            tries = 10
+            while tries > 0:
+                left = randint(0, Settings.WINDOW.width - Settings.size)
+                top = randint(0, Settings.WINDOW.height - Settings.size)
                 tile = Tile((left, top))
                 collided = pygame.sprite.spritecollide(tile, self.all_tiles, False)
-                ok = len(collided) == 0
-            self.all_tiles.add(tile)
+                if len(collided) == 0:
+                    self.all_tiles.add(tile)
+                    break
+                tries -= 1
 
     def klick(self, mousepos: Tuple[int, int]) -> None:
         for tile in self.all_tiles.sprites():
@@ -102,8 +102,7 @@ class Game:
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 \newpage
 \section{Bitmaps bewegen}\index{Bitmap!bewegen}
 \subsection{Grundlagen}
-In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung von Bitmaps notiert, dass wir die linke, obere Ecke als Positionsangabe und die Höhe und Breite beispielsweise für Abstandsberechnungen brauchen. Diese Angaben lassen sich gut einem Rechteck kodieren. Pygame stellt dazu die Klasse \texttt{pygame.Rect}\myindex{pyg}{\texttt{Rect}}\randnotiz{Rect} zur Verfügung. In \abbref[vref]{picRect01} finden Sie die meiner Ansicht nach wichtigsten Attribute der Klasse.
+In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung von Bitmaps notiert, dass wir die linke, obere Ecke als Positionsangabe und die Höhe und Breite beispielsweise für Abstandsberechnungen brauchen. Diese Angaben lassen sich gut einem Rechteck kodieren. Pygame stellt dazu die Klasse \texttt{pygame.rect.Rect}\myindex{pyg}{\texttt{Rect}}\randnotiz{Rect} zur Verfügung. In \abbref[vref]{picRect01} finden Sie die meiner Ansicht nach wichtigsten Attribute der Klasse.
 
 \begin{figure}[H]
 \begin{tikzpicture}
@@ -101,7 +101,7 @@ In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung vo
 \myindex{pyg}{\texttt{Rect}!\texttt{height}|underline}%
 In der Abbildung werden Strecken in normaler Schrift und Punkte in \textit{kursiver Schrift} angegeben. Die Strecken sind eindimensional und die Punkte zweidimensional $(x,y)$. Die Koordinate~$x$ ist dabei der horizontale und~$y$ der vertikale Abstand zum 0-Punkt des Koordinatensystems. Die Bedeutung der einzelnen Angaben sollte selbsterklärend sein. Der schöne Vorteil ist, dass die Angaben sich gegenseitig berechnen. Setze ich beispielsweise \texttt{topleft = (10,10)} und \texttt{width, height = 30, 40}, so werden alle anderen Angaben für mich ermittelt. Ich muss also nicht mehr den rechten Rand mit \texttt{left + width} ausrechnen; ich kann vielmehr sofort \texttt{right} verwenden. Auch oft nützlich ist die Berechnung des Mittelpunktes \texttt{center} oder die entsprechenden Längen \texttt{centerx} und \texttt{centery}. Ändere ich nun das Zentrum durch \texttt{center = (100, 10)}, so verschieben sich alle anderen Angaben ebenfalls und müssen nicht von mir neu bestimmt werden -- sehr praktisch.
 
-Schauen wir uns dazu eine reduzierte Version des letzten Quelltextes an. In \srcref[vref]{srcInvader05} wird die \texttt{Rect}-Klasse schon verwendet.
+Schauen wir uns dazu eine reduzierte Version des letzten Quelltextes an. In \srcref[vref]{srcInvader05} wird die \texttt{Rect}-Klasse schon verwendet. So werden beispielsweise in \zeiref{srcInvader0504a} die Fenstermaße in einem \texttt{Rect}-Objekt verwaltet. In den Zeilen \zeiref{srcInvader0504b}, \zeiref{srcInvader0502} und \zeiref{srcInvader0503} können dadurch die Bildschirminformationen bequem und ohne eigene Berechnungen ausgelesen werden.
 
 \lstsource{SRC/00 Einführung/04 Bewegung/invader05.py}{1}{999}{python}{Bitmaps bewegen, Version 1.0}{srcInvader05}
 
@@ -125,7 +125,7 @@ Allein diese kleine Ergänzung lässt unser Raumschiff nun nach rechts wandern. 
 	\item \textbf{Geschwindigkeit:}\randnotiz{Ge\-schwin\-dig\-keit}\index{Geschwindigkeit} Die \texttt{1} legt fest, um welche Größenordnung sich \texttt{left} verändert. Je größer der Wert ist, desto größer sind die Sprünge zwischen den Frames; die Bewegung erscheint schneller. 
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{28}{40}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{24}{40}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
 
 Diese beiden Informationen werden nun in \srcref[vref]{srcInvader05b} dazu genutzt, die Bewegung erheblich flexibler zu gestalten. In \zeiref{srcInvader0505} die Geschwindigkeit nun durch die Variable \texttt{defender\_speed} repräsentiert. So könnten wir im Laufe des Spiels die Geschwindigkeit dynamisch gestalten, z.B. bei einer Beschleunigung durch Raketentreibstoffausstoß. 
 
@@ -135,17 +135,17 @@ Beide Informationen können nun in \zeiref{srcInvader0507} zur Berechnung der ne
 
 Wenn Sie das Programm laufen lassen, verabschiedet sich der Verteidiger nach einiger Zeit und verschwindet hinter dem rechten Bildschirmrand und ward nicht mehr gesehen. Nutzen wir nun unser Rechteck zu einer ersten einfachen Kollisionsprüfung. Ich möchte, dass das Raumschiff von den Rändern \emph{abprallt} und die Richtung wechselt. 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{39}{44}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{35}{40}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
 
-Ich hoffe, dass Sie die Idee hinter dem Code erkennen. Nach Berechnung der neuen horizontalen Position, wird in \zeiref{srcInvader0508} überprüft, ob der neue rechte Rand die Bildschirmbreite erreicht oder überschreitet. Wenn ja, dann wird einfach das Vorzeichen der Richtungsvariable vertauscht\index{Richtungswechsel}\randnotiz{Rich\-tungs\-wechs\-el}! Analog klappt das beim Erreichen des linken Bildschirmrandes. 
+Ich hoffe, dass Sie die Idee hinter dem Code erkennen. Nach Berechnung der neuen horizontalen Position, wird in \zeiref{srcInvader0508} überprüft, ob der neue rechte Rand des Bitmaps die rechte Bildschirmseite erreicht oder überschreitet. Wenn ja, dann wird einfach das Vorzeichen der Richtungsvariable vertauscht\index{Richtungswechsel}\randnotiz{Rich\-tungs\-wechs\-el}! Analog klappt das beim Erreichen des linken Bildschirmrandes. 
 
 Probieren Sie doch mal aus, das Ganze mit einer vertikalen Bewegung zu kombinieren.
 
-Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem \texttt{Rect-}Objekt zugewiesen, obwohl sie vielleicht schon über den Rand ragt. Bei einer Geschwindigkeit von~\texttt{1} oder \texttt{2} mag das nicht so ins Auge fallen, aber wenn wir die Geschwindigkeit auf die Raumschiffbreite einstellen, wird das Problem offensichtlich (setzen Sie kurzfristig mal \texttt{Settings.fps = 5}, damit man was sieht). Das Raumschiff verlässt zur Hälfte den Bildschirm. 
+Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem \texttt{Rect-}Objekt zugewiesen, obwohl sie vielleicht schon über den Rand ragt. Bei einer Geschwindigkeit von~\texttt{1} oder \texttt{2} mag das nicht so ins Auge fallen, aber wenn wir die Geschwindigkeit auf die Raumschiffbreite einstellen, wird das Problem offensichtlich (setzen Sie kurzfristig mal \texttt{Settings.FPS = 5}, damit man was sieht). Das Raumschiff verlässt zur Hälfte den Bildschirm. 
 
 Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.Rect.move()}\myindex{pyg}{\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{39}{46}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{35}{42}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
 
 Die neue Funktion taucht in \zeiref{srcInvader0510} zum ersten Mal auf. Sie hat zwei Parameter. Mit dem ersten wird die Verschiebung der horizontalen Koordinate angegeben und mit der zweiten die vertikale Verschiebung. Da wir keine Höhenposition ändern wollen, ist dieser Parameter in unserem Beispiel konstant~0. Als Rückgabe liefert die Funktion ein neues \texttt{Rect}-Objekt mit den neuen Positionsangaben. Dieses speichern wir in \texttt{newpos} zwischen.
 
@@ -185,7 +185,7 @@ Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eb
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Geschwindigkeiten normalisieren (\emph{deltatime})}\index{deltatime}
-Die Bewegung ist derzeit nicht nur von \texttt{defender\_speed} abhängig, sondern auch von der Framerate \texttt{Settings.fps}. Um diese Abhängigkeit zu verdeurlichen, habe ich den vorherigen Quelltext für ein kleines Experiment umgebaut (siehe \srcref[vref]{srcInvader05e}).
+Die Bewegung ist derzeit nicht nur von \texttt{defender\_speed} abhängig, sondern auch von der Framerate \texttt{Settings.FPS}. Um diese Abhängigkeit zu verdeutlichen, habe ich den vorherigen Quelltext für ein kleines Experiment umgebaut (siehe \srcref[vref]{srcInvader05e}).
 
 In \zeiref{srcInvader05e01} sehen Sie die unterschiedlichen Frameraten, mit denen das Experiment durchgeführt wurde. In der Zeile davor werden die Fenstermaße so eingestellt, dass das Fenster hoch und schmal ist, und in der Zeile darunter wird die absolute Anzahl der Millisekunden angegeben, die das Raumschiff nach oben steigt.
 
@@ -193,15 +193,15 @@ In \zeiref{srcInvader05e01} sehen Sie die unterschiedlichen Frameraten, mit dene
 
 Innerhalb der Hauptprogrammschleife wandert das Raumschiff nun pro Frame eine gewisse Anzahl von Pixel nach oben. Dabei wird die neue Position dadurch ermittelt, dass auf die \texttt{top}-Koordinate der alten Position das Produkt aus Richtung und Geschwindigkeit addiert wird (\zeiref{srcInvader05e03}) -- also nix Neues an dieser Stelle.
 
-Nach einer festen Zeitspanne (\texttt{Settings.limit}, hier $500~ms$) wird die Richtung in \texttt{defender\_direction} auf~0 gesetzt, so dass die Bewegung stoppt. Dazu wird in \zeiref{srcInvader05e04} abgefragt, ob die aktuelle Anzahl von Millisekunden seit dem Start des Programmes größer als \texttt{start\_time} plus \texttt{Settings.limit} ist. Oder in Zahlen: Beim ersten Schleifendurchlauf (Frame~1) stünde dort beispielsweise die Abfrage \emph{Sind $17~ms$ größer als $5~ms + 500~ms$}. Die Antwort ist \emph{Nein}, so dass das Raumschiff sich nach oben bewegt. Bei Frame~61 stünde dort die Abfrage \emph{Sind $508~ms$ größer als $5~ms + 500~ms$}. Nun ist die Antwort \emph{Ja} und die Richtungsvariable wird deshalb auf~0 gesetzt, die Bewegung stoppt.
+Nach einer festen Zeitspanne (\texttt{Settings.LIMIT}, hier $500~ms$) wird die Richtung in \texttt{defender\_direction} auf~0 gesetzt, so dass die Bewegung stoppt. Dazu wird in \zeiref{srcInvader05e04} abgefragt, ob die aktuelle Anzahl von Millisekunden seit dem Start des Programmes größer als \texttt{start\_time} plus \texttt{Settings.LIMIT} ist. Oder in Zahlen: Beim ersten Schleifendurchlauf (Frame~1) stünde dort beispielsweise die Abfrage \emph{Sind $17~ms$ größer als $5~ms + 500~ms$}. Die Antwort ist \emph{Nein}, so dass das Raumschiff sich nach oben bewegt. Bei Frame~61 stünde dort die Abfrage \emph{Sind $508~ms$ größer als $5~ms + 500~ms$}. Nun ist die Antwort \emph{Ja} und die Richtungsvariable wird deshalb auf~0 gesetzt, die Bewegung stoppt.
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05e.py}{1}{57}{python}{Nicht normalisierte Bewegung}{srcInvader05e}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05e.py}{7}{53}{python}{Nicht normalisierte Bewegung}{srcInvader05e}
 
 In \abbref[vref]{fpsbewegung00} können Sie Bildschirmfotos der Strecken sehen, die das Raumschiff nach einer halben Sekunde zurückgelegt hat. In allen Experimenten blieb die Geschwindigkeit \texttt{defender\_speed} immer gleich -- nämlich 2. Nur die Framerate hat sich erhöht.
 
-Wie kommen diese unterschiedlichen Höhen zustande? Soll doch eigentlich nur \texttt{de\-fen\-der\-\_speed} die Geschwindigkeit definieren. In \tabref[vref]{tabFpsBewegung01} wird der Zusammenhang hoffentlich deutlich. In der ersten Spalte ist die Geschwindigkeit eines Objektes zu sehen; in unserem Beispiel ist dies die Variable \texttt{defender\_speed}. Dieser Wert gibt an, um wie viele Pixel pro Frame das Objekt bewegt wird; dieser Wert wird nicht verändert. Die zweite Spalte gibt die Framerate an, also die Anzahl der Frames pro Sekunde. In unserem Beispiel ist dieser Wert in \texttt{Settings.fps} definiert. Die Dauer der Bewegung ist in der dritten Spalte zu sehen. Wir haben eine Dauer von $500~ms$ also $0.5~s$. In unserem Beispiels liegt der Wert in \texttt{Settings.limit} und ist ebenfalls für alle Experimente gleich. 
+Wie kommen diese unterschiedlichen Höhen zustande? Soll doch eigentlich nur \texttt{de\-fen\-der\-\_speed} die Geschwindigkeit definieren. In \tabref[vref]{tabFpsBewegung01} wird der Zusammenhang hoffentlich deutlich. In der ersten Spalte ist die Geschwindigkeit eines Objektes zu sehen; in unserem Beispiel ist dies die Variable \texttt{defender\_speed}. Dieser Wert gibt an, um wie viele Pixel pro Frame das Objekt bewegt wird; dieser Wert wird nicht verändert. Die zweite Spalte gibt die Framerate an, also die Anzahl der Frames pro Sekunde. In unserem Beispiel ist dieser Wert in \texttt{Settings.FPS} definiert. Die Dauer der Bewegung ist in der dritten Spalte zu sehen. Wir haben eine Dauer von $500~ms$ also $0.5~s$. In unserem Beispiels liegt der Wert in \texttt{Settings.LIMIT} und ist ebenfalls für alle Experimente gleich. 
 
-In der letzten Spalte steht die errechnete Wegstrecke in Pixel, die das bewegliche Objekt dann zurückgelegt hat. Nun ist Zusammenhang offensichtlich: Da wir die Hauptprogrammschleife wegen der unterschiedlichen Framerate unterschiedlich oft wiederholen, wird bei konstanter Zeit eine unterschiedliche Strecke zurückgelegt.
+In der letzten Spalte steht die errechnete Wegstrecke in Pixel, die das bewegliche Objekt dann zurückgelegt hat. Nun ist Zusammenhang klar: Da wir die Hauptprogrammschleife wegen der unterschiedlichen Framerate unterschiedlich oft wiederholen, wird bei konstanter Zeit eine unterschiedliche Strecke zurückgelegt.
 
 \begin{figure}[hbtp] 
 \begin{center}
@@ -252,29 +252,29 @@ Was wir also brauchen, ist eine Mechanismus, der die Framerate wieder rausrechne
 	\hline
 	\endhead % Zweiter Kopf ist zu Ende
 	% Ab hier kommt der Inhalt der Tabelle
-	2  &   10 &  $\frac{1}{10}$   & 0.5 &  2 \\ \hline
-	2  &   30 &  $\frac{1}{30}$   & 0.5 &  2 \\ \hline
-	2  &   60 &  $\frac{1}{60}$   & 0.5 &  2 \\ \hline
-	2  &  120 &  $\frac{1}{120}$  & 0.5 &  2 \\ \hline
-	2  &  240 &  $\frac{1}{240}$  & 0.5 &  2 \\ \hline
-	2  &  300 &  $\frac{1}{300}$  & 0.5 &  2 \\ \hline
+	2  &   10 &  $\frac{1}{10}$   & 0.5 &  1 \\ \hline
+	2  &   30 &  $\frac{1}{30}$   & 0.5 &  1 \\ \hline
+	2  &   60 &  $\frac{1}{60}$   & 0.5 &  1 \\ \hline
+	2  &  120 &  $\frac{1}{120}$  & 0.5 &  1 \\ \hline
+	2  &  240 &  $\frac{1}{240}$  & 0.5 &  1 \\ \hline
+	2  &  300 &  $\frac{1}{300}$  & 0.5 &  1 \\ \hline
 \end{longtable} 
 
 
-In diesem Zusammenhang fällt auf, dass die Strecke erschreckend kurz ist: Nur~$2~px$ pro Sekunde. Bitte beachten Sie, dass sich auch die Maßeinheit der ersten Spalte geändert hat. Die Geschwindigeit gibt nun nicht mehr die Anzahl der Pixel pro Frame, sondern pro Sekunde an! Setzen wir daher eine andere Geschwindigeit fest; ich habe mich passend zu unserer Fenstgergröße mal für~$600~px/s$ entschieden. Nach einer Sekunde kommt unser Raumschiff also oben an. 
+In diesem Zusammenhang fällt auf, dass die Strecke erschreckend kurz ist: Nur~$1~px$ pro Sekunde. Bitte beachten Sie, dass sich auch die Maßeinheit der ersten Spalte geändert hat. Die Geschwindigeit gibt nun nicht mehr die Anzahl der Pixel pro Frame, sondern pro Sekunde an! Setzen wir daher eine andere Geschwindigeit fest; ich habe mich passend zu unserer Fenstgergröße mal für~$600~px/s$ entschieden. Nach einer Sekunde kommt unser Raumschiff also oben an. 
 
-In \tabref[vref]{tabFpsBewegung03} habe ich mal berechnet, welche Endposition (\texttt{.top}) wir nach einer halben Sekunde erwarten können. In der linken Hälfte wird die Wegstrecke ausgerechnet. Überraschung: Sie beträgt immer $300~px$. Von der Fensterhöhe (\texttt{window[height]}) müssen wir diese Wegstrecke abziehen. Ebenso die Höhe unseres Raumschiffs ($30~px$) und den kleinen Offset von $5~px$, da wir unser Raumschiff nicht ganz unten Rand starten lassen wollten. Wir erwarten also, dass unser Raumschiff nach einer halben Sekunde die in \tabref[vref]{tabFpsBewegung03} berechnete Endposition einnimmt.
+In \tabref[vref]{tabFpsBewegung03} habe ich mal berechnet, welche Endposition (\texttt{.top}) wir nach einer halben Sekunde erwarten können. In der linken Hälfte wird die Wegstrecke ausgerechnet. Überraschung: Sie beträgt immer $300~px$. Von der Fensterhöhe (\texttt{WINDOW.height}) müssen wir diese Wegstrecke abziehen. Ebenso die Höhe unseres Raumschiffs ($30~px$) und den kleinen Offset von $5~px$, da wir unser Raumschiff nicht ganz unten Rand starten lassen wollten. Wir erwarten also, dass unser Raumschiff nach einer halben Sekunde die in \tabref[vref]{tabFpsBewegung03} berechnete Endposition einnimmt.
 
 
 \begin{longtable}{r@{ * }r@{ * }r@{ * }r@{ = }r@{ $\rightarrow$ }c@{ - }r@{ - }r@{ = }r}%{r@{ * }r@{ * }r@{ * }r@{ + }r@{ + }r@{ = }r@{ $\rightarrow$ }r}
 	\caption{Pixelkoordinaten bei normalisierter Geschwindigkeit}\label{tabFpsBewegung03} \\[1em]
 	% Definition des Tabellenkopfes auf der ersten Seite
-    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{window[height]} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
+    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{WINDOW.height} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
 	\hline
 	\endfirsthead % Erster Kopf zu Ende
 	% Definition des Tabellenkopfes auf den folgenden Seiten
 	\caption{Pixelkoordinaten bei normalisierter Geschwindigkeit (Fortsetzung)}\\[1em]
-    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{window[height]} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
+    Geschw. & fps & dt  & Zeit  & Strecke & \texttt{WINDOW.height} & Höhe & Offset & \texttt{.top}\\[0.5em]\hline\hline
 	\hline
 	\endhead % Zweiter Kopf ist zu Ende
 	% Ab hier kommt der Inhalt der Tabelle
@@ -286,9 +286,9 @@ In \tabref[vref]{tabFpsBewegung03} habe ich mal berechnet, welche Endposition (\
 	600  &  300 &  $\frac{1}{300}$  & 0.5 & 300 & 650-300 & 30 & 5 & 315 \\ \hline
 \end{longtable} 
 
-\tabref{tabFpsBewegung03} sieht zwar kompliziert aus, die Umsetzung ist aber überraschend einfach. In \zeiref{srcInvader05f01} wird der Korrekturwert -- wie oben besprochen -- als Inverses von der Framerate definiert. Die Geschwindigkeit wird von~2 auf~600 in \zeiref{srcInvader05f02} angepasst und in \zeiref{srcInvader05f03} wird der Korrekturwert \texttt{deltatime} in Berechnung als Faktor eingebaut. Das war's; in \abbref[vref]{fpsbewegung01} können wir das \emph{perfekte} Ergebnis auf einem meineren langsameren Rechner bewundern. 
+\tabref{tabFpsBewegung03} sieht zwar kompliziert aus, die Umsetzung ist aber überraschend einfach. In \zeiref{srcInvader05f01} wird der Korrekturwert -- wie oben besprochen -- als Inverses von der Framerate definiert. Die Geschwindigkeit wird von~2 auf~600 in \zeiref{srcInvader05f02} angepasst und in \zeiref{srcInvader05f03} wird der Korrekturwert \texttt{DELTATIME} in Berechnung als Faktor eingebaut. Das war's; in \abbref[vref]{fpsbewegung01} können wir das \emph{perfekte} Ergebnis auf einem meiner langsameren Rechner bewundern. 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05f.py}{7}{59}{python}{Normalisierte Bewegung mit $1/fps$}{srcInvader05f}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05f.py}{7}{55}{python}{Normalisierte Bewegung mit $1/fps$}{srcInvader05f}
 
 Zwei Probleme verursachen diese Fehler:
 
@@ -303,7 +303,7 @@ Das erste Problem können wir nicht ohne erheblichen Performaceverlust lösen un
 \myebild{fehler_invers.pdf}{1.0}{Vergleich des Positionsfehlers von $1/fps$ und \texttt{pygame.clock.tick()}}{picFehlerInvers}
 
 \newpage
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05g.py}{51}{56}{python}{Normalisierte Bewegung mit \texttt{pygame.clock.tick()}}{srcInvader05g}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05g.py}{47}{52}{python}{Normalisierte Bewegung mit \texttt{pygame.clock.tick()}}{srcInvader05g}
 
 Ursache ist ein Problem, welches wir hätten sofort lösen müssen. Bei der Zuweisung in \zeiref{srcInvader05f03} in \srcref[vref]{srcInvader05f} steht auf der rechten Seite eine Fließkommazahl\index{float} und auf der linken ein \gls{int}\index{int}. Dies führt dazu, dass die Nachkommastellen bei jedem Schleifendurchlauf abgeschnitten werden. Würde beispielsweise in jedem Frame das Raumschiff sich um $5.8~px$ bewegen müssen, entstünden diese Werte:
 
@@ -330,7 +330,7 @@ Wir müssen die Positionswerte also unabhängig vom \texttt{Rect}-Objekt in eine
 Auch werden die errechneten Positionswerte nicht einfach den Integer-Attributen des \texttt{Rect}-Objektes zugewiesen, sondern mit Hilfe von \texttt{round}\randnotiz{round()}\index{\texttt{round}} wird die Ganzzahl passend zu den Nachkommawerten nach den üblichen Rundungsregeln ermittelt (siehe \zeiref{srcInvader05h02}). 
 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{18}{61}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{14}{57}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
 
 In \abbref[vref]{fpsbewegung03}  können wir sehen, dass das Ergebnis schon deutlich besser geworden ist. Auch hat sich die Abweichung von optimalen Wert~315 dramatisch verbessert. In \abbref[vref]{picFehlerFloat} wird der Unterschied sichtbar gemacht.
 
@@ -410,7 +410,7 @@ In \zeiref{srcInvader05i02} wird nach Ablauf eines Frame die aktuelle Zeit gemes
 \end{figure}
 \newpage
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05i.py}{19}{64}{python}{Normalisierte Bewegung mit \texttt{time.time()}}{srcInvader05i}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05i.py}{15}{60}{python}{Normalisierte Bewegung mit \texttt{time.time()}}{srcInvader05i}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

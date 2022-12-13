@@ -5,12 +5,12 @@ import pygame
 
 
 class Settings:
-    window: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1000, 800)
-    fps = 60
-    path: dict[str, str] = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
+    WINDOW = pygame.rect.Rect(0, 0, 1000, 800)
+    FPS = 30
+    PATH: dict[str, str] = {}
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
+    PATH["sound"] = os.path.join(PATH["file"], "sounds")
     #size = 5
     #number = 100
     #size = 5
@@ -23,17 +23,13 @@ class Settings:
     number = 40
 
     @staticmethod
-    def get_dim() -> Tuple[int, int]:
-        return (Settings.window.width, Settings.window.height)
-
-    @staticmethod
     def get_file(filename: str) -> str:
-        return os.path.join(Settings.path["file"], filename)
+        return os.path.join(Settings.PATH["file"], filename)
 
     @staticmethod
     def get_image(filename: str) -> str:
-        return os.path.join(Settings.path["image"], filename)
+        return os.path.join(Settings.PATH["image"], filename)
 
     @staticmethod
     def get_sound(filename: str) -> str:
-        return os.path.join(Settings.path["sound"], filename)
+        return os.path.join(Settings.PATH["sound"], filename)

@@ -8,11 +8,11 @@ Bei vielen Spielen werden Informationen nicht nur symbolisch auf die Spielfläch
 
 Zuerst importieren wir ein paar Konstanten. Die Klasse \texttt{Settings} überspringe ich mal, die hat sich nicht verändert:
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{1}{5}{python}{Text mit Fonts ausgeben (1), Präambel}{srcFonts00a} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{1}{6}{python}{Text mit Fonts ausgeben (1), Präambel}{srcFonts00a} 
 
 Und nun die Klasse \texttt{TextSprite}: Lassen Sie sich nicht vom \glslink{oo}{OO}-Ansatz verwirren. Eigentlich ist alles ganz einfach. Wir brauchen ein \texttt{pygame.font.\-Font}-Objekt\myindex{pyg}{\texttt{font}!\texttt{Font}}\randnotiz{Font}. Dieses wiederum braucht zwei Infos: Welchen installierten \Gls{font} es benutzen soll, und die Fontgröße in \glslink{pt}{$pt$}. Eine Möglichkeit zu einem installierten Font zu kommen, ist die Methode \texttt{pygame.font.get\_default\_font()}\myindex{pyg}{\texttt{font}!\texttt{get\_default\_font()}}\randnotiz{get\_default\_font()}. Ihr Aufruf in \zeiref{srcTextoutputSimple01} liefert mir die vom Betriebssystem eingestellte Zeichsatzvorgabe. Die Schriftgröße (\texttt{fontsize}) legen wir nach Bedarf einfach fest. 
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{16}{43}{python}{Text mit Fonts ausgeben (2), \texttt{TextSprite}}{srcFonts00b} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{14}{40}{python}{Text mit Fonts ausgeben (2), \texttt{TextSprite}}{srcFonts00b} 
 
 Schauen wir uns nun den Konstruktor etwas genauer an. Die  Attribute \texttt{image} und \texttt{rect} werden hier einfach schonmal als Dummies angelegt; könnte man auch lassen. Nachdem ich die übergebenen Informationen über Textgröße und -farbe in Attribute abgespeichert habe, kann ich das \texttt{Font}-Objekt erstellen lassen. Dies erfolgt durch den Aufruf von \texttt{fontsize\_update()} in \zeiref{srcTextoutputSimple02}. Durch die Angabe~0 wird klar, dass hier nicht die Größe verändert werden soll, sondern nur, dass die Objekterzeugung passiert. 
 
@@ -23,7 +23,7 @@ Jetzt noch die zwei Methoden \texttt{fontsize\_update()} und \texttt{fontcolor\_
 Wie kann man nun so eine Klasse nutzen? Hier ein Beispiel. In der Mitte soll ein Gruß erscheinen. Dazu verwende ich das Objekt \texttt{hello} (\zeiref{srcTextoutputSimple07}). Darunter soll durch \texttt{info} ausgegeben werden, mit welcher Schriftgröße und -farbe der Gruß erzeugt wurde (\zeiref{srcTextoutputSimple07}). 
 
 \newpage
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{47}{94}{python}{Text mit Fonts ausgeben (3),  Hauptprogramm}{srcFonts00c} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{43}{90}{python}{Text mit Fonts ausgeben (3),  Hauptprogramm}{srcFonts00c} 
 
 Dieser Gruß kann durch die Plus- und Minus-Tasten in seiner Größe verändert werden (\zeiref{srcTextoutputSimple05}ff.). Die Tasten \texttt{r}, \texttt{g} und \texttt{b} werden dazu verwendet, den jeweiligen Farbkanal zu manipulieren. Der Großbuchstabe erhöht den Wert (z.B. in \zeiref{srcTextoutputSimple09}), der Kleinbuchstabe reduziert ihn (z.B. in \zeiref{srcTextoutputSimple10}).
 
@@ -35,20 +35,20 @@ In \abbref[vref]{picFont01} können Sie eine mögliche Darstellung sehen.
 
 Als weiteres Beispiel möchte ich Ihnen ein kleines Programm zeigen, welches alle installierten Fonts auflistet. Vielleicht kann man sich ja dabei Gestaltungsideen holen. Der erste Teil sollte keine Verständnisprobleme mehr bereiten.
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{1}{40}{python}{Fontliste (1), \texttt{Präambel}, \texttt{Settings} und \texttt{Textsprite}}{srcFonts01a} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{1}{36}{python}{Fontliste (1), \texttt{Präambel}, \texttt{Settings} und \texttt{Textsprite}}{srcFonts01a} 
 
-Die Klasse \texttt{TextSprite} wurde nur wenig auf die Bedürfnisse angepasst. Die Klasse \texttt{BigImage} hat nur die Aufgabe, alle \texttt{FontSprite}-Images als großes Bild zu verwalteten. Später wird immer ein Ausschnitt aus dem Bitmap auf den Bildschirm gedruckt. Der Ausschnitt orientiert sich an der Position innerhalb der Liste und wird durch das Attribut \texttt{offset} gesteuert und in der Methode \texttt{update()} (\zeiref{srcTextoutputFontlist01}) ermittelt. Zuerst wird ermittelt, ob ich das obere oder untere Ende des Bitmaps erreicht habe. Falls ja, wird \texttt{top} bzw. \texttt{bottom} entsprechnd gesetzt, so dass immer der ganze Bildschirm gefüllt wird. Ansonsten wird das \texttt{offset}-Rechteck nach oben bzw. nach unten verschoben und mit \texttt{pygame.Surface.subsurface()}\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\randnotiz{subsurface()} der Ausschnitt ermittelt.
+Die Klasse \texttt{TextSprite} wurde nur wenig auf die Bedürfnisse angepasst. Die Klasse \texttt{BigImage} hat  die Aufgabe, alle \texttt{FontSprite}-Images als großes Bild zu verwalteten. Später wird immer ein Ausschnitt aus dem Bitmap auf den Bildschirm gedruckt. Der Ausschnitt orientiert sich an der Position innerhalb der Liste und wird durch das Attribut \texttt{offset} gesteuert und in der Methode \texttt{update()} (\zeiref{srcTextoutputFontlist01}) ermittelt. Zuerst wird ermittelt, ob ich das obere oder untere Ende des Bitmaps erreicht habe. Falls ja, wird \texttt{top} bzw. \texttt{bottom} entsprechnd gesetzt, so dass immer der ganze Bildschirm gefüllt wird. Ansonsten wird das \texttt{offset}-Rechteck nach oben bzw. nach unten verschoben und mit \texttt{pygame.Surface.subsurface()}\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\randnotiz{subsurface()} der Ausschnitt ermittelt.
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{43}{62}{python}{Fontliste (2), \texttt{BigImage}}{srcFonts01b} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{39}{58}{python}{Fontliste (2), \texttt{BigImage}}{srcFonts01b} 
 
 Und jetzt das Hauptprogramm. Im ersten Teil wird über \texttt{pygame.font.get\_fonts()}\myindex{pyg}{\texttt{font}!\texttt{get\_fonts()}}\randnotiz{get\_fonts()} (\zeiref{srcTextoutputFontlist02}) eine Liste aller installierten Fontnamen ermittelt. Dieser Name wird dem Konstruktor von \texttt{TestSprite} übergeben. Mit Hilfe der Methode \texttt{pygame.font.match\_font()}\myindex{pyg}{\texttt{font}!\texttt{match\_font()}}\randnotiz{match\_font()} (\zeiref{srcTextoutputFontlist03})wird nun der Font selbst im System gesucht, wobei sich diese Methode zunutze macht, dass der Name der Fontdatei sich aus dem Fontnamen und der Endung~\glslink{ttf}{\texttt{ttf}} herleiten lässt.
 
 \newpage
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{67}{112}{python}{Fontliste (3), Hauptprogramm (1)}{srcFonts01c} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{61}{89}{python}{Fontliste (3), Hauptprogramm (1)}{srcFonts01c} 
 
 In der \forSchleife\_ werden nun für alle Fonts \texttt{TextSprite}-Objekte erzeugt und deren Höhe und Breite ermittelt. Diese vielen Bitmaps werden dann auf das große Bitmap gedruckt (\zeiref{srcTextoutputFontlist04}).
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{97}{999}{python}{Fontliste, Hauptprogramm (2)}{srcFonts01d} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{91}{108}{python}{Fontliste, Hauptprogramm (2)}{srcFonts01d} 
 
 Die Hauptprogrammschleife übernimmt nun nur noch das Blättern (jeweils um eine drittel Bildschirmhöhe) und das Programmende.
 
