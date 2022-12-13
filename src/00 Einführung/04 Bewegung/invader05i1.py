@@ -7,21 +7,17 @@ import pygame.time
 
 
 class Settings:
-    window = {'width': 120, 'height': 650}
-    fps = 10                                                   # 10 30 60 120 240 300 600
-    limit = 500
-    deltatime = 1.0/fps
-
-    @staticmethod
-    def window_dim():
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (120, 650))
+    FPS = 10                                                   # 10 30 60 120 240 300 600
+    LIMIT = 500
+    DELTATIME = 1.0/FPS
 
 
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
 
-    screen = pygame.display.set_mode(Settings.window_dim())
+    screen = pygame.display.set_mode(Settings.WINDOW.size)
     pygame.display.set_caption("Bewegung")
     clock = pygame.time.Clock()
 
@@ -30,22 +26,22 @@ def main():
     defender_rect = defender_image.get_rect()
     result = {}
     for fps in range(10, 610, 10):
-        Settings.fps = fps
-        Settings.deltatime = 1.0/Settings.fps
+        Settings.FPS = fps
+        Settings.DELTATIME = 1.0/Settings.FPS
         messures = []
         for index in range(10):
-            defender_rect.centerx = Settings.window['width'] // 2
-            defender_rect.bottom = Settings.window['height'] - 5
+            defender_rect.centerx = Settings.WINDOW.centerx
+            defender_rect.bottom = Settings.WINDOW.height - 5
             defender_pos = pygame.Vector2(defender_rect.left, defender_rect.top)
             defender_speed = 600
             defender_direction_v = -1
 
-            clock.tick(Settings.fps)
+            clock.tick(Settings.FPS)
             start_time = pygame.time.get_ticks()  # Startzeit der Bewegung
             time_previous = time()
             running = True
             while running:
-                if pygame.time.get_ticks() > start_time + Settings.limit:
+                if pygame.time.get_ticks() > start_time + Settings.LIMIT:
                     defender_speed = 0
                     break
                 # Events
@@ -54,25 +50,25 @@ def main():
                         running = False
 
                 # Update
-                defender_pos[1] += defender_direction_v * defender_speed * Settings.deltatime
+                defender_pos[1] += defender_direction_v * defender_speed * Settings.DELTATIME
                 defender_rect.top = round(defender_pos[1])
-                if defender_rect.bottom >= Settings.window['height']:
+                if defender_rect.bottom >= Settings.WINDOW.height:
                     defender_direction_v *= -1
                 elif defender_rect.top <= 0:
                     defender_direction_v *= -1
 
                 # Draw
                 screen.fill("white")
-                pygame.draw.line(screen, "red", (0, 315), (Settings.window['width'], 315), 2)
+                pygame.draw.line(screen, "red", (0, 315), (Settings.WINDOW.width, 315), 2)
                 screen.blit(defender_image, defender_rect)
                 pygame.display.flip()
-                clock.tick(Settings.fps)
+                clock.tick(Settings.FPS)
                 time_current = time()
-                Settings.deltatime = time_current - time_previous
+                Settings.DELTATIME = time_current - time_previous
                 time_previous = time_current
             messures.append(defender_rect.top)
             if fps in (10, 30, 60, 120, 240, 300, 600):
-                pygame.image.save(screen, f"fps_05i_{Settings.fps:03d}_{index:02d}.png")
+                pygame.image.save(screen, f"fps_05i_{Settings.FPS:03d}_{index:02d}.png")
         avg = fmean(messures)       # arithmetische Mittel
         med = median(messures)      # Median
         mad = 0.0                   # Mittlerer absolute Abweichung/Fehler
@@ -82,7 +78,7 @@ def main():
         messures.append(avg)
         messures.append(med)
         messures.append(mad)
-        result[Settings.fps] = messures
+        result[Settings.FPS] = messures
     with open('result_05i.txt', 'w') as f:
         for key in result.keys():
             f.write(f"{key}")

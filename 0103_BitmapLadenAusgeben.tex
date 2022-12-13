@@ -18,7 +18,7 @@ Wir wollen nun die Bitmaps ein wenig unseren Bedürfnissen anpassen. Zunächst e
     \vspace{-1em}%
 	\myfigure{invader02.png}{0.8}{Größen OK}{picInvader02}%
 \end{wrapfigure}%
-Die Funktion \texttt{pygame.Surface.load()} lieferte mir ja ein \texttt{Surface}-Objekt zurück. Die Klasse \texttt{Surface} hat nun eine Methode, die mir die gewünschte Konvertierung vornimmt: \texttt{pygame.Surface.convert()}\myindex{pyg}{\texttt{Surface}!\texttt{convert()}}\randnotiz{convert()}.\label{pageTransparenz}Beispielhaft sei hier auf \zeiref{srcInvader0201} verwiesen. 
+Die Funktion \texttt{pygame.Surface.load()} lieferte mir ein \texttt{Surface}-Objekt zurück. Die Klasse \texttt{Surface} hat nun eine Methode, die mir die gewünschte Konvertierung vornimmt: \texttt{pygame.Surface.convert()}\myindex{pyg}{\texttt{Surface}!\texttt{convert()}}\randnotiz{convert()}.\label{pageTransparenz} Beispielhaft sei hier auf \zeiref{srcInvader0201} verwiesen. 
 
 Das Verändern der Größe erfolgt durch \texttt{pygame\-.trans\-form\-.scale()}\myindex{pyg}{\texttt{transform}!\texttt{scale()}|underline}\randnotiz{scale()}. In \zeiref{srcInvader0202} wird das Image auf die angegeben $(width, height)$ in der Maßeinheit Pixel skaliert. Das Ergebnis an \abbref{picInvader02} entspricht nicht ganz meinen Erwartungen.  
 
@@ -26,7 +26,7 @@ Die Größenverhältnisse gefallen mir zwar jetzt, aber warum erscheint plötzli
 
 Ich habe nun zwei Möglichkeiten, diese Transparenz wieder verfügbar zu machen:
 \begin{itemize}
-	\item \texttt{pygame.Surface.convert\_alpha()}\myindex{pyg}{\texttt{Surface}!\texttt{convert\_alpha()}}\randnotiz{convert\_alpha()}: Ganz einfach formuliert wird bei der Konvertierung der Alpha-Kanal erhalten. Wenn möglich, sollte das das Mittel Ihrer Wahl sein.
+	\item \texttt{pygame.Surface.convert\_alpha()}\myindex{pyg}{\texttt{Surface}!\texttt{convert\_alpha()}}\randnotiz{convert\_alpha()}: Ganz einfach formuliert bleibt bei der Konvertierung der Alpha-Kanal erhalten. Wenn möglich, sollte das das Mittel Ihrer Wahl sein.
 	
 	\item \texttt{pygame.Surface.set\_colorkey()}\myindex{pyg}{\texttt{Surface}!\texttt{set\_colorkey()}}\randnotiz{set\_colorkey()}: Als Übergabeparameter übergeben Sie die Farbe, die von Pygame beim Drucken auf das Ziel-Surface übersprungen werden soll. Dabei können zwei Nachteile entstehen. Zum einen können Transparenzen, die zwischen sichtbar und unsichtbar liegen, nicht abgebildet werden. Es wäre also nicht möglich, einen Pixel \emph{halbdurchscheinen} zu lassen. Zum anderen werden Teile der Figur, die die gleiche Farbe wie der Hintergrund haben, ebenfalls transparent erscheinen. Würde unser Alien in der Mitte ein schwarzes Auge haben, würde es verschwinden und der Alien hätte ein Loch in der Mitte.
 \end{itemize}
@@ -39,7 +39,7 @@ Ich habe nun zwei Möglichkeiten, diese Transparenz wieder verfügbar zu machen:
 	\myfigure{invader03.png}{0.8}{Transparenz OK}{picInvader03}
 \end{wrapfigure}In \srcref[vref]{srcInvader03} habe ich beide Varianten mal ausprobiert und in \abbref[vref]{picInvader03} können Sie das Ergebnis sehen. Nun sind beide Bitmaps ohne schwarze Hintergrund sichtbar, der weiße Hintergrund scheint wieder durch.
 
-Was mir nun noch nicht gefällt ist die Position und die Anzahl der Angreifer. Ich möchte den Verteidiger mittig unten platzieren und die Angreifer am oberen Bildschirmrand und zwar so, dass sie horizontal  \gls{aequidistant}\index{äquidistant}\randnotiz{äquidistant} sind. Dabei gibt es zwei Möglichkeiten: Ich gebe einen Mindestabstand an und die Anzahl wird ausgerechnet, oder ich gebe die maximale Anzahl an und der Abstand wird ausgerechnet. Welchen Weg ich wähle, hängt von meiner Spiellogik ab; meist ist die Anzahl vorgegeben.
+Was mir nun immer noch nicht gefällt ist die Position und die Anzahl der Angreifer. Ich möchte den Verteidiger mittig unten platzieren und die Angreifer am oberen Bildschirmrand und zwar so, dass sie horizontal  \gls{aequidistant}\index{äquidistant}\randnotiz{äquidistant} sind. Dabei gibt es zwei Möglichkeiten: Ich gebe einen Mindestabstand an und die Anzahl wird ausgerechnet, oder ich gebe die maximale Anzahl an und der Abstand wird ausgerechnet. Welchen Weg ich wähle, hängt von meiner Spiellogik ab; meist ist die Anzahl vorgegeben.
 
 \lstsource{SRC/00 Einführung/03 Bitmaps/invader04.py}{13}{50}{python}{Bitmap: Positionen, Version 1.4}{srcInvader04}
 

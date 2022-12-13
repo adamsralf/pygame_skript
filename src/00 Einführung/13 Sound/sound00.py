@@ -7,39 +7,31 @@ from pygame.constants import K_ESCAPE, KEYDOWN, KEYUP, QUIT, K_f, K_j, K_p
 
 
 class Settings:
-    window: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1220, 1002)   # Rect §\label{srcSound0001}§
-    fps = 60
-    deltatime = 1.0/fps
-    radius = {"max": 240, "min": 5}
-    speed = {"min": 1, "max": 4}
-    max_bubbles = window.height * window.width // 50000
-    path: dict[str, str] = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
-    start_distance = 20
-
-    @staticmethod
-    def get_dim() -> Tuple[int, int]:
-        return (Settings.window.width, Settings.window.height)
+    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 600, 800)   # Rect §\label{srcSound0001}§
+    FPS = 60
+    PATH: dict[str, str] = {}
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
+    PATH["sound"] = os.path.join(PATH["file"], "sounds")
+    START_DISTANCE = 20
 
     @staticmethod
     def get_file(filename: str) -> str:
-        return os.path.join(Settings.path["file"], filename)
+        return os.path.join(Settings.PATH["file"], filename)
 
     @staticmethod
     def get_image(filename: str) -> str:
-        return os.path.join(Settings.path["image"], filename)
+        return os.path.join(Settings.PATH["image"], filename)
 
     @staticmethod
     def get_sound(filename: str) -> str:
-        return os.path.join(Settings.path["sound"], filename)
+        return os.path.join(Settings.PATH["sound"], filename)
 
 
 class Game:
     def __init__(self) -> None:
         pygame.init()                                               # Auch mixer §\label{srcSound0002}§
-        self.screen = pygame.display.set_mode(Settings.get_dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption('Fingerübung "Sound"')
         self.clock = pygame.time.Clock()
         self.font_bigsize = pygame.font.Font(pygame.font.get_default_font(), 40)
@@ -68,7 +60,7 @@ class Game:
                 elif event.key == K_j:
                     self.music_start_stop(loop=-1)
                 elif event.key == K_p:
-                    self.switch_pause()
+                    self.pause_alter()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:                               # left
                     self.sound_play(bubble=True)
@@ -91,7 +83,7 @@ class Game:
         if "loop" in kwargs.keys():
             pygame.mixer.music.play(kwargs["loop"], 0.0)
 
-    def switch_pause(self) -> None:
+    def pause_alter(self) -> None:
         if self.pause:
             pygame.mixer.music.unpause()
         else:
@@ -111,7 +103,7 @@ class Game:
 
         volume = self.font_bigsize.render(f"Lautstärke: {self.volume:3.2f}", True, "red")
         rect = volume.get_rect()
-        rect.center = Settings.window.center
+        rect.center = Settings.WINDOW.center
         self.screen.blit(volume, rect)
 
         pygame.display.flip()
@@ -120,23 +112,18 @@ class Game:
         pass
 
     def run(self):
-        time_previous = time()
         self.running = True
         while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
-            time_current = time()
-            Settings.deltatime = time_current - time_previous
-            time_previous = time_current
+            self.clock.tick(Settings.FPS)
         pygame.quit()
 
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

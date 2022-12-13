@@ -7,30 +7,26 @@ from pygame import K_ESCAPE, KEYDOWN, QUIT
 
 class Settings:
 
-    window = {'width': 700, 'height': 650}
-    path: dict[str, str] = {}
-    path['file'] = os.path.dirname(os.path.abspath(__file__))
-    path['image'] = os.path.join(path['file'], "images")
-
-    @staticmethod
-    def dim() -> Tuple[int, int]:
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (700, 650))
+    PATH: dict[str, str] = {}
+    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
+    PATH['image'] = os.path.join(PATH['file'], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.path['file'], name)
+        return os.path.join(Settings.PATH['file'], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.path['image'], name)
+        return os.path.join(Settings.PATH['image'], name)
 
 
 class Spritelib(pygame.sprite.Sprite):
 
     def __init__(self, filename: str) -> None:
         super().__init__()
-        self.image: pygame.surface.Surface = pygame.image.load(Settings.imagepath(filename)).convert()
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.image = pygame.image.load(Settings.imagepath(filename)).convert()
+        self.rect = self.image.get_rect()
         self.nof = {'rows': 4, 'cols': 10}
         self.letter = {'width': 18, 'height': 18}
         self.offset = {'h': 6, 'v': 6}
@@ -61,7 +57,7 @@ class Letters(object):
                 left = startpos[0] + col * (self.spritelib.letter['width'] + self.spritelib.distance['h'])  # §\label{srcTextbitmaps0004}§
                 top = startpos[1] + row * (self.spritelib.letter['height'] + self.spritelib.distance['v'])  # §\label{srcTextbitmaps0005}§
                 width, height = self.spritelib.letter.values()   # Größe §\label{srcTextbitmaps0006}§
-                r = pygame.Rect(left, top, width, height)
+                r = pygame.rect.Rect(left, top, width, height)
                 self.letters[lettername[index]] = self.spritelib.image.subsurface(r)  # §\label{srcTextbitmaps0007}§
                 index += 1
 
@@ -85,7 +81,7 @@ class TextBitmaps(object):
 
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.dim())
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption('Textausgabe mit Bitmaps')
         self.clock = pygame.time.Clock()
         self.filename = "chars.png"

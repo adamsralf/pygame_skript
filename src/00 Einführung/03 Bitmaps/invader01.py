@@ -4,16 +4,16 @@ import pygame
 
 
 class Settings:
-    window_width = 600
-    window_height = 400
-    fps = 60
+    WINDOW_WIDTH = 600
+    WINDOW_HEIGHT = 400
+    FPS = 60
 
 
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
 
-    screen = pygame.display.set_mode((Settings.window_width, Settings.window_height))
+    screen = pygame.display.set_mode((Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT))
     pygame.display.set_caption("Bitmaps laden und ausgeben")
     clock = pygame.time.Clock()
 
@@ -22,7 +22,7 @@ def main():
 
     running = True
     while running:
-        clock.tick(Settings.fps)
+        clock.tick(Settings.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

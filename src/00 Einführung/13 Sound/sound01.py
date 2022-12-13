@@ -8,43 +8,39 @@ from pygame.constants import (K_DOWN, K_ESCAPE, K_LEFT, K_RIGHT, K_SPACE, K_UP,
 
 
 class Settings:
-    window: pygame.rect.Rect = pygame.rect.Rect(0, 0, 800, 160)
-    fps = 60
-    deltatime = 1.0/fps
-    path: dict[str, str] = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
-
-    @staticmethod
-    def get_dim() -> Tuple[int, int]:
-        return (Settings.window.width, Settings.window.height)
+    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 800, 160)
+    FPS = 60
+    DELTATIME = 1.0/FPS
+    PATH: dict[str, str] = {}
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
+    PATH["sound"] = os.path.join(PATH["file"], "sounds")
 
     @staticmethod
     def get_file(filename: str) -> str:
-        return os.path.join(Settings.path["file"], filename)
+        return os.path.join(Settings.PATH["file"], filename)
 
     @staticmethod
     def get_image(filename: str) -> str:
-        return os.path.join(Settings.path["image"], filename)
+        return os.path.join(Settings.PATH["image"], filename)
 
     @staticmethod
     def get_sound(filename: str) -> str:
-        return os.path.join(Settings.path["sound"], filename)
+        return os.path.join(Settings.PATH["sound"], filename)
 
 
 class Ground(pygame.sprite.Sprite):
 
     def __init__(self) -> None:
         super().__init__()
-        fullfilename: str = Settings.get_image("tankbrigade_part64.png")
-        tile: pygame.surface.Surface = pygame.image.load(fullfilename).convert()
-        rect: pygame.rect.Rect = tile.get_rect()
-        self.image: pygame.surface.Surface = pygame.Surface(Settings.get_dim())
-        for row in range(Settings.window.width // rect.width):
-            for col in range(Settings.window.height // rect.height):
+        fullfilename = Settings.get_image("tankbrigade_part64.png")
+        tile = pygame.image.load(fullfilename).convert()
+        rect = tile.get_rect()
+        self.image = pygame.Surface(Settings.WINDOW.size)
+        for row in range(Settings.WINDOW.width // rect.width):
+            for col in range(Settings.WINDOW.height // rect.height):
                 self.image.blit(tile, (row * rect.width, col * rect.height))
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
 
 
 class Tank(pygame.sprite.Sprite):
@@ -61,17 +57,15 @@ class Tank(pygame.sprite.Sprite):
             self.images["down"].append(pygame.transform.rotate(picture, 180))
             self.images["left"].append(pygame.transform.rotate(picture, +90))
             self.images["right"].append(pygame.transform.rotate(picture, -90))
-        self.direction: str = "right"
-        self.imageindex: int = 0
-        self.image: pygame.surface.Surface = self.images[self.direction][self.imageindex]
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.direction = "right"
+        self.imageindex = 0
+        self.image = self.images[self.direction][self.imageindex]
+        self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = 3 * self.rect.width, 2 * self.rect.height
-        self.sound_drive: pygame.mixer.Sound = pygame.mixer.Sound(
-            Settings.get_sound("tank_drive1.wav")
-        )  # §\label{srcSound0101}§
-        self.channel: pygame.mixer.Channel = pygame.mixer.find_channel()  # Sound-Kanal finden§\label{srcSound0104}§
-        self.stereo()  # §\label{srcSound0102}§
-        self.channel.play(self.sound_drive, -1)  # §\label{srcSound0103}§
+        self.sound_drive = pygame.mixer.Sound(Settings.get_sound("tank_drive1.wav"))  # §\label{srcSound0101}§
+        self.channel = pygame.mixer.find_channel()          # Sound-Kanal finden§\label{srcSound0104}§
+        self.stereo()                                       # §\label{srcSound0102}§
+        self.channel.play(self.sound_drive, -1)             # §\label{srcSound0103}§
         self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = 50
 
@@ -85,25 +79,25 @@ class Tank(pygame.sprite.Sprite):
                 elif self.direction == "down" or self.direction == "right":
                     self.speed = 50
                 if self.direction == "up" or self.direction == "down":
-                    self.position.y += (self.speed * Settings.deltatime)
+                    self.position.y += (self.speed * Settings.DELTATIME)
                     self.rect.top = round(self.position.y)
-                    if self.rect.top <= self.rect.height // 2:
+                    if self.rect.top <= Settings.WINDOW.top:
                         self.turn("down")
-                    if self.rect.bottom >= Settings.window.height - self.rect.height // 2:
+                    if self.rect.bottom >= Settings.WINDOW.bottom:
                         self.turn("up")
                 elif self.direction == "left" or self.direction == "right":
-                    self.position.x += (self.speed * Settings.deltatime)
+                    self.position.x += (self.speed * Settings.DELTATIME)
                     self.rect.left = round(self.position.x)
-                    if self.rect.left <= self.rect.width // 2:
+                    if self.rect.left <= Settings.WINDOW.left:
                         self.turn("right")
-                    if self.rect.right >= Settings.window.width - self.rect.width // 2:
+                    if self.rect.right >= Settings.WINDOW.right:
                         self.turn("left")
                 self.stereo()
         if "turn" in kwargs.keys():
             self.turn(kwargs["turn"])
 
     def stereo(self) -> None:
-        volume_rechts = self.rect.centerx / Settings.window.width  # §\label{srcSound0105}§
+        volume_rechts = self.rect.centerx / Settings.WINDOW.width  # §\label{srcSound0105}§
         volume_links = 1 - volume_rechts
         self.channel.set_volume(volume_links, volume_rechts)
 
@@ -119,7 +113,7 @@ class Tank(pygame.sprite.Sprite):
 
 class Bullet(pygame.sprite.Sprite):
 
-    _sound_fire = None  # Es braucht nur einen §\label{srcSound0106}§
+    _sound_fire = None                                      # Es braucht nur einen §\label{srcSound0106}§
 
     def __init__(self, tank: Tank) -> None:
         super().__init__()
@@ -131,35 +125,29 @@ class Bullet(pygame.sprite.Sprite):
             "up": (0, -bulletspeed),
             "down": (0, bulletspeed),
         }
-        fullfilename = os.path.join(Settings.path["image"], f"tankbrigade_part{number[tank.direction]}.png")
-        self.image: pygame.surface.Surface = pygame.image.load(fullfilename).convert()
+        fullfilename = os.path.join(Settings.PATH["image"], f"tankbrigade_part{number[tank.direction]}.png")
+        self.image = pygame.image.load(fullfilename).convert()
         self.image.set_colorkey("black")
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
         self.direction = tank.direction
         self.rect.center = tank.rect.center
-        self.speed: Tuple[int, int] = directions[tank.direction]
+        self.speed = directions[tank.direction]
         self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
 
-        if Bullet._sound_fire == None:                  # Es braucht nur einen §\label{srcSound0107}§
+        if Bullet._sound_fire == None:                      # Es braucht nur einen §\label{srcSound0107}§
             Bullet._sound_fire = pygame.mixer.Sound(Settings.get_sound("tank_fire1.wav"))
-        volume_rechts = self.rect.centerx / Settings.window.width
+        volume_rechts = self.rect.centerx / Settings.WINDOW.width
         volume_links = 1 - volume_rechts
         self.channel: pygame.mixer.Channel = pygame.mixer.find_channel()
         self.channel.set_volume(volume_links, volume_rechts)
         self.channel.play(Bullet._sound_fire)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        self.position.x += self.speed[0] * Settings.deltatime
+        self.position.x += self.speed[0] * Settings.DELTATIME
         self.rect.left = round(self.position.x)
-        self.position.y += self.speed[1] * Settings.deltatime
+        self.position.y += self.speed[1] * Settings.DELTATIME
         self.rect.top = round(self.position.y)
-        if self.rect.right <= 0:
-            self.kill()
-        elif self.rect.left >= Settings.window.width:
-            self.kill()
-        elif self.rect.bottom <= 0:
-            self.kill()
-        elif self.rect.top >= Settings.window.height:
+        if not Settings.WINDOW.contains(self.rect):
             self.kill()
 
 
@@ -167,7 +155,7 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.get_dim())
+        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
         pygame.display.set_caption("Steroeeffekt")
         self.clock = pygame.time.Clock()
         self.ground = pygame.sprite.GroupSingle(Ground())
@@ -215,17 +203,16 @@ class Game:
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             time_current = time()
-            Settings.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 
 
 def main():
     os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

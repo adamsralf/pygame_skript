@@ -7,25 +7,21 @@ from pygame.constants import K_ESCAPE, K_KP_MINUS, K_KP_PLUS, KEYDOWN, QUIT
 
 
 class Settings():
-    window = {'width': 300, 'height': 200}
-    fps = 60
-    deltatime = 1.0 / fps
-    title = "Animation"
-    path: dict[str, str] = {}
-    path['file'] = os.path.dirname(os.path.abspath(__file__))
-    path['image'] = os.path.join(path['file'], "images")
-
-    @staticmethod
-    def dim() -> Tuple[int, int]:
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (300, 200))
+    FPS = 60
+    DELTATIME = 1.0 / FPS
+    TITLE = "Animation"
+    PATH: dict[str, str] = {}
+    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
+    PATH['image'] = os.path.join(PATH['file'], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.path['file'], name)
+        return os.path.join(Settings.PATH['file'], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.path['image'], name)
+        return os.path.join(Settings.PATH['image'], name)
 
 
 class Animation():
@@ -87,7 +83,7 @@ class Cat(pygame.sprite.Sprite):
         self.animation = Animation([f"cat{i}.bmp" for i in range(6)], True, 100, (0, 0, 0))  # §\label{srcAnimation0102}§
         self.image: pygame.surface.Surface = self.animation.next()
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
+        self.rect.center = Settings.WINDOW.center
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "animation_delta" in kwargs.keys():
@@ -105,8 +101,8 @@ class CatAnimation():
         super().__init__()
         os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.dim())
-        pygame.display.set_caption(Settings.title)
+        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
+        pygame.display.set_caption(Settings.TITLE)
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.cat = pygame.sprite.GroupSingle(Cat())
@@ -119,9 +115,9 @@ class CatAnimation():
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.fps)
+            self.clock.tick(Settings.FPS)
             time_current = time()
-            Settings.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 
@@ -145,8 +141,8 @@ class CatAnimation():
         self.cat.draw(self.screen)
         text_image = self.font.render(f"animation time: {self.cat.sprite.animation.timer.duration}", True, "white")
         text_rect = text_image.get_rect()
-        text_rect.centerx = Settings.window['width'] // 2
-        text_rect.bottom = Settings.window['height'] - 50
+        text_rect.centerx = Settings.WINDOW.centerx
+        text_rect.bottom = Settings.WINDOW.bottom - 50
         self.screen.blit(text_image, text_rect)
         pygame.display.flip()
 

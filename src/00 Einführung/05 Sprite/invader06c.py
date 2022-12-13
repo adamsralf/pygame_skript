@@ -5,13 +5,9 @@ import pygame
 
 
 class Settings:
-    window = {'width': 600, 'height': 100}
-    fps = 60
-    deltatime = 1.0 / fps
-
-    @staticmethod
-    def window_dim():
-        return (Settings.window['width'], Settings.window['height'])
+    WINDOW = pygame.rect.Rect((0, 0), (600, 100))
+    FPS = 60
+    DELTATIME = 1.0 / FPS
 
 
 class Defender(pygame.sprite.Sprite):
@@ -21,13 +17,13 @@ class Defender(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.rect.centerx = Settings.window['width'] // 2
-        self.rect.bottom = Settings.window['height'] - 5
+        self.rect.centerx = Settings.WINDOW.centerx
+        self.rect.bottom = Settings.WINDOW.bottom - 5
         self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = pygame.math.Vector2(300, 0)
 
     def update(self) -> None:
-        self.position = self.position + (self.speed * Settings.deltatime)
+        self.position = self.position + (self.speed * Settings.DELTATIME)
         self.rect.left = round(self.position.x)
 
     def change_direction(self) -> None:
@@ -39,17 +35,17 @@ class Border(pygame.sprite.Sprite):
     def __init__(self, leftright: str) -> None:
         super().__init__()
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (35, Settings.window['height']))
+        self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
         if leftright == 'right':
-            self.rect.left = Settings.window['width'] - self.rect.width
+            self.rect.left = Settings.WINDOW.width - self.rect.width
 
 
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
 
-    screen = pygame.display.set_mode(Settings.window_dim())
+    screen = pygame.display.set_mode(Settings.WINDOW.size)
     pygame.display.set_caption("Sprite")
     clock = pygame.time.Clock()
     defender = pygame.sprite.GroupSingle(Defender())
@@ -76,9 +72,9 @@ def main():
         all_border.draw(screen)                 # Mit einem Rutsch §\label{srcInvader0610}§
         pygame.display.flip()
 
-        clock.tick(Settings.fps)
+        clock.tick(Settings.FPS)
         time_current = time()
-        Settings.deltatime = time_current - time_previous
+        Settings.DELTATIME = time_current - time_previous
         time_previous = time_current
     pygame.quit()
 
