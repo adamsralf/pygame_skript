@@ -26,9 +26,9 @@ def main():
                 running = False
         screen.fill(mygrey)
         pygame.draw.rect(screen, "red", myrectangle1)          # Gefülltes Rechteck  §\label{srcPrimitives03}§
-        pygame.draw.rect(screen, "red", myrectangle2, 3, 10)   # Anderes Rechteck §\label{srcPrimitives04}§
+        pygame.draw.rect(screen, "red", myrectangle2, 3, 5)   # Anderes Rechteck §\label{srcPrimitives04}§
         pygame.draw.polygon(screen, "green", points1)          # Gefülltes Polygon §\label{srcPrimitives06}§
-        pygame.draw.polygon(screen, "green", points2, 2)       # Nicht gefülltes Polygon §\label{srcPrimitives07}§
+        pygame.draw.polygon(screen, "green", points2, 1)       # Nicht gefülltes Polygon §\label{srcPrimitives07}§
         pygame.draw.line(screen, "red", (5, 230), (240, 230), 3)  # Linie §\label{srcPrimitives08}§
         pygame.draw.circle(screen, "blue", (40, 150), 30)      # Gefüllter Kreis §\label{srcPrimitives09}§
         pygame.draw.circle(screen, "blue", (110, 150), 30, 2)  # Nicht gefüllter Kreis §\label{srcPrimitives10}§

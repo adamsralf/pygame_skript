@@ -3,7 +3,7 @@ from time import time
 from typing import Any, Tuple
 
 import pygame
-from pygame.constants import K_ESCAPE, K_KP_MINUS, K_KP_PLUS, KEYDOWN, QUIT
+from pygame.constants import K_ESCAPE, K_MINUS, K_PLUS, KEYDOWN, QUIT
 
 
 class Settings():
@@ -107,9 +107,9 @@ class CatAnimation():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.running = False
-                elif event.key == K_KP_PLUS:
+                elif event.key == K_PLUS:
                     self.cat.sprite.update(animation_delta=-10)
-                elif event.key == K_KP_MINUS:
+                elif event.key == K_MINUS:
                     self.cat.sprite.update(animation_delta=10)
 
     def update(self) -> None:

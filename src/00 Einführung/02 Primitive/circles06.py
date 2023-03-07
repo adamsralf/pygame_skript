@@ -18,7 +18,7 @@ class Circle:
         self.todelete = False
 
     def update(self):
-        self.speedy += Circle.gravity
+        self.speedy -= Circle.gravity
         self.posx += self.speedx
         self.posy += self.speedy
         self.radius += Circle.radius_inc
