@@ -4,6 +4,7 @@
 \usepackage[german]{varioref}
 \usepackage[pdftex,unicode=true,breaklinks,bookmarksnumbered,colorlinks,linkcolor=blue,linktocpage,pdfauthor={Ralf Adams},pdftitle={Einführung in Pygame}]{hyperref}
 \usepackage[german,nokeyprefix]{refstyle}
+\usepackage{keystroke}
 \usepackage{enumerate}
 \usepackage{fontspec}
 \usepackage{verbatim}
@@ -20,12 +21,13 @@
 \usepackage[acronym]{glossaries}
 \usepackage{xparse}
 \usepackage{tikz}
+\usepackage{multirow}
+\usepackage{colortbl}
 \usetikzlibrary{calc}
-\graphicspath{{./pics/}}
-
+\usetikzlibrary{angles,quotes}
 \usepackage{chngcntr}
 
-
+\graphicspath{{./pics/}}
 \selectlanguage{ngerman}
 
 
@@ -53,7 +55,7 @@
 
   \title{Einführung in die\\2D-Spieleprogrammierung mit Pygame}
   \author{Ralf Adams (TBS1, Bochum)}
-  \date{Version 0.7 vom \today}
+  \date{Version 0.8 vom \today}
   \maketitle
   \tableofcontents
 
@@ -66,22 +68,25 @@
 
 \chapter{Ziele}\input{0001_ziele.tex}
 \chapter{Grundlagen}\label{secGrundlagen}
-\input{0101_DerAnfang.tex}
-\input{0102_Grafikprimitives.tex}
-\input{0103_BitmapLadenAusgeben.tex}
-\input{0104_BitmapBewegen.tex}
-\input{0105_SpriteKlasse.tex}
-\input{0106_Tastatur.tex}
-\input{0107_Fonts.tex}
-\input{0108_Textbitmaps.tex}
-\input{0109_Kollisionsarten.tex}
-\input{0110_Zeitsteuerung.tex}
-\input{0111_Animation.tex}
-\input{0112_Maus.tex}
-\input{0113_Sound.tex}
+\input{0101_DerAnfang}
+\input{0102_Grafikprimitives}
+\input{0103_BitmapLadenAusgeben}
+\input{0104_BitmapBewegen}
+\input{0105_SpriteKlasse}
+\input{0106_Tastatur}
+\input{0107_Fonts}
+\input{0108_Textbitmaps}
+\input{0109_Kollisionsarten}
+\input{0110_Zeitsteuerung}
+\input{0111_Animation}
+\input{0112_Maus}
+\input{0113_Sound}
 \input{0114_DirtySprite}
+\input{0115_Events}
 \chapter{Beispielprojekte}
-\input{0201_Bubbles.tex}
+\input{0201_Pong.tex}
+\input{0202_Bubbles.tex}
+%\input{0202_Kreiskollision.tex}
 
 \listoffigures
 %\lstlistoflistings

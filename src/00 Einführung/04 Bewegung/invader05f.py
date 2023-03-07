@@ -6,7 +6,7 @@ import pygame.time
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (120, 650))
-    FPS = 600                                            # 10 30 60 120 240 300 600
+    FPS = 300                                            # 10 30 60 120 240 300 600
     LIMIT = 500
     DELTATIME = 1.0/FPS                                  # Korrekturwert §\label{srcInvader05f01}§
 

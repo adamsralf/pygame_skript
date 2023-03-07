@@ -7,7 +7,7 @@ import pygame.time
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (120, 650))
     FPS = 600  # 10 30 60 120 240 300 600 §\label{srcInvader05e01}§
-    LIMIT = 500
+    LIMIT = 60
 
 
 def main():
