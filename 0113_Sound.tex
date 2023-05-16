@@ -32,6 +32,8 @@ Für Soundeffekte\index{Soundeffekte}\randnotiz{Soundeffekte} wird jeweils ein e
 
 Die Methode \texttt{watch\_for\_events()} ist nur ein Verteiler. Je nachdem welche Taste gedrückt oder welches Mauselement verwendet wurde, werden entsprechende Hilfsmethoden aufgerufen.
 
+\newpage
+
 \lstsource{SRC/00 Einführung/13 Sound/sound00.py}{50}{72}{python}{Sound: \texttt{watch\_for\_events()} von \texttt{Game}}{srcSound00c} 
 
 Mit der Hilfsmethode \texttt{sound\_play()} wird gesteuert, welcher Sound abgespielt werden soll. Das eigentliche Abspielen erfolgt über \texttt{pygame.mixer.Sound.play()}\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{play()}|underline}\randnotiz{play()}. Sie können sehen, dass für das jeweilige \texttt{Sound}-Objekt die Methode \texttt{play()} aufgerufen wird. Auch dieses \texttt{play} hat drei optionale Argumente: Über \texttt{loops} kann die Anzahl der Wiederholungen definiert werden; $-1$ steht für endlos und ist die Vorbelegung. \texttt{maxtime} beendet nach der angegebenen Anzahl von Millisekunden die Wiedergabe; $0$~steht für keine Beendigung und ist die Vorbelegung. \texttt{fade\_ms} ist die Angabe wie viele Millisekunden das Fadein hat; die Vorbelegung ist~$0$.
@@ -42,6 +44,8 @@ Werden -- wie hier -- keine Angaben gemacht, startet die Wiedergabe des Sounds u
 
 Die Hintergrundmusik will ich mal starten, mal ausklingen lassen. Dazu dient die Hilfsmethode \texttt{music\_start\_stop()}. Mit  \texttt{pygame.mixer.music.fadeout()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{fadeout()}|underline}\randnotiz{fadeout()} wird die Musik gestoppt. Dabei muss man angegeben, über wie viele Millisekunden die Musik zum Ende hin leiser wird -- in unserem Beispiel sind es~$5000~ms$. Die Methode \texttt{pygame.mixer.music\-.play()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{play()}} zum Starten der Hintergrundmusik wurde oben schon erläutert.
 
+\newpage
+
 \lstsource{SRC/00 Einführung/13 Sound/sound00.py}{80}{84}{python}{Sound: \texttt{music\_start\_stop()} von \texttt{Game}}{srcSound00e} 
 
 Über die Taste~\texttt{P} wird die Hintergrundmusik pausiert bzw. wieder gestartet. Der aktuelle Zustand wird im \texttt{pause} abgelegt. Dieses Attribut steuert dann in der Methode \texttt{pause\_alter()} welche der beiden \texttt{music}-Methoden --  \texttt{pygame.mixer.music.pause()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{pause()}|underline}\randnotiz{pause()} oder \texttt{pygame.mixer.music.unpause()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{unpause()}|underline}\randnotiz{unpause()} ausgeführt wird. Am Ende wird in \zeiref{srcSound0007} das Flag \texttt{pause} umgelegt.
@@ -50,7 +54,7 @@ Die Hintergrundmusik will ich mal starten, mal ausklingen lassen. Dazu dient die
 
 Als letztes Feature soll die Lautstärkensteuerung noch vorgestellt werden. Diese ist in der Methode \texttt{volume\_alter()} gekapselt. Als Übergabeparameter wird dieser Methode nicht eine absolute Lautstärke mitgegeben, sondern ein Veränderungswert. 
 
-Zunächst wird dieser Wert auf das Attribut \texttt{volume} addiert (Bedenken Sie, dass ein negativer Veränderungswert hier die Lautstärke reduziert.). Anschließend wird der Wert auf das Intervall $[0, 1]$ begrenzt und abschließend die neu Lautstärke mit \texttt{pygame.mixer\-.music\-.set\-\_volume()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{set\_volume()}}\randnotiz{set\_volume()} gesetzt.
+Zunächst wird dieser Wert auf das Attribut \texttt{volume} addiert \footnote{Bedenken Sie, dass ein negativer Veränderungswert hier die Lautstärke reduziert.}. Anschließend wird der Wert auf das Intervall $[0, 1]$ begrenzt und abschließend die neu Lautstärke mit \texttt{pygame.mixer\-.music\-.set\-\_volume()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{set\_volume()}}\randnotiz{set\_volume()} gesetzt.
 
 \lstsource{SRC/00 Einführung/13 Sound/sound00.py}{93}{99}{python}{Sound: \texttt{volume\_alter()} von \texttt{Game}}{srcSound00g} 
 
@@ -68,6 +72,8 @@ In \abbref[vref]{picStereo00} sehen Sie einen Panzer, der von links nach rechts 
 
 \myebild{stereo00.png}{0.7}{Sound: Stereoeffekt}{picStereo00}
 
+\newpage 
+
 Zunächst das notwendige Beiwerk, welches ich nicht weiter erklären müssen sollte:
 
 \lstsource{SRC/00 Einführung/13 Sound/sound01.py}{1}{43}{python}{Sound-Stereo: Präamble, \texttt{Settings} und \texttt{Ground}}{srcSound01a} 
@@ -76,23 +82,23 @@ In \zeiref{srcSound0101} wird ein \texttt{Sound}-Objekt\myindex{pyg}{\texttt{mix
 
 Normalerweise, wäre dies eine gute Idee gewesen, wählt dieser Befehl doch einen der acht verfügbaren Sound-Kanäle aus\index{Kanal}\randnotiz{Kanal}. Man kann aber auch einen Kanal direkt ansteuern und damit mehr Kontrolle über das Sound-Verhalten erlangen. In \zeiref{srcSound0104} wird dazu ein freies  \texttt{pygame.mixer.Channel}-Objekt\myindex{pyg}{\texttt{mixer}!\texttt{Channel}|underline} ermittelt. Die Methode \texttt{pygame.mixer.find\-\_chan\-nel()} \myindex{pyg}{\texttt{mixer}!\texttt{find\_channel()}|underline}\randnotiz{find\_channel()} liefert mir nämlich den ersten freien Kanal und speichert diesen im Attribut \texttt{channel} ab. Das Abspielen erfolgt dann in \zeiref{srcSound0103} nicht mehr über eine Methode des \texttt{Sound}-Objektes, sondern mit Hilfe von \texttt{pygame.mixer.Channel.play()}\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{play()}|underline}\randnotiz{play()}. 
 
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{46}{70}{python}{Sound-Stereo: Konstruktor von \texttt{Tank}}{srcSound01b} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{46}{69}{python}{Sound-Stereo: Konstruktor von \texttt{Tank}}{srcSound01b} 
 
 Die Methode \texttt{update()} wird hier nur der Vollständigkeit halber abgedruckt. Bzgl. der Geräuschkulisse passiert hier nichts. 
 
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{72}{97}{python}{Sound-Stereo: \texttt{Tank.update()}}{srcSound01c} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{71}{94}{python}{Sound-Stereo: \texttt{Tank.update()}}{srcSound01c} 
 
-Die Methode \texttt{stereo()} ist überraschend simpel. Die Methode \texttt{pygame.mixer.Channel\-.set\-\_vol\-ume()}\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{set\_volume()}|underline}\randnotiz{set\_volume)} stellt nämlich zwei Übergabeparameter zur Verfügung: \emph{left} und \emph{right}. Beide haben einen Wertebereich von~$[0, 1]$. Nun wollten wir ja, dass der rechte Lautsprecher das Motorengeräusch lauter wiedergibt je weiter rechts der Panzer steht und umgekehrt. Dazu berechne ich in \zeiref{srcSound0103} die relative Position des Panzerzentrums in der Waagerechten im Verhältnis zur Fensterbreite; gibt ja auch einen Wert im Intervall von~$[0, 1]$. Habe ich diesen Wert, kann ich in der folgenden Zeile ebenfalls die relative linke Position ermitteln. Danach werden beide Werte der Methode \texttt{set\_volume()} übergeben. 
+Die Methode \texttt{stereo()} ist überraschend simpel. Die Methode \texttt{pygame.mixer.Channel\-.set\-\_vol\-ume()}\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{set\_volume()}|underline}\randnotiz{set\_volume()} stellt nämlich zwei Übergabeparameter zur Verfügung: \emph{left} und \emph{right}. Beide haben einen Wertebereich von~$[0, 1]$. Nun wollten wir ja, dass der rechte Lautsprecher das Motorengeräusch lauter wiedergibt je weiter rechts der Panzer steht und umgekehrt. Dazu berechne ich in \zeiref{srcSound0103} die relative Position des Panzerzentrums in der Waagerechten im Verhältnis zur Fensterbreite; gibt ja auch einen Wert im Intervall von~$[0, 1]$. Habe ich diesen Wert, kann ich in der folgenden Zeile ebenfalls die relative linke Position ermitteln. Danach werden beide Werte der Methode \texttt{set\_volume()} übergeben. 
 
 Hinweis: Der Methode \texttt{pygame.mixer.Channel\-.set\-\_vol\-ume()} können unterschiedliche Lautstärken für Rechts und Links mitgegeben werden, den Methoden \texttt{pygame.mix\-er\-.Sound\-.set\-\_vol\-ume()}\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{set\_volume()}} und \texttt{pygame.mixer.music\-.set\-\_vol\-ume()}\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{set\_volume()}} nicht.
 
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{99}{102}{python}{Sound-Stereo: \texttt{Tank.stereo()}}{srcSound01d} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{96}{99}{python}{Sound-Stereo: \texttt{Tank.stereo()}}{srcSound01d} 
 
 Wozu könnte dieser Effekt noch genutzt werden? Denken wir beispielsweise an zwei Personen, die miteinander sprechen, Geräuschquellen in einem Raum, usw.. Immer dann, wenn durch die Akustik die Lokalisierung erleichtert werden soll, oder Einzelgeräusche abgehoben bzw. unterschieden werden sollen, bieten sich unterschiedliche Lautstärken -- also Stereo -- an.
 
 In \texttt{turn()} und \texttt{update\_imageindex()} passiert nichts bzgl. der Soundausgabe.
 
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{104}{111}{python}{Sound-Stereo: \texttt{Tank.turn()} und \texttt{Tank.update\_imageindex()}}{srcSound01e} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{101}{108}{python}{Sound-Stereo: \texttt{Tank.turn()} und \texttt{Tank.update\_imageindex()}}{srcSound01e} 
 
 Die Soundausgabe des \texttt{Bullet} hätte man auch in der Klasse \texttt{Tank} programmieren können. Ich finde es aber organischer, diese in \texttt{Bullet} zu verorten. Vielleicht wollte man ja später auch noch einen Aufprall oder ein Explosion implementieren.
 
@@ -100,12 +106,11 @@ Vor dem Konstruktor wird in \zeiref{srcSound0106} die statische Variable \texttt
 
 Anschließend wird wie beim Panzer ein freier Kanal gesucht und die Lautstärke des rechten und linken Lautsprechers abhängig von der Position bestimmt. Zum Schluss wird der Sound abgespielt.
 
-\newpage
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{114}{143}{python}{Sound-Stereo: Die Klasse \texttt{Bullet}}{srcSound01g} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{111}{144}{python}{Sound-Stereo: Die Klasse \texttt{Bullet}}{srcSound01g} 
 
 Der Rest des Quelltexts wird nur der Vollständigkeit wegen abgedruckt.
 
-\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{154}{222}{python}{Sound-Stereo: Rest}{srcSound01h} 
+\lstsource{SRC/00 Einführung/13 Sound/sound01.py}{147}{203}{python}{Sound-Stereo: Rest}{srcSound01h} 
 
 
 \subsection*{Was war neu?}
@@ -115,51 +120,51 @@ Für die Soundunterstützung stehen zwei Möglichkeiten zur Verfügung. Einmal d
 Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
 	\item\texttt{pygame.mixer.Channel} :
-\myindex{pyg}{\texttt{mixer}!\texttt{Channel}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.Channel}
+\myindex{pyg}{\texttt{mixer}!\texttt{Channel}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.Channel}
 
 	\item \texttt{pygame.mixer.Channel.play()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{play()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Channel.play}
+\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{play()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Channel.play}
 
 	\item \texttt{pygame.mixer.Channel.set\_volume()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{set\_volume()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Channel.set_volume}
+\myindex{pyg}{\texttt{mixer}!\texttt{Channel}!\texttt{set\_volume()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Channel.set_volume}
 
 	\item\texttt{pygame.mixer.find\_channel()} :
-\myindex{pyg}{\texttt{mixer}!\texttt{find\_channel()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.find_channel}
+\myindex{pyg}{\texttt{mixer}!\texttt{find\_channel()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.find_channel}
 
 	\item \texttt{pygame.mixer.init()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{init()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.init}
+\myindex{pyg}{\texttt{mixer}!\texttt{init()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.init}
 
 	\item\texttt{pygame.mixer.music.fadeout()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{fadeout()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.fadeout}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{fadeout()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.fadeout}
 
 	\item \texttt{pygame.mixer.music.get\_volume()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{get\_volume()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.get_volume}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{get\_volume()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.get_volume}
 
     \item \texttt{pygame.mixer.music.load()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{load()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.load}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{load()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.load}
 
 	\item \texttt{pygame.mixer.music.pause()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{pause()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.pause}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{pause()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.pause}
 
 	\item \texttt{pygame.mixer.music.play()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{play()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.play}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{play()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.play}
 
 	\item \texttt{pygame.mixer.music.set\_volume()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{set\_volume()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.set_volume}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{set\_volume()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.set_volume}
 
 	\item \texttt{pygame.mixer.music.unpause()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{unpause()}}\\ \url{https://www.pygame.org/docs/ref/music.html#pygame.mixer.music.unpause}
+\myindex{pyg}{\texttt{mixer}!\texttt{music}!\texttt{unpause()}}\\ \url{https://pyga.me/docs/ref/music.html#pygame.mixer.music.unpause}
 
 	\item \texttt{pygame.mixer.Sound}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Sound}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Sound}
+\myindex{pyg}{\texttt{mixer}!\texttt{Sound}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Sound}
 
 	\item \texttt{pygame.mixer.Sound.get\_volume()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{get\_volume()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Sound.get_volume}
+\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{get\_volume()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Sound.get_volume}
 
 	\item \texttt{pygame.mixer.Sound.play()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{play()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Sound.play}
+\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{play()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Sound.play}
 
 	\item \texttt{pygame.mixer.Sound.set\_volume()}:
-\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{set\_volume()}}\\ \url{https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Sound.set_volume}
+\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{set\_volume()}}\\ \url{https://pyga.me/docs/ref/mixer.html#pygame.mixer.Sound.set_volume}
 
 \end{itemize}

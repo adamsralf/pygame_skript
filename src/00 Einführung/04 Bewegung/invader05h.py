@@ -21,10 +21,9 @@ def main():
 
     defender_image = pygame.image.load("images/defender01.png").convert_alpha()
     defender_image = pygame.transform.scale(defender_image, (30, 30))
-    defender_rect = defender_image.get_rect()
+    defender_rect = pygame.rect.FRect(defender_image.get_rect())    # float§\label{srcInvader05h01}§
     defender_rect.centerx = Settings.WINDOW.centerx
     defender_rect.bottom = Settings.WINDOW.bottom - 5
-    defender_pos = pygame.math.Vector2(defender_rect.left, defender_rect.top)    # float§\label{srcInvader05h01}§
     defender_speed = 600
     defender_direction_v = -1
 
@@ -39,8 +38,7 @@ def main():
                 running = False
 
         # Update
-        defender_pos[1] += defender_direction_v * defender_speed * Settings.DELTATIME
-        defender_rect.top = round(defender_pos[1])                  # Runden§\label{srcInvader05h02}§
+        defender_rect.top += defender_direction_v * defender_speed * Settings.DELTATIME
         if defender_rect.bottom >= Settings.WINDOW.bottom:
             defender_direction_v *= -1
         elif defender_rect.top <= 0:

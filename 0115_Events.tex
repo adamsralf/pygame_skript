@@ -40,41 +40,41 @@ Hat die ganz rechte Box den Wert 10 erreicht, erzeugt er einen Überlauf auf die
 
 Das Ganze nun im Detail. In der Konsolenausgabe oben (siehe Seite~\pageref{srcConsole00a}) ist für jedes Event so eine eindeutige Nummer zu sehen, über die man das Event identifizieren kann. Pygame reserviert mir einen Nummernbereich für eigene Events zwischen den Konstanten \texttt{pygame.USEREVENT}\randnotiz{USEREVENT}\myindex{pyg}{\texttt{USEREVENT}|underline} und \texttt{pygame.NUMEVENTS~-~1}\randnotiz{NUMEVENTS}\myindex{pyg}{\texttt{NUMEVENTS}|underline}. Für jedes selbst erstellte Event muss man nun eine solche eindeutige Nummer vergeben. Am einfachsten ist es, zentral diese durch \texttt{USEREVENT~+~}$n$ zu definieren. In \zeiref{srcEvent0101} und \zeiref{srcEvent0102} finden Sie entsprechende Beispiele. Ich kapsle diese Definitionen in eine statische Klasse aus keinem anderen Grund, als dass ich dann die Autovervollständigung des Editors gut nutzen kann (\zeiref{srcEvent0100}). Die Klasse \texttt{Settings} sollte selbsterklärend sein.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{1}{22}{python}{Events (2) -- Präambel}{srcEvent01a}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{1}{21}{python}{Events (2) -- Präambel}{srcEvent01a}
 
 Die Klasse \texttt{Button} sollte auch über weite Strecken verstanden werden. Die erste spannende Stelle finden Sie in \zeiref{srcEvent0103}. Hier wird ein neues \texttt{pygame.event.Event}\randnotiz{Event}-Objekt\myindex{pyg}{\texttt{event}!\texttt{Event}|underline} erzeugt. Als ersten Parameter muss diese eben erwähnte ID angegeben werden. Danach können Sie beliebig viele Angaben als Eventinfo mitgeben. In unserem Beispiel wird der Buttontext mitgegeben, damit man später feststellen kann, welcher Button gedrückt wurde. 
 
 Danach wird in \zeiref{srcEvent0104} über \texttt{pygame.event.post()}\randnotiz{post()}\myindex{pyg}{\texttt{event}!\texttt{post()}|underline} das Event abgefeuert.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{24}{41}{python}{Events (2) -- Klasse \texttt{Button}}{srcEvent01b}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{24}{39}{python}{Events (2) -- Klasse \texttt{Button}}{srcEvent01b}
 
 Die Klasse \texttt{Particle} ist viel Quelltext mit wenig Neuem. Partikel zufälliger Größe, Farbe, Richtung und Geschwindigkeit sausen durch den Bildschirm und prallen ggf. von den Rändern ab. Sie enthalten keine event-spezifischen Funktionalitäten. Das Attribut \texttt{\_halted} wird verwendet, um nach Drücken der Buttons den Partikel anzuhalten bzw. wieder loslaufen zu lassen.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{44}{81}{python}{Events (2) -- Klasse \texttt{Particle}}{srcEvent01c}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{42}{77}{python}{Events (2) -- Klasse \texttt{Particle}}{srcEvent01c}
 
 Mit \texttt{Box} wird so eine Ziffernbox implementiert. Dem Konstruktor wird dabei eine Position und ein Index mitgegeben. Die Bedeutung des Paramters \texttt{position} sollte klar sein. Mit Hilfe von \texttt{index} kann später ermittelt werden, welche Box einen Überlauf zur nächst höheren Zehnerpotenz hatte.
 
 In \texttt{update()} wird der internen Zähler \texttt{\_count} immer um~1 erhöht. Erreiche ich dabei die~10 (\zeiref{srcEvent0105}), wird das Event erzeugt und der Index als Eventinfo übergeben. Damit kann das Hauptprogramm ermitteln, welcher Box er nun ein \texttt{update()} verpassen muss.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{84}{109}{python}{Events (2) -- Klasse \texttt{Box}}{srcEvent01d}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{80}{105}{python}{Events (2) -- Klasse \texttt{Box}}{srcEvent01d}
 
 Und jetzt das Hauptprogramm: Im Konstruktor werden die Buttons, Boxen und Partikel angelegt und Spritegroups zugeordnet.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{112}{128}{python}{Events (2) --  Konstruktor von \texttt{Game}}{srcEvent01e}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{108}{123}{python}{Events (2) --  Konstruktor von \texttt{Game}}{srcEvent01e}
 
 Die Methode \texttt{run()} ist nahezu langweilig.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{130}{140}{python}{Events (2) --  \texttt{Game.run()}}{srcEvent01f}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{125}{135}{python}{Events (2) --  \texttt{Game.run()}}{srcEvent01f}
 
 Benutzerdefiniert Events werden genauso behandelt wie vordefiniert. Zuerst erfragt man den \texttt{type} und dann verarbeitet man die Eventinfos. In \zeiref{srcEvent0106} wird nachgeschaut, ob einer der beiden Buttons gedrückt wird. Anschließend wird über die Eventinfo \texttt{text} an die Partikel die Nachricht weitergeleitet, ob sie stehenbleiben oder weiterlaufen sollen. Analoges ab \zeiref{srcEvent0107}. Zuerst wird überprüft, ob eine Box einen Überlauf hatte und dann wird mit Hilfe des Eventinfo \texttt{index} die nächste Box darüber informiert, dass sie sich um~1 erhöhen muss.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{142}{156}{python}{Events (2) --  \texttt{Game.watch\_for\_events()}}{srcEvent01g}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{137}{151}{python}{Events (2) --  \texttt{Game.watch\_for\_events()}}{srcEvent01g}
 
 Der Rest wird hier der Vollständigkeit abgedruckt.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{158}{999}{python}{Events (2) --  Der Rest von \texttt{Game}}{srcEvent01h}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{153}{181}{python}{Events (2) --  Der Rest von \texttt{Game}}{srcEvent01h}
 
-\subsection{Wie kann ich periodisch Ereignisse erzeugen lassen?}
+\subsection{Wie kann ich periodisch Ereignisse erzeugen lassen?}\label{eventtime}
 
 Dies ist sogar recht einfach. Das vorherige Beispiel wird so erweitert, dass im Abstand von $500~ms$ immer neue Partikel erstellt werden.
 
@@ -84,11 +84,11 @@ Dazu wird zunächst die neue ID \texttt{NEWPARTICLES} für das Benutzerevent def
 
 Im Konstruktor von \texttt{Game} wird in \zeiref{srcEvent0201} mit Hilfe von \texttt{pygame.time.set\_timer()} ein periodischer Timer\randnotiz{set\_timer()}\myindex{pyg}{\texttt{time}!\texttt{set\_timer()}|underline} dazu gesetzt. Dieser schießt alle~$500~ms$ die entsprechende EventID ab.
 
-\lstsource{SRC/00 Einführung/15 Events/events02.py}{142}{144}{python}{Events (3) -- Timer}{srcEvent02b}
+\lstsource{SRC/00 Einführung/15 Events/events02.py}{138}{140}{python}{Events (3) -- Timer}{srcEvent02b}
 
 Wie die anderen Events wird dieses nun in \texttt{watch\_for\_event()} abgefangen (\zeiref{srcEvent0202}) und verarbeitet. Hier indem die Methode \texttt{\_generate\_particles()} aufgerufen wird.
 
-\lstsource{SRC/00 Einführung/15 Events/events02.py}{170}{174}{python}{Events (3) -- Event}{srcEvent02c}
+\lstsource{SRC/00 Einführung/15 Events/events02.py}{169}{170}{python}{Events (3) -- Event}{srcEvent02c}
 
 \subsection*{Was war neu?}
 
@@ -102,27 +102,27 @@ Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
 	\item \texttt{USEREVENT}
     \myindex{pyg}{\texttt{USEREVENT}}:\\
-    \url{https://www.pygame.org/docs/ref/event.html#pygame.event}
+    \url{https://pyga.me/docs/ref/event.html#pygame.event}
 
     \item \texttt{NUMEVENTS}
     \myindex{pyg}{\texttt{NUMEVENTS}}:\\
-    \url{https://www.pygame.org/docs/ref/event.html#pygame.event}
+    \url{https://pyga.me/docs/ref/event.html#pygame.event}
 
 	\item \texttt{pygame.event.Event}:
 	\myindex{pyg}{\texttt{event}!\texttt{Event}}\\
-	\url{https://www.pygame.org/docs/ref/event.html#pygame.event.Event}
+	\url{https://pyga.me/docs/ref/event.html#pygame.event.Event}
 	
 	\item \texttt{pygame.event.get()}
     \myindex{pyg}{\texttt{event!get()}}:\\
-    \url{https://www.pygame.org/docs/ref/event.html#pygame.event.get}
+    \url{https://pyga.me/docs/ref/event.html#pygame.event.get}
 
 	\item \texttt{pygame.event.post()}:
 	\myindex{pyg}{\texttt{event}!\texttt{post()}}\\
-	\url{https://www.pygame.org/docs/ref/event.html#pygame.event.post}
+	\url{https://pyga.me/docs/ref/event.html#pygame.event.post}
 	
 	\item \texttt{pygame.time.set\_timer()}:
 	\myindex{pyg}{\texttt{time}!\texttt{set\_timer()}}\\
-	\url{https://www.pygame.org/docs/ref/time.html#pygame.time.set_timer}
+	\url{https://pyga.me/docs/ref/time.html#pygame.time.set_timer}
 
 	
 \end{itemize}

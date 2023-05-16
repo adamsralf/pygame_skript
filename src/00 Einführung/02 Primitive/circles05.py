@@ -20,7 +20,7 @@ class Circle:
         self.speedy += Circle.gravity
         self.posx += self.speedx
         self.posy += self.speedy
-        if self.posx - self.radius < 0:     # Links raus §\label{srcCircles0501}§
+        if self.posx - self.radius < 0:     # links raus §\label{srcCircles0501}§
             self.todelete = True
         elif self.posx + self.radius > pygame.display.get_window_size()[0]:  # rechts raus§\label{srcCircles0502}§
             self.todelete = True
@@ -43,7 +43,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -65,6 +64,7 @@ def main():
             p.draw()
 
         pygame.display.flip()
+        clock.tick(60)
 
     pygame.quit()
 

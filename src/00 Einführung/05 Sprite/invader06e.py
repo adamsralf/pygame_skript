@@ -17,22 +17,20 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.centerx = Settings.WINDOW.centerx
         self.rect.bottom = Settings.WINDOW.height - 5
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
-        self.speed = pygame.math.Vector2(300, 0)
+        self.speed = 300
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "newpos":        # Neue Position berechnen §\label{srcInvader06e01}§
-                self.position = self.position + (self.speed * Settings.DELTATIME)
-                self.rect.left = round(self.position.x)
+                self.rect.move_ip(self.speed * Settings.DELTATIME, 0)
             elif kwargs["action"] == "direction":   # Richtung wechseln§\label{srcInvader06e02}§
                 self.change_direction()
 
     def change_direction(self) -> None:
-        self.speed.x *= -1
+        self.speed *= -1
 
 
 class Border(pygame.sprite.Sprite):

@@ -29,8 +29,6 @@ class Button(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.font = pygame.font.SysFont(None, 30)
         self.centerxy = (Settings.WINDOW.centerx, self.font.get_height()//2)
-        self.image: pygame.surface.Surface = None
-        self.rect: pygame.rect.Rect = None
         self._text = text
         self.image = self.font.render(self._text, True, "black")
         self.rect = self.image.get_rect(topleft=(position))
@@ -46,38 +44,36 @@ class Particle(pygame.sprite.Sprite):
     r = 0
     g = 0
     b = 0
+    halted = False
 
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
         self.image = pygame.surface.Surface((randint(3, 6), randint(3, 6)))
         self.image.fill((Particle.r, Particle.g, Particle.b))
         self._nextcolor()
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.topleft = (randint(30, Settings.WINDOW.right-30), randint(30, Settings.WINDOW.bottom-30), )
         self._speed = randint(100, 400)
-        self._direction = [choice((-1, 1)), choice((-1, 1))]
-        self._halted = False
+        self._direction = pygame.Vector2(choice((-1, 1)), choice((-1, 1)))
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
-                if not self._halted:
+                if not Particle.halted:
                     self._move()
             elif kwargs["action"] == "Start":
-                self._halted = False
+                Particle.halted = False
             elif kwargs["action"] == "Stop":
-                self._halted = True
+                Particle.halted = True
 
     def _move(self) -> None:
-        self.rect.left += self._speed*self._direction[0]*Settings.DELTATIME
+        self.rect.move_ip(self._speed*self._direction*Settings.DELTATIME)
         if self.rect.left < 0:
             self._direction[0] *= -1
             self.rect.left = 0
         if self.rect.right > Settings.WINDOW.right:
             self._direction[0] *= -1
             self.rect.right = Settings.WINDOW.right
-
-        self.rect.top += self._speed*self._direction[1]*Settings.DELTATIME
         if self.rect.top < 0:
             self._direction[1] *= -1
             self.rect.top = 0
@@ -101,8 +97,8 @@ class Box(pygame.sprite.Sprite):
 
     def __init__(self, index: int, position: Tuple[int], *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.image: pygame.surface.Surface = pygame.surface.Surface((Settings.BOXWIDTH, 20))
-        self.rect: pygame.rect.Rect = self.image.get_rect(center=position)
+        self.image = pygame.surface.Surface((Settings.BOXWIDTH, 20))
+        self.rect = self.image.get_rect(center=position)
         self._font = pygame.font.SysFont(None, 30)
         self._counter = 0
         self._index = index

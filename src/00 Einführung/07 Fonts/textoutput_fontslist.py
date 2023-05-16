@@ -60,8 +60,6 @@ class BigImage(pygame.sprite.Sprite):
 
 def main():
 
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "650, 40"
-
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(Settings.WINDOW.size)
@@ -90,7 +88,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(60)
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
@@ -104,6 +101,7 @@ def main():
 
         bigimage.draw(screen)
         pygame.display.flip()
+        clock.tick(Settings.FPS)
 
     pygame.quit()
 

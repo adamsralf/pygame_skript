@@ -282,3 +282,10 @@ TSWLatexianTemp*
 *.db
 änderungen.txt
 00 skript.synctex-PC-ADAMS.gz
+src/00 Einführung/04 Bewegung/.vscode/settings.json
+src/00 Einführung/06 Tastatur/.vscode/settings.json
+src/00 Einführung/07 Fonts/.vscode/settings.json
+src/00 Einführung/08 TextBitmaps/.vscode/settings.json
+src/00 Einführung/09 Kollision/.vscode/settings.json
+src/00 Einführung/10 Zeitsteuerung/.vscode/settings.json
+src/01 Beispiele/02 Bubbles/.vscode/settings.json

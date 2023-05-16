@@ -10,33 +10,31 @@ class Settings:
     DELTATIME = 1.0 / FPS
 
 
-class Defender(pygame.sprite.Sprite):               # Kindklasse von Sprite §\label{srcInvader0601}§
+class Defender(pygame.sprite.Sprite):               # Kindklasse von Sprite §\label{srcInvader06a01}§
 
-    def __init__(self) -> None:                     # Konstruktor §\label{srcInvader0602}§
+    def __init__(self) -> None:                     # Konstruktor §\label{srcInvader06a02}§
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.centerx = Settings.WINDOW.centerx
         self.rect.bottom = Settings.WINDOW.bottom - 5
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
-        self.speed = pygame.math.Vector2(300, 0)
+        self.speed = 300
 
-    def update(self) -> None:                       # Zustandsberechnung §\label{srcInvader0603}§
-        newpos = self.position + (self.speed * Settings.DELTATIME)
-        if newpos.x + self.rect.width >= Settings.WINDOW.right:
+    def update(self) -> None:                       # Zustandsberechnung §\label{srcInvader06a03}§
+        newpos = self.rect.move(self.speed * Settings.DELTATIME, 0)
+        if newpos.right >= Settings.WINDOW.right:
             self.change_direction()
-        elif newpos.x <= Settings.WINDOW.left:
+        elif newpos.left <= Settings.WINDOW.left:
             self.change_direction()
         else:
-            self.position = newpos
-            self.rect.left = round(newpos.x)
+            self.rect = newpos
 
-    def draw(self, screen: pygame.surface.Surface) -> None:  # Malen §\label{srcInvader0604}§
+    def draw(self, screen: pygame.surface.Surface) -> None:  # Malen §\label{srcInvader06a04}§
         screen.blit(self.image, self.rect)
 
-    def change_direction(self) -> None:             # OO style §\label{srcInvader0608}§
-        self.speed.x *= -1
+    def change_direction(self) -> None:             # OO style §\label{srcInvader06a08}§
+        self.speed *= -1
 
 
 def main():
@@ -46,7 +44,7 @@ def main():
     screen = pygame.display.set_mode(Settings.WINDOW.size)
     pygame.display.set_caption("Sprite")
     clock = pygame.time.Clock()
-    defender = Defender()                           # Objekt anlegen §\label{srcInvader0605}§
+    defender = Defender()                           # Objekt anlegen §\label{srcInvader06a05}§
 
     time_previous = time()
     running = True
@@ -57,11 +55,11 @@ def main():
                 running = False
 
         # Update
-        defender.update()                           # Aufruf §\label{srcInvader0606}§
+        defender.update()                           # Aufruf §\label{srcInvader06a06}§
 
         # Draw
         screen.fill("white")
-        defender.draw(screen)                       # Aufruf §\label{srcInvader0607}§
+        defender.draw(screen)                       # Aufruf §\label{srcInvader06a07}§
         pygame.display.flip()
 
         clock.tick(Settings.FPS)

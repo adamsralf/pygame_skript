@@ -26,7 +26,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(Settings.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -35,6 +34,7 @@ def main():
         screen.blit(enemy_image, (10, 10))
         screen.blit(defender_image, (10, 80))
         pygame.display.flip()
+        clock.tick(Settings.FPS)
 
     pygame.quit()
 

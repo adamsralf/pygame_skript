@@ -6,12 +6,34 @@ import pygame
 from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
 
 
+class Settings:
+    WINDOW = pygame.rect.Rect(0, 0, 1220, 1002)
+    FPS = 60
+    DELTATIME = 1.0/FPS
+    PATH: Dict[str, str] = {}
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
+    PATH["sound"] = os.path.join(PATH["file"], "sounds")
+    CAPTION = 'Fingerübung "Bubbles"'
+
+    @staticmethod
+    def get_file(filename: str) -> str:
+        return os.path.join(Settings.PATH["file"], filename)
+
+    @staticmethod
+    def get_image(filename: str) -> str:
+        return os.path.join(Settings.PATH["image"], filename)
+
+    @staticmethod
+    def get_sound(filename: str) -> str:
+        return os.path.join(Settings.PATH["sound"], filename)
+
 class Background(pygame.sprite.DirtySprite):
     def __init__(self) -> None:
         super().__init__()
-        imagename = Game.get_image("aquarium.png")
+        imagename = Settings.get_image("aquarium.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
-        self.image = pygame.transform.scale(self.image, Game.window.size)
+        self.image = pygame.transform.scale(self.image, Settings.WINDOW.size)
         self.rect: pygame.rect.Rect = self.image.get_rect()
         self.dirty = 1
 
@@ -20,31 +42,11 @@ class Background(pygame.sprite.DirtySprite):
 
 
 class Game:
-    window = pygame.rect.Rect(0, 0, 1220, 1002)
-    fps = 60
-    deltatime = 1.0/fps
-    path: Dict[str, str] = {}
-    path["file"] = os.path.dirname(os.path.abspath(__file__))
-    path["image"] = os.path.join(path["file"], "images")
-    path["sound"] = os.path.join(path["file"], "sounds")
-    caption = 'Fingerübung "Bubbles"'
-
-    @staticmethod
-    def get_file(filename: str) -> str:
-        return os.path.join(Game.path["file"], filename)
-
-    @staticmethod
-    def get_image(filename: str) -> str:
-        return os.path.join(Game.path["image"], filename)
-
-    @staticmethod
-    def get_sound(filename: str) -> str:
-        return os.path.join(Game.path["sound"], filename)
 
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Game.window.size)
-        pygame.display.set_caption(Game.caption)
+        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
+        pygame.display.set_caption(Settings.CAPTION)
         self._clock = pygame.time.Clock()
         self._background = Background()
         self._running = True
@@ -71,9 +73,9 @@ class Game:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Game.fps)
+            self._clock.tick(Settings.FPS)
             time_current = time()
-            Game.deltatime = time_current - time_previous
+            Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 

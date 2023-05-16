@@ -11,7 +11,7 @@ class MyEvents:
 
 
 class Settings:
-    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1000, 600)
+    WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0/FPS
 
@@ -29,7 +29,7 @@ class Background(pygame.sprite.Sprite):
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, player: str, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.Rect(0, 0, 15, Settings.WINDOW.height//10)
+        self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height//10)
         y = Settings.WINDOW.centery
         if player == "left":
             x = 50
@@ -55,19 +55,18 @@ class Paddle(pygame.sprite.Sprite):
 
     def _move(self) -> None:
         self.rect.centery += self._speed * self._direction * Settings.DELTATIME
-        if self.rect.top < 0:
-            self.rect.top = 0
-        elif self.rect.bottom > Settings.WINDOW.bottom:
-            self.rect.bottom = Settings.WINDOW.bottom
+        self.rect.top = max(0, self.rect.top)
+        self.rect.bottom = min(Settings.WINDOW.bottom, self.rect.bottom)
 
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.Rect(0, 0, 20, 20)
-        self.image = pygame.surface.Surface(self.rect.size)
+        self.rect = pygame.rect.FRect(0, 0, 20, 20)
+        self.image = pygame.surface.Surface(self.rect.size).convert()
+        self.image.set_colorkey("black")
         pygame.draw.circle(self.image, "green", self.rect.center, self.rect.width//2)
-        self.speed = Settings.WINDOW.width // 3
+        self._speed = Settings.WINDOW.width // 3
         self._service()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -85,8 +84,7 @@ class Ball(pygame.sprite.Sprite):
         return super().update(*args, **kwargs)
 
     def _move(self) -> None:
-        self.rect.x += self.speedx * Settings.DELTATIME
-        self.rect.y += self.speedy * Settings.DELTATIME
+        self.rect.move_ip(self._speedxy * Settings.DELTATIME)
         if self.rect.top <= 0:
             self._vertical_flip()
             self.rect.top = 0
@@ -104,18 +102,17 @@ class Ball(pygame.sprite.Sprite):
 
     def _service(self) -> None:
         self.rect.center = Settings.WINDOW.center
-        self.speedx = choice([-1, 1]) * self.speed
-        self.speedy = choice([-1, 1]) * self.speed
+        self._speedxy = pygame.Vector2(choice([-1, 1]), choice([-1, 1])) * self._speed
 
     def _horizontal_flip(self) -> None:
-        self.speedx *= -1
+        self._speedxy.x *= -1
 
     def _vertical_flip(self) -> None:
-        self.speedy *= -1
+        self._speedxy.y *= -1
 
     def _respeed(self) -> None:
-        self._speedx += choice((-self._speed//4, 0, self._speed//4))
-        self._speedy += choice((-self._speed//4, 0, self._speed//4))
+        self._speedxy.x += choice((-self._speed//4, 0, self._speed//4))
+        self._speedxy.y += choice((-self._speed//4, 0, self._speed//4))
 
 
 class Score(pygame.sprite.Sprite):
@@ -152,7 +149,8 @@ class Game:
         self._clock = pygame.time.Clock()
         self._background = pygame.sprite.GroupSingle(Background())
         self._all_sprites = pygame.sprite.Group()
-        self._paddles = [Paddle("left", self._all_sprites), Paddle("right", self._all_sprites)]  # §\label{srcPong0601}§
+        self._paddles = [Paddle("left", self._all_sprites), 
+                         Paddle("right", self._all_sprites)]  # §\label{srcPong0601}§
         self._score = Score(self._all_sprites)
         self._ball = Ball(self._all_sprites)
         self._isComputerPlayer = [False, False]                     # Computerspielerflags§\label{srcPong0602}§
@@ -161,6 +159,7 @@ class Game:
     def run(self):
         time_previous = time()
         while self._running:
+            self.watch_for_events()
             self.update()
             self.draw()
             self._clock.tick(Settings.FPS)
@@ -170,7 +169,6 @@ class Game:
         pygame.quit()
 
     def update(self):
-        self.watch_for_events()
         self._check_collision()
         for i in range(2):                                          # Computerbefehl §\label{srcPong0603}§
             if self._isComputerPlayer[i]:
@@ -230,9 +228,9 @@ class Game:
             self._ball.rect.right = self._paddles[1].rect.left - 1
 
     def _paddlecontroler(self, paddle) -> None:
-        if paddle.rect.centery > self._ball.rect.centery and paddle.rect.top > self._ball.rect.height - 1:
+        if paddle.rect.top > self._ball.rect.centery and paddle.rect.top > self._ball.rect.height - 1:
             paddle.update(action="up")
-        elif paddle.rect.centery < self._ball.rect.centery and paddle.rect.bottom < Settings.WINDOW.bottom - (self._ball.rect.height - 1):
+        elif paddle.rect.bottom < self._ball.rect.centery and paddle.rect.bottom < Settings.WINDOW.bottom - (self._ball.rect.height - 1):
             paddle.update(action="down")
         else:
             paddle.update(action="halt")

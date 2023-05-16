@@ -3,7 +3,7 @@
 \section{Dirty Sprites}\label{secDirtySprites}\index{Dirty Sprite}
 Derzeit wird in jedem Frame\index{Frame} der gesamte Bildschirm -- also Hintergrund und Sprites -- neu gezeichnet. Dies ist, besonders wenn sich eigentlich nur wenige Sprites bewegen oder ihr Aussehen verändern, Rechenzeitverschwendung. 
 
-Pygame stellt dafür das Konzept der \emph{Dirty Sprites}\randnotiz{Dirty Sprite} zur Verfügung. Dabei wird über das Flag \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}} gesteuert, ob das Sprite neu gezeichnet werden muss oder nicht. Auch muss der Sprite irgendwie mitgeteilt werden, was auf die alte Position gezeichnet werden soll, wenn sich sie sich bewegt oder verschwindet; wird doch der Hintergrund eben nicht in jedem Frame neu gezeichnet.
+Pygame stellt dem das Konzept der \emph{Dirty Sprites}\randnotiz{Dirty Sprite} entgegen. Dabei wird über das Flag \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}} gesteuert, ob das Sprite neu gezeichnet werden muss oder nicht. Auch muss der Sprite irgendwie mitgeteilt werden, was auf die alte Position gezeichnet werden soll, wenn sich sie sich bewegt oder verschwindet; wird doch der Hintergrund eben nicht in jedem Frame neu gezeichnet.
 
 \myebild{dirty00.png}{0.7}{Dirty Sprite -- Demo-Spiel}{picDirty00}
 
@@ -24,11 +24,11 @@ Das eigentliche Spiel ist etwas anspruchsvoller. Dabei werden die Quadrate in ei
 
 Zunächst ein paar Worte über das noch nicht umgebaute Spiel. Die Klassen \texttt{Settings} und \texttt{Timer} werde ich nicht mehr kommentieren, da die schon ausführlich besprochen wurden. 
 
-Zunächst die Klasse \texttt{Tile}. Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von $500~ms$ gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch anklicken zerstört werden kann.
+Die Klasse \texttt{Tile}: Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von $500~ms$ gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch Anklicken zerstört werden kann.
 
 Wird ein Kill-Signal gesendet (\texttt{action='kill'}), wird die Kachel nur dann gelöscht, wenn der Status den Wert~1 hat, also rot eingefärbt ist. Ansonsten wird der Timer überprüft und ggf. Status und Farbe wieder zurückgesetzt.
 
-Erwähnenswert ist noch, dass hier Farbnamen anstelle von RGB-Werten verwendet werden (siehe \zeiref{srcDirty0001} und \zeiref{srcDirty0002}). Dies ist möglich, da in Pygame schon eine große Anzahl von Farben vordefiniert sind\randnotiz{Farbnamen}\index{Farbnamen|underline}. Überall dort, wo ein RGB-Code oder ein Farbwert angegeben werden kann, z.B. im Konstruktor eines \texttt{Color}-Objekts, können diese vordefinierten Farbnamen als Strings angegeben werden.
+Erwähnenswert ist noch, dass hier Farbnamen anstelle von RGB-Werten verwendet werden (siehe \zeiref{srcDirty0001} und \zeiref{srcDirty0002}). Dies ist möglich, da in Pygame schon eine große Anzahl von Farben vordefiniert sind\randnotiz{Farbnamen}\index{Farbnamen}. Überall dort, wo ein RGB-Code oder ein Farbwert angegeben werden kann, z.B. im Konstruktor eines \texttt{Color}-Objekts, können diese vordefinierten Farbnamen als Strings angegeben werden.
 
 \lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty00.py}{1}{32}{python}{Dirty Sprite -- \texttt{Tile} (unverändertes Demo)}{srcDirty00a} 
 
@@ -36,9 +36,9 @@ Die Klasse \texttt{Game} ist auch recht einfach. Herzstück ist die Methode \tex
 
 Für unser eigentliches Thema ist die Methode \texttt{Game.draw()} interessant. Hier können Sie sehen, dass in jedem Frame der komplette Hintergrund und alle Kacheln ausgegeben werden, obwohl nur wenige Kacheln ihr Aussehen zwischen zwei Frames verändern bzw. zerstört wurden. Eine offensichtliche Rechenzeitvernichtung. Nehmen wir beispielsweise nur das ständige Zeichnen des Hintergrundes. Bei einer Spielfeldgröße von $800~px\times~400~px$ sind hier $60mal$ in der Sekunde $320.000$~Pixel zu zeichnen, obwohl zwischen zwei Frames eher nur eine Kachel verschwindet, also bei einer Kachelgröße von $30~px\times~30~px$ nur $900$ Pixel neu zu zeichnen wären.
 
-\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty00.py}{35}{999}{python}{Dirty Sprite -- \texttt{Game} (unverändertes Demo)}{srcDirty00b} 
+\lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty00.py}{35}{97}{python}{Dirty Sprite -- \texttt{Game} (unverändertes Demo)}{srcDirty00b} 
 
-Aber Rettung naht; wie oben schon erwähnt, wird uns von Pygame die Klasse \texttt{pygame\-.sprite\-.Dirty\-Sprite}\randnotiz{DirtySprite}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}|underline} zur Verfügung gestellt. Diese Klasse wird von \texttt{pygame\-.sprite\-.Sprite} abgeleitet und hat insbesondere ein zusätzliches Attribut, welches steuert, ob der Sprite neu gezeichnet werden muss oder nicht: \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}|underline}. Dieses Attribut kann drei verschiedene Werte annehmen. In \tabref[vref]{tabDirty} werden die Bedeutungen angegeben. 
+Wie oben schon erwähnt, wird uns von Pygame die Klasse \texttt{pygame\-.sprite\-.Dirty\-Sprite}\randnotiz{DirtySprite}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}|underline} zur Verfügung gestellt. Diese Klasse wird von \texttt{pygame\-.sprite\-.Sprite} abgeleitet und hat insbesondere ein zusätzliches Attribut, welches steuert, ob der Sprite neu gezeichnet werden muss oder nicht: \texttt{pygame.sprite.DirtySprite.dirty}\randnotiz{self.dirty}\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}|underline}. Dieses Attribut kann drei verschiedene Werte annehmen. In \tabref[vref]{tabDirty} werden die Bedeutungen angegeben. 
 
 
 Fangen wir also mit dem Umbau an, und machen aus \texttt{Tile} eine Kindklasse von \texttt{Dirty\-Sprite}. In \zeiref{srcDirty0100} wird der Name der Elternklasse angepasst. Im Konstruktor sollte man \texttt{self.dirty} auf~\texttt{1} setzen, damit der Sprite auf jeden Fall beim ersten \texttt{draw()} ausgegeben wird (siehe \zeiref{srcDirty0101})\footnote{Der Wert~1 ist die Vorbelegung für dieses Attribut; ein Setzen ist daher nicht zwingend nötig, aber wegen der besseren Verständlichkeit angebracht.}. Anschließend müssen Sie die Stellen im Quelltext finden, die das Aussehen oder die Position ihres Sprites verändern. Wird eine solche Veränderung vorgenommen, muss \texttt{self.dirty} auf~\texttt{1} gesetzt werden. Dies ist in der Regel die Methode \texttt{update()} oder solche, die von ihr aufgerufen werden. 
@@ -73,7 +73,7 @@ Deshalb kann in \texttt{draw()} auf den zweiten Parameter verzichtet werden (\ze
 \newpage
 \lstsource{SRC/00 Einführung/14 Dirty Sprites/dirty03.py}{64}{66}{python}{Dirty Sprite -- \texttt{Game.draw()} (Umbau)}{srcDirty03b} 
 
-Ich sprach aber von zwei Kleinigkeiten. Für die zweite muss ich ein wenig was erklären. Die ganze Idee um den \texttt{DirtySprite} herum ist ja, Performance dadurch einzusparen, dass man nur noch die veränderten Bildschirmbereiche aktualisiert. Nun kostet aber das Ermitteln und Ausschneiden dieser Bereiche ebenfalls Rechenzeit. In der Informatik spricht man dabei von einem \gls{tradeoff}. Diese Rechenzeit kann das Zeitfenster, welches dafür innerhalb eines Frames zur Verfügung steht, überschreiten und damit die Bildschirmausgabe verlangsamen bzw. qualitativ verschlechtern. Daher wird während der Ausführung von \texttt{draw()} in \texttt{LayeredDirty} die Ausführungszeit gemessen\footnote{Siehe \url{https://github.com/pygame/pygame/blob/main/src_py/sprite.py}.}. Wird das Zeitfenster überschritten, merkt sich das \texttt{LayeredDirty} und blittet beim nächsten mal Hintergründe und Sprites, als ob keine DirtySprite-Logik verwendet wird. 
+Ich sprach aber von zwei Kleinigkeiten. Für die zweite muss ich ein wenig was erklären. Die ganze Idee um den \texttt{DirtySprite} herum ist ja, Performance dadurch einzusparen, dass man nur noch die veränderten Bildschirmbereiche aktualisiert. Nun kostet aber das Ermitteln und Ausschneiden dieser Bereiche ebenfalls Rechenzeit. In der Informatik spricht man dabei von einem \gls{tradeoff}. Diese Rechenzeit kann das Zeitfenster, welches dafür innerhalb eines Frames zur Verfügung steht, überschreiten und damit die Bildschirmausgabe verlangsamen bzw. qualitativ verschlechtern. Daher wird während der Ausführung von \texttt{draw()} in \texttt{LayeredDirty} die Ausführungszeit gemessen\footnote{Siehe \url{https://github.com/pygame-community/pygame-ce/blob/main/src_py/sprite.py}.}. Wird das Zeitfenster überschritten, merkt sich das \texttt{LayeredDirty} und blittet beim nächsten mal Hintergründe und Sprites, als ob keine DirtySprite-Logik verwendet wird. 
 
 Aber woher soll nun \texttt{DirtyLayer} wissen, wie lang das verfügbare Zeitfenster ist? Eben dafür ist die Methode \texttt{pygame.sprite.LayeredDirty.set\-\_tim\-ing\-\_thres\-hold()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_threshold()}|underline}\randnotiz{set\-\_tim\-ing\-\_thres\-hold()} zuständig (siehe \zeiref{srcDirty0302}). Im Handbuch wird vorgeschlagen, den Wert $1000.0 / FPS$ zu nehmen. Warum? Eine Sekunde besteht aus $1000$ Millisekunden. Teilt man diese $1000$ durch die Anzahl der Frames pro Sekunde, erhält man die Anzahl der Millisekunden, die ein Frame zur Verfügung hat; bei uns sind es ca.~$16~ms$.
 
@@ -124,6 +124,20 @@ Nach vielen Wiederholungstest auf den drei Rechnern, kam mir der Gedanke, dass d
 
 Es ist somit eine ernst zu nehmende Aufgabe, die maximale Framerate\index{Framerate} auf dem Rechner zu ermitteln. Nur dann können die Mechanismen des DirtySprite-Konzepts greifen. Auch ist nicht auszuschließen, dass die Rechner deshalb kein schönes ruckelfreies Bewegungsbild erzeugen, wenn die Framerate für den Rechner zu hoch eingestellt ist.
 
+\subsection{Fazit}
+
+Die obigen Messungen und Probleme bzgl. sich bewegender Sprites haben mich persönlich nicht von dieser DirtySprite-Implementierung überzeugt. Ein einfacher Ball, der an den Wänden abprallt (\srcref[vref]{srcBallDirty00}), hinterlässt Artefakte oder flackert recht heftig, was ich nicht erwartet hätte.  
+
+\lstsource{SRC/00 Einführung/14 Dirty Sprites/ball00.py}{15}{72}{python}{Einfacher Ball mit DirtsSprite}{srcBallDirty00} 
+
+Falls jemand einen Programmierfehler im Beispiel findet, wäre ich um eine Korrektur sehr dankbar. In einem Pygame-Tutorial\footnote{\url{https://pyga.me/docs/tutorials/en/newbie-guide.html}} wird die Verwendung auch nicht wirklich empfohlen:
+
+\begin{quote}
+\textit{In the present day (2022) though, most modest desktop computers are powerful enough to refresh the entire display once per frame at 60 FPS and beyond. You can have a moving camera, or dynamic backgrounds and your game should run totally fine at 60 FPS. CPUs are more powerful nowadays, and you can use display.flip() without fear.}
+\end{quote}
+
+Ich werde deshalb das Thema in dieser Einführung nicht weiter vertiefen.
+
 \subsection*{Was war neu?}
 
 Mit Hilfe von entsprechenden Klassen, kann die Zeichenausgabe pro Frame auf die Bereiche eingeschränkt werden, die sich tatsächlich verändert haben. Der Performanceverbrauch reduziert sich dabei erheblich. 
@@ -132,33 +146,33 @@ Es muss allerdings darauf geachtet werden, dass die Framerate der Leistungsfähi
 
 Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
-	\item Vordefnierte Farbnamen:\index{Farbennamen}\\ 
-	\url{http://www.pygame.org/docs/ref/color_list.html}
+	\item Vordefnierte Farbnamen:\index{Farbnamen}\\ 
+	\url{https://pyga.me/docs/ref/color_list.html}
 
 	\item\texttt{pygame.display.update()}:
-	\myindex{pyg}{\texttt{display}!\texttt{update()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.display.update}
+	\myindex{pyg}{\texttt{display}!\texttt{update()}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.display.update}
 
 	\item\texttt{pygame.sprite.DirtySprite}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.DirtySprite}
+	\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.DirtySprite}
 
 	\item\texttt{pygame.sprite.DirtySprite.dirty}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.DirtySprite}\\
+	\myindex{pyg}{\texttt{sprite}!\texttt{DirtySprite}!\texttt{dirty}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.DirtySprite}\\
 	Bedeutung siehe \tabref[vref]{tabDirty}.
 
 	\item \texttt{pygame.sprite.LayeredDirty}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty}
+	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.LayeredDirty}
 	
 	\item \texttt{pygame.sprite.LayeredDirty.clear()}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{clear()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty.clear}
+	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{clear()}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.LayeredDirty.clear}
 	
 	\item \texttt{pygame.sprite.LayeredDirty.draw()}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{draw()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty.draw}
+	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{draw()}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.LayeredDirty.draw}
 
 	\item \texttt{pygame.sprite.LayeredDirty.set\_timing\_treshold()}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_treshold()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty.set\_timing\_treshold}
+	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_treshold()}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.LayeredDirty.set\_timing\_treshold}
 
 	\item \texttt{pygame.sprite.LayeredDirty.set\_timing\_threshold()}:
-	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_threshold()}}\\ \url{http://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty.set\_timing\_threshold}
+	\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{set\_timing\_threshold()}}\\ \url{https://pyga.me/docs/ref/sprite.html#pygame.sprite.LayeredDirty.set\_timing\_threshold}
 
 \end{itemize}
 

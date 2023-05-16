@@ -28,19 +28,17 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, filename: str) -> None:
         super().__init__()
         self.image = pygame.image.load(Settings.imagepath(filename)).convert_alpha()
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect= pygame.rect.FRect(self.image.get_rect())
         self.rect.topleft = (10, 10)
         self.direction = 1
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = pygame.math.Vector2(150, 0)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        newpos = self.position + (self.speed * Settings.DELTATIME * self.direction)
-        self.rect.left = round(newpos.x)
-        if self.rect.left < 10 or self.rect.right >= Settings.WINDOW.right - 10:
+        newpos = self.rect.move(self.speed * Settings.DELTATIME * self.direction)
+        if newpos.left < 10 or newpos.right >= Settings.WINDOW.right - 10:
             self.direction *= -1
-        self.position += (self.speed * Settings.DELTATIME * self.direction)
-        self.rect.left = round(self.position.x)
+        else:
+            self.rect = newpos
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -48,15 +46,13 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, picturefile: str, startpos: Tuple[int, int]) -> None:
         super().__init__()
         self.image = pygame.image.load(Settings.imagepath(picturefile)).convert_alpha()
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect= pygame.rect.FRect(self.image.get_rect())
         self.rect.center = startpos
         self.direction = 1
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = pygame.math.Vector2(0, 100)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        self.position += (self.speed * Settings.DELTATIME * self.direction)
-        self.rect.top = round(self.position.y)
+        self.rect.move_ip(self.speed * Settings.DELTATIME * self.direction)
         if self.rect.top > Settings.WINDOW.bottom - 30:
             self.kill()                                           # Selbstzerstörung§\label{srcZeit0004}§
 

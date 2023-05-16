@@ -22,11 +22,10 @@ def main():
     defender_rect.centerx = Settings.WINDOW.centerx
     defender_rect.bottom = Settings.WINDOW.height - 5
     defender_speed = 2                                      # Geschwindigkeit §\label{srcInvader0505}§
-    defender_direction_h = 1                                # Richtung §\label{srcInvader0506}§
+    defender_direction_h = +1                               # Richtung §\label{srcInvader0506}§
 
     running = True
     while running:
-        clock.tick(Settings.FPS)
         # Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,6 +38,7 @@ def main():
         screen.fill("white")
         screen.blit(defender_image, defender_rect)
         pygame.display.flip()
+        clock.tick(Settings.FPS)
 
     pygame.quit()
 

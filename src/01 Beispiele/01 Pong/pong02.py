@@ -5,7 +5,7 @@ import pygame
 
 
 class Settings:
-    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1000, 600)
+    WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0/FPS
 
@@ -23,7 +23,7 @@ class Background(pygame.sprite.Sprite):
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, player: str, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.Rect(0, 0, 15, Settings.WINDOW.height//10)   # Größe §\label{srcPong0201}§
+        self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height//10)   # Größe §\label{srcPong0201}§
         y = Settings.WINDOW.centery                                     # Position §\label{srcPong0202}§
         if player == "left":
             x = 50
@@ -48,11 +48,9 @@ class Paddle(pygame.sprite.Sprite):
         return super().update(*args, **kwargs)
 
     def _move(self) -> None:
-        self.rect.centery += self._speed * self._direction * Settings.DELTATIME   # §\label{srcPong0207}§
-        if self.rect.top < 0:
-            self.rect.top = 0
-        elif self.rect.bottom > Settings.WINDOW.bottom:
-            self.rect.bottom = Settings.WINDOW.bottom
+        self.rect.move_ip(0, self._speed * self._direction * Settings.DELTATIME)   # §\label{srcPong0207}§
+        self.rect.top = max(0, self.rect.top)
+        self.rect.bottom = min(Settings.WINDOW.bottom, self.rect.bottom)
 
 
 class Game:
@@ -70,6 +68,7 @@ class Game:
     def run(self):
         time_previous = time()
         while self._running:
+            self.watch_for_events()
             self.update()
             self.draw()
             self._clock.tick(Settings.FPS)
@@ -79,7 +78,6 @@ class Game:
         pygame.quit()
 
     def update(self):
-        self.watch_for_events()
         self._all_sprites.update(action="move")                         # Bewegung §\label{srcPong0209}§
 
     def draw(self):

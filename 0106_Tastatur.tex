@@ -11,29 +11,34 @@
 \end{wrapfigure}%
 Ich möchte hier die Tastatur nicht erschöpfend behandeln, sondern lediglich das Grundprinzip verdeutlichen. So soll die Bewegungsrichtung durch die Pfeiltasten gesteuert werden können. Ebenso soll das Raumschiffe stehen bleiben oder sich wieder in Bewegung setzen können. Auch kann das Spiel jetzt durch die Escape-Taste verlassen werden (\Gls{boss}).
 
-Zunächst bereiten wir die Verteidiger-Klasse vor bzw. wandeln sie ein wenig ab (\srcref[vref]{srcTastatur00a}). Das Sprite wird nun nicht mehr unten sondern mittig platziert (\zeiref{srcTastatur0001}). Das Raumschiff soll sich nun auch vertikal bewegen können. Dazu braucht es entweder zwei entsprechende Variablen oder aber ein \texttt{Vector2}-Objekt. Ich nehme ein \texttt{Vector2}-Objekt (\zeiref{srcTastatur0002}), wobei das erste Element der Richtungsvektor der horizontalen und das zweite der vertikalen Richtung ist. Der jeweilige Richtungsvektor wird dabei entsprechend der schon oben vorgestellten Semantik gesetzt. In der Methode \texttt{change\_direction()} werden nun beide Koordinaten berücksichtigt und aktualisiert. Bewegen und Stehenbleiben wird einfach dadurch erreicht, dass ich die Geschwindigkeit in \texttt{start()} auf~100 bzw. in \texttt{stop()} auf~0 setze.
+Im ersten Schritt wird ein Dictionary\index{Dictionary} der möglichen Richtungen in \texttt{Settings} angelegt. Diese werden als \texttt{Vector2}-Objekte\myindex{pyg}{\texttt{math}!\texttt{Vector2D}} verwaltet, da diese einfacher für mathematische Operationen verwendet werden können.
 
-\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{14}{49}{python}{Bewegung durch Tastatur steuern (1), \texttt{Defender}}{srcTastatur00a} 
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{8}{15}{python}{Bewegung durch Tastatur steuern (1), \texttt{Settings}}{srcTastatur00aa} 
+
+
+Danach bereiten wir die Verteidiger-Klasse vor bzw. wandeln sie ein wenig ab (\srcref[vref]{srcTastatur00a}). Das Sprite wird nun nicht mehr unten sondern mittig platziert (\zeiref{srcTastatur0001}), und das Raumschiff soll sich jetzt auch vertikal bewegen können. Dazu braucht es entweder zwei entsprechende Variablen oder aber ein \texttt{Vector2}-Objekt. Ich nehme ein \texttt{Vector2}-Objekt (\zeiref{srcTastatur0002}), wobei das erste Element der Richtungsvektor der horizontalen und das zweite der vertikalen Richtung ist. Der jeweilige Richtungsvektor wird dabei entsprechend der schon oben vorgestellten Semantik gesetzt. In der Methode \texttt{change\_direction()} wird entweder der Richtungsvektor gesetzt oder die Geschwindigkeit angepasst. Bewegen und Stehenbleiben wird einfach dadurch erreicht, dass ich die Geschwindigkeit bei \texttt{start} auf~100 bzw. bei \texttt{stop} auf~0 setze.
+
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{18}{45}{python}{Bewegung durch Tastatur steuern (1), \texttt{Defender}}{srcTastatur00a} 
 
 Die Klasse \texttt{Border} wird trivialerweise so erweitert, dass alle vier Seiten der Spielfläche nun durch eine Steinwand begrenzt werden (\srcref[vref]{srcTastatur00b}). Dazu wird im Konstruktor abgefragt, auf welcher Seite die Wand hochgezogen werden soll. Rechts und links wird das Bitmap in die Höhe gestreckt und oben und unten in die Breite. Anschließend wird das \texttt{Rect}-Objekt ermittelt und die Position festgelegt.
 
-\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{52}{72}{python}{Bewegung durch Tastatur steuern (2), \texttt{Border}}{srcTastatur00b}
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{48}{68}{python}{Bewegung durch Tastatur steuern (2), \texttt{Border}}{srcTastatur00b}
 
 Es werden dann die vier Objekte der \texttt{Border}-Klasse erzeugt und der Spritegruppe hinzugefügt.
 
-\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{75}{89}{python}{Bewegung durch Tastatur steuern (3), \texttt{Game}-Konstruktor}{srcTastatur00c}
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{71}{85}{python}{Bewegung durch Tastatur steuern (3), \texttt{Game}-Konstruktor}{srcTastatur00c}
 
-Kommen wir jetzt zur eigentlichen Tastaturverarbeitung: Das Verwenden einer Taste kann die Ereignistypen \texttt{pygame.KEYDOWN}\myindex{pyg}{\texttt{KEYDOWN}|underline} oder \texttt{pygame.KEYUP}\myindex{pyg}{\texttt{KEYUP}|underline}\randnotiz{KEYDOWN\\KEYUP} auslösen. In unserem Beispiel (\zeiref{srcTastatur0003}) wollen wir wissen, welche Taste \emph{gedrückt} wurde, also verwenden wir \texttt{KEYDOWN}. Anschließend können wir über \texttt{pygame.event.key}\myindex{pyg}{\texttt{event}!\texttt{key}}\randnotiz{key} ermitteln, welche Taste gedrückt wurde. Dazu stellt uns Pygame in \texttt{pygame.key}\myindex{pyg}{\texttt{key}} eine Liste von vordefinierten Konstanten zur Verfügung (siehe \tabref[vref]{tabKey} und \tabref[vref]{tabKeyMod}).
+Kommen wir jetzt zur eigentlichen Tastaturverarbeitung: Das Verwenden einer Taste kann die Ereignistypen\index{Ereignis}\myindex{pyg}{\texttt{Event}} \texttt{pygame.KEYDOWN}\myindex{pyg}{\texttt{KEYDOWN}|underline} oder \texttt{pygame.KEYUP}\myindex{pyg}{\texttt{KEYUP}|underline}\randnotiz{KEYDOWN\\KEYUP} auslösen. In unserem Beispiel (\zeiref{srcTastatur0003}) wollen wir wissen, welche Taste \emph{gedrückt} wurde, also verwenden wir \texttt{KEYDOWN}. Anschließend können wir über \texttt{pygame.event.key}\myindex{pyg}{\texttt{event}!\texttt{key}}\randnotiz{key} ermitteln, welche Taste gedrückt wurde. Dazu stellt uns Pygame in \texttt{pygame.key}\myindex{pyg}{\texttt{key}} eine Liste von vordefinierten Konstanten zur Verfügung (siehe \tabref[vref]{tabKey} und \tabref[vref]{tabKeyMod}).
 
-\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{104}{125}{python}{Bewegung durch Tastatur steuern (4), \texttt{Game}.\texttt{watch\_for\_events()}}{srcTastatur00d}
+\lstsource{SRC/00 Einführung/06 Tastatur/tastatur00.py}{100}{121}{python}{Bewegung durch Tastatur steuern (4), \texttt{Game}.\texttt{watch\_for\_events()}}{srcTastatur00d}
 
-Fangen wir mit der Boss-Taste an. In \zeiref{srcTastatur0004} wird über die Konstante \texttt{K\_ESCAPE}\myindex{pyg}{\texttt{K\_ESCAPE}}\randnotiz{K\_ESCAPE} abgefragt, ob die gedrückte Taste die Escape-Taste ist. Wie beim Weg-Xen wird danach einfach das Flag der Hauptprogrammschleife auf \false\ gesetzt. Probieren Sie es aus!
+Fangen wir mit der Boss-Taste an. In \zeiref{srcTastatur0004} wird über die Konstante \texttt{K\_ESCAPE}\myindex{pyg}{\texttt{K\_ESCAPE}}\randnotiz{K\_ESCAPE} abgefragt, ob die gedrückte Taste die Escape-Taste ist. Wie beim \emph{Weg-Xen} wird danach einfach das Flag der Hauptprogrammschleife auf \false\ gesetzt. Probieren Sie es aus!
 
 Danach werden mit Hilfe von \randnotiz{K\_LEFT K\_RIGHT K\_UP K\_DOWN}\texttt{K\_LEFT}, \texttt{K\_RIGHT}, \texttt{K\_UP} und \texttt{K\_DOWN}\myindex{pyg}{\texttt{K\_LEFT}}\myindex{pyg}{\texttt{K\_RIGHT}}\myindex{pyg}{\texttt{K\_UP}}\myindex{pyg}{\texttt{K\_DOWN}} ab \zeiref{srcTastatur0005}ff. die vier Pfeiltasten abgefragt und die entsprechende Nachricht an den Verteidiger gesendet.
 
 Mit Hilfe der Leerzeichen-Taste \texttt{K\_SPACE}\myindex{pyg}{\texttt{K\_SPACE}}\randnotiz{K\_SPACE} wird das Raumschiff in \zeiref{srcTastatur0006} gestoppt. 
 
-Um den Einsatz der Shift-Taste (Umschalttaste) mal zu demonstrieren, habe ich hier das~\texttt{r} doppelt belegt (\zeiref{srcTastatur0007}). Das große~\texttt{R} stoppt das Raumschiff und das kleine~\texttt{r} startet es wieder. Dabei wird die Variable \texttt{event.mod}\myindex{pyg}{\texttt{event}!\texttt{mod}}\randnotiz{event.mod} mit Hilfe einer bitweisen Und-Verknüpfung dahingehend überprüft, ob das entsprechende Bit \texttt{KMOD\_LSHIFT}\myindex{pyg}{\texttt{KMOD\_LSHIFT}}\randnotiz{KMOD\_LSHIFT} für die linke Shift-Taste gedrückt wurde.
+Um den Einsatz der Shift-Taste (Umschalttaste)\index{Shift-Taste} mal zu demonstrieren, habe ich hier das~\texttt{r} doppelt belegt (\zeiref{srcTastatur0007}). Das große~\texttt{R} stoppt das Raumschiff und das kleine~\texttt{r} startet es wieder. Dabei wird die Variable \texttt{event.mod}\myindex{pyg}{\texttt{event}!\texttt{mod}}\randnotiz{event.mod} mit Hilfe einer bitweisen Und-Verknüpfung dahingehend überprüft, ob das entsprechende Bit \texttt{KMOD\_LSHIFT}\myindex{pyg}{\texttt{KMOD\_LSHIFT}}\randnotiz{KMOD\_LSHIFT} für die linke Shift-Taste gedrückt wurde.
 
 Dies soll ersteinmal ausreichen. Die Tastatur ist nur eine Möglichkeit der Spielsteuerung. Maus, Game-Controller oder Joystick sind ebenfalls in Pygame möglich.
 
@@ -45,15 +50,15 @@ Es wurden folgende Pygame-Elemente eingeführt:
 
 \begin{itemize}
 	\item \texttt{pygame.key}:
-	\myindex{pyg}{\texttt{KEY}|underline}\\ \url{https://www.pygame.org/docs/ref/key.html}
+	\myindex{pyg}{\texttt{KEY}|underline}\\ \url{https://pyga.me/docs/ref/key.html}
 
 	\item \texttt{pygame.KEYDOWN}, \texttt{pygame.KEYUP}:
-	\myindex{pyg}{\texttt{KEYDOWN}}\myindex{pyg}{\texttt{KEYUP}}\\ \url{https://www.pygame.org/docs/ref/event.html}
+	\myindex{pyg}{\texttt{KEYDOWN}}\myindex{pyg}{\texttt{KEYUP}}\\ \url{https://pyga.me/docs/ref/event.html}
 	
 \end{itemize}
 
 \begin{longtable}{lll}
-	\caption{Liste von vordefinierten Tastaturkonstanten}\label{tabKey} \\
+	\caption{Liste von vordefinierten Tastaturkonstanten}\label{tabKey}\index{Tastatur!-konstanten} \\
 	% Definition des Tabellenkopfes auf der ersten Seite
      Konstante & Bedeutung & Beschreibung \\\hline\hline
 	\hline
@@ -201,7 +206,7 @@ Es wurden folgende Pygame-Elemente eingeführt:
 \end{longtable} 
 
 \begin{longtable}{ll}
-	\caption{Liste von vordefinierten Konstanten zur Tastaturschaltung}\label{tabKeyMod} \\
+	\caption{Liste von vordefinierten Konstanten zur Tastaturschaltung}\label{tabKeyMod}\index{Tastatur!-schalter} \\
 	% Definition des Tabellenkopfes auf der ersten Seite
 	Konstante  & Beschreibung \\\hline\hline
 	\hline

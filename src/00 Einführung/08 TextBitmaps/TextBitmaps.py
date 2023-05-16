@@ -11,6 +11,7 @@ class Settings:
     PATH: dict[str, str] = {}
     PATH['file'] = os.path.dirname(os.path.abspath(__file__))
     PATH['image'] = os.path.join(PATH['file'], "images")
+    FPS = 60
 
     @staticmethod
     def filepath(name: str) -> str:
@@ -105,18 +106,17 @@ class TextBitmaps(object):
         letters = Letters(spritelib, 2)
         self.running = True
         while self.running:
-            self.clock.tick(60)
             self.watch_for_events()
             self.screen.fill((200, 200, 200))
             self.screen.blit(letters.get_text(self.input), (400, 200))
             spritelib.draw(self.screen)
             pygame.display.flip()
+            self.clock.tick(Settings.FPS)
 
         pygame.quit()
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
 
     demo = TextBitmaps()
     demo.run()

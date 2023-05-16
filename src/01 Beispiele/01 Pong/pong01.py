@@ -5,7 +5,7 @@ import pygame
 
 
 class Settings:
-    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1000, 600)
+    WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0/FPS
 
@@ -32,6 +32,7 @@ class Game:
     def run(self):
         time_previous = time()
         while self._running:
+            self.watch_for_events()
             self.update()
             self.draw()
             self._clock.tick(Settings.FPS)
@@ -41,7 +42,7 @@ class Game:
         pygame.quit()
 
     def update(self):
-        self.watch_for_events()
+        pass
 
     def draw(self):
         self._background.draw(self._display)

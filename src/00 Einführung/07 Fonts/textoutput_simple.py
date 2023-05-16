@@ -41,7 +41,6 @@ class TextSprite(pygame.sprite.Sprite):
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "500, 150"
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(Settings.WINDOW.size)
@@ -54,7 +53,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(Settings.FPS)
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
@@ -86,6 +84,7 @@ def main():
         screen.fill((200, 200, 200))
         all_sprites.draw(screen)
         pygame.display.flip()
+        clock.tick(Settings.FPS)
 
     pygame.quit()
 

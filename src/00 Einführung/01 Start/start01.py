@@ -13,12 +13,12 @@ def main():
 
     running = True
     while running:
-        clock.tick(60)                            # Taktung auf 60 fps§\label{srcStart0102}§
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         screen.fill((0, 255, 0))
         pygame.display.flip()
+        clock.tick(60)                            # Taktung auf 60 fps§\label{srcStart0102}§
 
     pygame.quit()
 

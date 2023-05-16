@@ -33,7 +33,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(Settings.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -46,6 +45,7 @@ def main():
             screen.blit(alien_image, alien_pos)
         screen.blit(defender_image, defender_pos)               # Benutze Position §\label{srcInvader0404}§
         pygame.display.flip()
+        clock.tick(Settings.FPS)
 
     pygame.quit()
 

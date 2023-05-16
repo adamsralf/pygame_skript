@@ -86,10 +86,10 @@ class Game(object):
         self.resize()
         self.running = True
         while self.running:
-            self.clock.tick(Settings.FPS)
             self.watch_for_events()
             self.update()
             self.draw()
+            self.clock.tick(Settings.FPS)
         pygame.quit()
 
     def watch_for_events(self) -> None:

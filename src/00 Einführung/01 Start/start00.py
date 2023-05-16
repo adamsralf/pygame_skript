@@ -1,10 +1,10 @@
 import os
 
-import pygame  # Pygame-Modul §\label{srcStart0001}§
+import pygame  # Pygame-Modul (auch bei Pygame-ce!)§\label{srcStart0001}§
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"  # Fensterposition §\label{srcStart0002}§
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50" # Fensterposition §\label{srcStart0002}§
     pygame.init()                                 # Subsystem starten§\label{srcStart0003}§
     pygame.display.set_caption('Mein erstes Pygame-Programm')  # Fenstertitel §\label{srcStart0004}§
 

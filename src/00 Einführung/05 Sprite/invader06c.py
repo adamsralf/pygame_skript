@@ -16,18 +16,16 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect: pygame.rect.Rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.centerx = Settings.WINDOW.centerx
         self.rect.bottom = Settings.WINDOW.bottom - 5
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
-        self.speed = pygame.math.Vector2(300, 0)
+        self.speed = 300
 
     def update(self) -> None:
-        self.position = self.position + (self.speed * Settings.DELTATIME)
-        self.rect.left = round(self.position.x)
+        self.rect.move_ip(self.speed * Settings.DELTATIME, 0)
 
     def change_direction(self) -> None:
-        self.speed.x *= -1
+        self.speed *= -1
 
 
 class Border(pygame.sprite.Sprite):
@@ -38,7 +36,7 @@ class Border(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
         if leftright == 'right':
-            self.rect.left = Settings.WINDOW.width - self.rect.width
+            self.rect.right = Settings.WINDOW.right
 
 
 def main():
@@ -62,14 +60,14 @@ def main():
                 running = False
 
         # Update
-        if pygame.sprite.spritecollide(defender.sprite, all_border, False):  # ! §\label{srcInvader0611}§
-            defender.sprite.change_direction()  # §\label{srcInvader0609}§
+        if pygame.sprite.spritecollide(defender.sprite, all_border, False):  # ! §\label{srcInvader06c01}§
+            defender.sprite.change_direction()  # §\label{srcInvader06c02}§
         defender.update()
 
         # Draw
         screen.fill((255, 255, 255))
         defender.draw(screen)
-        all_border.draw(screen)                 # Mit einem Rutsch §\label{srcInvader0610}§
+        all_border.draw(screen)                 # Mit einem Rutsch §\label{srcInvader06c03}§
         pygame.display.flip()
 
         clock.tick(Settings.FPS)

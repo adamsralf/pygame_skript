@@ -4,7 +4,7 @@
 \subsection{Default-Font}
 \myebild{font01}{0.8}{Textausgabe mit Fonts}{picFont01}
 
-Bei vielen Spielen werden Informationen nicht nur symbolisch auf die Spielfläche gebracht (z.B. drei Männchen für drei Leben), sondern auch in Schriftform. Eine Möglichkeit dies zu erreichen, ist die Textausgabe mit Hilfe installierter Fonts. Dabei wird zuerst ein \texttt{Font}-Objekt erstellt und durch ihn ein \texttt{Surface}-Objekt mit dem Text erzeugt (\glslink{render}{gerendert)}\index{Rendern}\randnotiz{Rendern}. Ich habe dies für ein kleines Beispiel in eine Klasse gekapselt, die Sie ja nach Belieben aufbohren oder anpassen können.
+Bei vielen Spielen werden Informationen nicht nur symbolisch auf die Spielfläche gebracht (z.B. drei Männchen für drei Leben), sondern auch in Schriftform. Eine Möglichkeit dies zu erreichen, ist die Textausgabe mit Hilfe installierter Fonts. Dabei wird zuerst ein \texttt{Font}-Objekt erstellt und durch ein \texttt{Surface}-Objekt mit dem Text erzeugt (\glslink{render}{gerendert)}\index{Rendern}\randnotiz{Rendern}. Ich habe dies für ein kleines Beispiel in eine Klasse gekapselt, die Sie ja nach Belieben aufbohren oder anpassen können.
 
 Zuerst importieren wir ein paar Konstanten. Die Klasse \texttt{Settings} überspringe ich mal, die hat sich nicht verändert:
 
@@ -14,7 +14,7 @@ Und nun die Klasse \texttt{TextSprite}: Lassen Sie sich nicht vom \glslink{oo}{O
 
 \lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{14}{40}{python}{Text mit Fonts ausgeben (2), \texttt{TextSprite}}{srcFonts00b} 
 
-Schauen wir uns nun den Konstruktor etwas genauer an. Die  Attribute \texttt{image} und \texttt{rect} werden hier einfach schonmal als Dummies angelegt; könnte man auch lassen. Nachdem ich die übergebenen Informationen über Textgröße und -farbe in Attribute abgespeichert habe, kann ich das \texttt{Font}-Objekt erstellen lassen. Dies erfolgt durch den Aufruf von \texttt{fontsize\_update()} in \zeiref{srcTextoutputSimple02}. Durch die Angabe~0 wird klar, dass hier nicht die Größe verändert werden soll, sondern nur, dass die Objekterzeugung passiert. 
+Schauen wir uns nun den Konstruktor etwas genauer an. Die  Attribute \texttt{image} und \texttt{rect} werden hier einfach schonmal als Dummies angelegt; könnte man auch lassen. Nachdem ich die übergebenen Informationen über Textgröße und -farbe\index{Font!-größe}\index{Font!-farbe} in Attribute abgespeichert habe, kann ich das \texttt{Font}-Objekt erstellen lassen. Dies erfolgt durch den Aufruf von \texttt{fontsize\_update()} in \zeiref{srcTextoutputSimple02}. Durch die Angabe~0 wird klar, dass hier nicht die Größe verändert werden soll, sondern nur, dass die Objekterzeugung passiert. 
 
 Nun merke ich mir den eigentlichen Text, der zu einem Schriftzug gerendert werden soll und, wo das das Zentrum des Schriftzug platziert wird. Jetzt habe ich alle Infos zusammen und kann durch Aufruf von \texttt{render()} in \zeiref{srcTextoutputSimple03} mit Hilfe von \texttt{pygame\-.font\-.ren\-der()}\myindex{pyg}{\texttt{font}!\texttt{Font}!\texttt{render()}}\randnotiz{render()} das \texttt{Surface}-Objekt erzeugen (\zeiref{srcTextoutputSimple04}). Anschließend wird vom Bitmap das Rechteck ermittelt und das Zentrum des Rechtecks auf die gewünschte Position verschoben.
 
@@ -23,7 +23,7 @@ Jetzt noch die zwei Methoden \texttt{fontsize\_update()} und \texttt{fontcolor\_
 Wie kann man nun so eine Klasse nutzen? Hier ein Beispiel. In der Mitte soll ein Gruß erscheinen. Dazu verwende ich das Objekt \texttt{hello} (\zeiref{srcTextoutputSimple07}). Darunter soll durch \texttt{info} ausgegeben werden, mit welcher Schriftgröße und -farbe der Gruß erzeugt wurde (\zeiref{srcTextoutputSimple07}). 
 
 \newpage
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{43}{90}{python}{Text mit Fonts ausgeben (3),  Hauptprogramm}{srcFonts00c} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_simple.py}{43}{89}{python}{Text mit Fonts ausgeben (3),  Hauptprogramm}{srcFonts00c} 
 
 Dieser Gruß kann durch die Plus- und Minus-Tasten in seiner Größe verändert werden (\zeiref{srcTextoutputSimple05}ff.). Die Tasten \texttt{r}, \texttt{g} und \texttt{b} werden dazu verwendet, den jeweiligen Farbkanal zu manipulieren. Der Großbuchstabe erhöht den Wert (z.B. in \zeiref{srcTextoutputSimple09}), der Kleinbuchstabe reduziert ihn (z.B. in \zeiref{srcTextoutputSimple10}).
 
@@ -31,11 +31,11 @@ In \abbref[vref]{picFont01} können Sie eine mögliche Darstellung sehen.
 
 \subsection{Fontliste}
 
-\myebild{font02}{0.8}{Fontliste}{picFont02}
-
 Als weiteres Beispiel möchte ich Ihnen ein kleines Programm zeigen, welches alle installierten Fonts auflistet. Vielleicht kann man sich ja dabei Gestaltungsideen holen. Der erste Teil sollte keine Verständnisprobleme mehr bereiten.
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{1}{36}{python}{Fontliste (1), \texttt{Präambel}, \texttt{Settings} und \texttt{Textsprite}}{srcFonts01a} 
+\myebild{font02}{0.8}{Fontliste}{picFont02}
+
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{1}{36}{python}{Fontliste (1), \texttt{Präambel}, \texttt{Settings} und \texttt{TextSprite}}{srcFonts01a} 
 
 Die Klasse \texttt{TextSprite} wurde nur wenig auf die Bedürfnisse angepasst. Die Klasse \texttt{BigImage} hat  die Aufgabe, alle \texttt{FontSprite}-Images als großes Bild zu verwalteten. Später wird immer ein Ausschnitt aus dem Bitmap auf den Bildschirm gedruckt. Der Ausschnitt orientiert sich an der Position innerhalb der Liste und wird durch das Attribut \texttt{offset} gesteuert und in der Methode \texttt{update()} (\zeiref{srcTextoutputFontlist01}) ermittelt. Zuerst wird ermittelt, ob ich das obere oder untere Ende des Bitmaps erreicht habe. Falls ja, wird \texttt{top} bzw. \texttt{bottom} entsprechnd gesetzt, so dass immer der ganze Bildschirm gefüllt wird. Ansonsten wird das \texttt{offset}-Rechteck nach oben bzw. nach unten verschoben und mit \texttt{pygame.Surface.subsurface()}\myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\randnotiz{subsurface()} der Ausschnitt ermittelt.
 
@@ -44,11 +44,11 @@ Die Klasse \texttt{TextSprite} wurde nur wenig auf die Bedürfnisse angepasst. D
 Und jetzt das Hauptprogramm. Im ersten Teil wird über \texttt{pygame.font.get\_fonts()}\myindex{pyg}{\texttt{font}!\texttt{get\_fonts()}}\randnotiz{get\_fonts()} (\zeiref{srcTextoutputFontlist02}) eine Liste aller installierten Fontnamen ermittelt. Dieser Name wird dem Konstruktor von \texttt{TestSprite} übergeben. Mit Hilfe der Methode \texttt{pygame.font.match\_font()}\myindex{pyg}{\texttt{font}!\texttt{match\_font()}}\randnotiz{match\_font()} (\zeiref{srcTextoutputFontlist03})wird nun der Font selbst im System gesucht, wobei sich diese Methode zunutze macht, dass der Name der Fontdatei sich aus dem Fontnamen und der Endung~\glslink{ttf}{\texttt{ttf}} herleiten lässt.
 
 \newpage
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{61}{89}{python}{Fontliste (3), Hauptprogramm (1)}{srcFonts01c} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{61}{87}{python}{Fontliste (3), Hauptprogramm (1)}{srcFonts01c} 
 
 In der \forSchleife\_ werden nun für alle Fonts \texttt{TextSprite}-Objekte erzeugt und deren Höhe und Breite ermittelt. Diese vielen Bitmaps werden dann auf das große Bitmap gedruckt (\zeiref{srcTextoutputFontlist04}).
 
-\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{91}{108}{python}{Fontliste, Hauptprogramm (2)}{srcFonts01d} 
+\lstsource{SRC/00 Einführung/07 Fonts/textoutput_fontslist.py}{89}{108}{python}{Fontliste, Hauptprogramm (2)}{srcFonts01d} 
 
 Die Hauptprogrammschleife übernimmt nun nur noch das Blättern (jeweils um eine drittel Bildschirmhöhe) und das Programmende.
 
@@ -58,23 +58,23 @@ Es wurden folgende Pygame-Elemente eingeführt:
 
 \begin{itemize}
 	\item \texttt{pygame.font.Font}:
-	\myindex{pyg}{\texttt{font}!\texttt{Font}}\\ \url{https://www.pygame.org/docs/ref/font.html}
+	\myindex{pyg}{\texttt{font}!\texttt{Font}}\\ \url{https://pyga.me/docs/ref/font.html}
 	
 	\item \texttt{pygame.font.get\_default\_font()}:
-	\myindex{pyg}{\texttt{font}!\texttt{get\_default\_font()}}\\ \url{https://www.pygame.org/docs/ref/font.html#pygame.font.get_default_font}
+	\myindex{pyg}{\texttt{font}!\texttt{get\_default\_font()}}\\ \url{https://pyga.me/docs/ref/font.html#pygame.font.get_default_font}
 
 	\item \texttt{pygame.font.get\_fonts()}:
-	\myindex{pyg}{\texttt{font}!\texttt{get\_fonts()}}\\ \url{https://www.pygame.org/docs/ref/font.html#pygame.font.get_fonts}
+	\myindex{pyg}{\texttt{font}!\texttt{get\_fonts()}}\\ \url{https://pyga.me/docs/ref/font.html#pygame.font.get_fonts}
 	
     \item \texttt{pygame.font.match\_font()}:
     \myindex{pyg}{\texttt{font}!\texttt{match\_font()}}\\
-    \url{https://www.pygame.org/docs/ref/font.html#pygame.font.match_font}
+    \url{https://pyga.me/docs/ref/font.html#pygame.font.match_font}
 
 	\item \texttt{pygame.font.Font.render()}:
-    \myindex{pyg}{\texttt{font}!\texttt{Font}!\texttt{render()}}\\ \url{https://www.pygame.org/docs/ref/font.html#pygame.font.Font.render}
+    \myindex{pyg}{\texttt{font}!\texttt{Font}!\texttt{render()}}\\ \url{https://pyga.me/docs/ref/font.html#pygame.font.Font.render}
 
 	\texttt{pygame.Surface.subsurface()}:
-    \myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\\ \url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.subsurface}
+    \myindex{pyg}{\texttt{Surface}!\texttt{subsurface()}}\\ \url{https://pyga.me/docs/ref/surface.html#pygame.Surface.subsurface}
 
 
 \end{itemize}

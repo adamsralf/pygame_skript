@@ -83,10 +83,9 @@ class Rock(pygame.sprite.Sprite):
         super().__init__()
         rocknb = random.randint(6, 9)
         self.image = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width-self.rect.width)
         self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height-self.rect.height)
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = pygame.math.Vector2(random.randint(-100, 100), random.randint(-100, 100))
         self.anim = Animation([f"explosion0{i}.png" for i in range(1, 5)], False, 50)
         self.bumm = False
@@ -100,14 +99,11 @@ class Rock(pygame.sprite.Sprite):
                     self.rect = self.image.get_rect()
                     self.rect.center = c
                 else:
-                    newpos = self.position + self.speed * Settings.DELTATIME
-                    self.rect.left = newpos.x
-                    self.rect.top = newpos.y
+                    self.rect.move_ip(self.speed * Settings.DELTATIME)
                     if self.rect.top <= 0 or self.rect.bottom >= Settings.WINDOW.height:
                         self.speed.y *= -1
                     if self.rect.left <= 0 or self.rect.right >= Settings.WINDOW.width:
                         self.speed.x *= -1
-                    self.position += self.speed * Settings.DELTATIME
             elif kwargs["action"] == "bumm":
                 self.bumm = True
         if self.anim.is_ended():

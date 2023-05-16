@@ -10,7 +10,7 @@ Eine Animation ist eigentlich eine Art \emph{Filmchen} innerhalb eines Spiels. B
 
 Die Einzelbilder des Bewegungsbeispiels können Sie in \abbref[vref]{picAnimation00} sehen. Werden diese Einzelsprites in einer gewissen Geschwindigkeit hintereinander ausgegeben, so erscheinen sie wie eine flüssige Bewegung. Dabei gilt: Je mehr Einzelbilder, desto flüssiger die Bewegung.
 
-Der \srcref[vref]{srcAnimation00a} unterscheidet sich nur um ein Feature zum letzten Kapitel. Die \texttt{Timer}-Klasse wurde um die Methode \texttt{change\_duration()} erweitert. Diese Methode ermöglicht es zur Laufzeit die Dauer des Zeitintervalls zu verändern, wobei die untere Grenze bei ~$0~ms$ festgelegt wird. Wir werden dieses Feature gleich dazu verwenden, die Animationsgeschwindigkeit manuell einzustellen. 
+Der \srcref[vref]{srcAnimation00a} unterscheidet sich nur um ein Feature zum letzten Kapitel. Die \texttt{Timer}-Klasse wurde um die Methode \texttt{change\_duration()} erweitert. Diese Methode ermöglicht es, zur Laufzeit die Dauer des Zeitintervalls zu verändern, wobei die untere Grenze bei ~$0~ms$ festgelegt wird. Wir werden dieses Feature gleich dazu verwenden, die Animationsgeschwindigkeit manuell einzustellen. 
 
 \lstsource{SRC/00 Einführung/11 Animation/animation00.py}{1}{45}{python}{Animation einer Katze (1), Version 1.0: Präambel, \texttt{Timer} und \texttt{Settings}}{srcAnimation00a} 
 
@@ -26,13 +26,14 @@ Die Klasse \texttt{CatAnimation} ist nur die übliche Kapselung des Hauptprogram
 
 In \texttt{watch\_for\_events()} ist nur erwähnenswert, dass die \texttt{+}-Taste und die \texttt{-}-Taste für die Manipulation der Animationsgeschwindigkeit verwendet werden. Um die Animationsgeschwindigkeit zu erhöhen, muss das Zeitintervall des \texttt{Timer}-Objekts verkleinert werden, daher $-10$. Um die Animationsgeschwindigkeit zu verlangsamen, muss das Zeitintervall des \texttt{Timer}-Objekts verlängert werden, daher $+10$. 
 
+\newpage
 \lstsource{SRC/00 Einführung/11 Animation/animation00.py}{103}{113}{python}{Animation einer Katze (4), Version 1.0: \texttt{watch\_for\_events()}}{srcAnimation00d} 
 
 Der restliche Quelltext (\srcref[vref]{srcAnimation00e}) sollte selbsterklärend sein. Wenn Sie das Programm nun starten, ist eine animierte Katzenbewegung zu sehen. Probieren Sie doch mal aus, die Animationsgeschwindigkeit zu verändern. 
 
 \lstsource{SRC/00 Einführung/11 Animation/animation00.py}{115}{126}{python}{Animation einer Katze (5), Version 1.0: \texttt{update()} und \texttt{draw()}}{srcAnimation00e} 
 
-Wie bei der Zeitsteuerung stört mich, dass die Animationslogik über die Klasse \texttt{Cat} verteilt ist, was meiner Ansicht nach ein Verstoß gegen das SRP ist. Bauen wir doch eine einfache Animationklasse (siehe \srcref[vref]{srcAnimation01a}).
+Wie bei der Zeitsteuerung stört mich, dass die Animationslogik über die Klasse \texttt{Cat} verteilt ist, was meiner Ansicht nach ein Verstoß gegen das SRP ist. Bauen wir doch einfach eine Animationsklasse (siehe \srcref[vref]{srcAnimation01a}).
 
 Schauen wir uns die Übergabeparameter des Konstruktors an: 
 \begin{itemize}

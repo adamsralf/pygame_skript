@@ -47,7 +47,6 @@ def main():
 
     running = True
     while running:
-        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -69,6 +68,7 @@ def main():
             p.draw()
 
         pygame.display.flip()
+        clock.tick(60)
 
     pygame.quit()
 

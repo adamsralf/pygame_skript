@@ -11,7 +11,7 @@ class MyEvents:                                                     # Userevent�
 
 
 class Settings:
-    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 1000, 600)
+    WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0/FPS
 
@@ -29,7 +29,7 @@ class Background(pygame.sprite.Sprite):
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, player: str, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.Rect(0, 0, 15, Settings.WINDOW.height//10)
+        self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height//10)
         y = Settings.WINDOW.centery
         if player == "left":
             x = 50
@@ -55,19 +55,18 @@ class Paddle(pygame.sprite.Sprite):
 
     def _move(self) -> None:
         self.rect.centery += self._speed * self._direction * Settings.DELTATIME
-        if self.rect.top < 0:
-            self.rect.top = 0
-        elif self.rect.bottom > Settings.WINDOW.bottom:
-            self.rect.bottom = Settings.WINDOW.bottom
+        self.rect.top = max(0, self.rect.top)
+        self.rect.bottom = min(Settings.WINDOW.bottom, self.rect.bottom)
 
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.Rect(0, 0, 20, 20)
+        self.rect = pygame.rect.FRect(0, 0, 20, 20)
         self.image = pygame.surface.Surface(self.rect.size)
         pygame.draw.circle(self.image, "green", self.rect.center, self.rect.width//2)
         self._speed = Settings.WINDOW.width // 3
+        self._speedxy = pygame.Vector2()
         self._service()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -83,8 +82,7 @@ class Ball(pygame.sprite.Sprite):
         return super().update(*args, **kwargs)
 
     def _move(self) -> None:
-        self.rect.x += self._speedx * Settings.DELTATIME
-        self.rect.y += self._speedy * Settings.DELTATIME
+        self.rect.move_ip(self._speedxy * Settings.DELTATIME)
         if self.rect.top <= 0:
             self._vertical_flip()
             self.rect.top = 0
@@ -92,8 +90,8 @@ class Ball(pygame.sprite.Sprite):
             self._vertical_flip()
             self.rect.bottom = Settings.WINDOW.bottom
         elif self.rect.right < 0:
-            MyEvents.MYEVENT.player = 2                                 # Player? §\label{srcPong0402}§
-            pygame.event.post(MyEvents.MYEVENT)                         # Event abschicken §\label{srcPong0403}§
+            MyEvents.MYEVENT.player = 2                     # Spielernummer§\label{srcPong0402}§
+            pygame.event.post(MyEvents.MYEVENT)             # Abfeuern§\label{srcPong0403}§
             self._service()
         elif self.rect.left > Settings.WINDOW.right:
             MyEvents.MYEVENT.player = 1
@@ -102,15 +100,13 @@ class Ball(pygame.sprite.Sprite):
 
     def _service(self) -> None:
         self.rect.center = Settings.WINDOW.center
-        self._speedx = random.choice([-1, 1]) * self._speed
-        self._speedy = random.choice([-1, 1]) * self._speed
+        self._speedxy = pygame.Vector2(random.choice([-1, 1]), random.choice([-1, 1])) * self._speed
 
     def _horizontal_flip(self) -> None:
-        self._speedx *= -1
+        self._speedxy.x *= -1
 
     def _vertical_flip(self) -> None:
-        self._speedy *= -1
-
+        self._speedxy.y *= -1
 
 class Score(pygame.sprite.Sprite):
 
@@ -118,23 +114,23 @@ class Score(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.font = pygame.font.SysFont(None, 30)
         self.centerxy = (Settings.WINDOW.centerx, self.font.get_height()//2)
-        self.image: pygame.surface.Surface = None
+        self.image = None
         self.rect: pygame.rect.Rect = None
-        self.points = [0, 0]                                        # Jetzt Attribute!§\label{srcPong0401}§
+        self._points = [0, 0]                                        # Jetzt Attribute!§\label{srcPong0401}§
         self._render()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "player" in kwargs.keys():
             if kwargs["player"] == 1:
-                self.points[0] += 1
+                self._points[0] += 1
                 self._render()
             elif kwargs["player"] == 2:
-                self.points[1] += 1
+                self._points[1] += 1
                 self._render()
         return super().update(*args, **kwargs)
 
     def _render(self):
-        self.image = self.font.render(f"{self.points[0]} : {self.points[1]}", True, "white")
+        self.image = self.font.render(f"{self._points[0]} : {self._points[1]}", True, "white")
         self.rect = self.image.get_rect(center=(self.centerxy))
 
 
@@ -155,6 +151,7 @@ class Game:
     def run(self):
         time_previous = time()
         while self._running:
+            self.watch_for_events()
             self.update()
             self.draw()
             self._clock.tick(Settings.FPS)
@@ -164,7 +161,6 @@ class Game:
         pygame.quit()
 
     def update(self):
-        self.watch_for_events()
         self._all_sprites.update(action="move")
 
     def draw(self):

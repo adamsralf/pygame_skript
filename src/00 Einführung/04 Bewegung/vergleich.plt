@@ -18,7 +18,7 @@ pause mouse
 set output "fehler_float.pdf"
 set title "Vergleich des Positionsfehlers (Median) ohne und mit float"
 plot "result_05g.txt" using 1:(315 - $13) with lines ls 1 lw 2 linecolor "sea-green" title "Version 1: rect.top",\
-     "result_05h.txt" using 1:(315 - $13) with lines ls 1 lw 2 linecolor "red" title "Version 2: Vector2"
+     "result_05h.txt" using 1:(315 - $13) with lines ls 1 lw 2 linecolor "red" title "Version 2: FRect"
 
 pause mouse
 

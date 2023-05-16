@@ -9,6 +9,10 @@ class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 100))
     FPS = 60
     DELTATIME = 1.0 / FPS
+    DIRECTIONS = {"right": pygame.math.Vector2(1, 0), 
+                  "left": pygame.math.Vector2(-1, 0), 
+                  "up": pygame.math.Vector2(0, -1), 
+                  "down": pygame.math.Vector2(0, 1)}
 
 
 class Defender(pygame.sprite.Sprite):
@@ -17,32 +21,24 @@ class Defender(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.center = Settings.WINDOW.center  # §\label{srcTastatur0001}§
-        self.position: pygame.math.Vector2 = pygame.math.Vector2(self.rect.left, self.rect.top)
-        self.direction: pygame.math.Vector2 = pygame.math.Vector2(1, 0)   # 2 Dimensionen §\label{srcTastatur0002}§
+        self.direction = Settings.DIRECTIONS["right"]   # 2 Dimensionen §\label{srcTastatur0002}§
         self.change_direction("right")
         self.change_direction("start")
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
-                self.position = self.position + self.speed * Settings.DELTATIME * self.direction
-                self.rect.left, self.rect.top = round(self.position.x), round(self.position.y)
+                self.rect.move_ip(self.speed * Settings.DELTATIME * self.direction)
             elif kwargs["action"] == "switch":
                 self.direction *= -1
         elif "direction" in kwargs.keys():
             self.change_direction(kwargs["direction"])
 
     def change_direction(self, direction: str) -> None:
-        if direction == "right":
-            self.direction.x, self.direction.y = (1, 0)
-        elif direction == "left":
-            self.direction.x, self.direction.y = (-1, 0)
-        elif direction == "up":
-            self.direction.x, self.direction.y = (0, -1)
-        elif direction == "down":
-            self.direction.x, self.direction.y = (0, 1)
+        if direction in Settings.DIRECTIONS.keys():
+            self.direction = Settings.DIRECTIONS[direction]
         elif direction == "stop":
             self.speed = 0
         elif direction == "start":
@@ -57,7 +53,7 @@ class Border(pygame.sprite.Sprite):
         if whichone == 'right':
             self.image = pygame.transform.scale(self.image, (10, Settings.WINDOW.height))
             self.rect = self.image.get_rect()
-            self.rect.left = Settings.WINDOW.right - self.rect.width
+            self.rect.right = Settings.WINDOW.right
         elif whichone == 'left':
             self.image = pygame.transform.scale(self.image, (10, Settings.WINDOW.height))
             self.rect = self.image.get_rect()

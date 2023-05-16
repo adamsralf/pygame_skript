@@ -60,13 +60,12 @@ class Tank(pygame.sprite.Sprite):
         self.direction = "right"
         self.imageindex = 0
         self.image = self.images[self.direction][self.imageindex]
-        self.rect = self.image.get_rect()
+        self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.left, self.rect.top = 3 * self.rect.width, 2 * self.rect.height
         self.sound_drive = pygame.mixer.Sound(Settings.get_sound("tank_drive1.wav"))  # §\label{srcSound0101}§
         self.channel = pygame.mixer.find_channel()          # Sound-Kanal finden§\label{srcSound0104}§
         self.stereo()                                       # §\label{srcSound0102}§
         self.channel.play(self.sound_drive, -1)             # §\label{srcSound0103}§
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
         self.speed = 50
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -79,15 +78,13 @@ class Tank(pygame.sprite.Sprite):
                 elif self.direction == "down" or self.direction == "right":
                     self.speed = 50
                 if self.direction == "up" or self.direction == "down":
-                    self.position.y += (self.speed * Settings.DELTATIME)
-                    self.rect.top = round(self.position.y)
+                    self.rect.move_ip(0, self.speed * Settings.DELTATIME)
                     if self.rect.top <= Settings.WINDOW.top:
                         self.turn("down")
                     if self.rect.bottom >= Settings.WINDOW.bottom:
                         self.turn("up")
                 elif self.direction == "left" or self.direction == "right":
-                    self.position.x += (self.speed * Settings.DELTATIME)
-                    self.rect.left = round(self.position.x)
+                    self.rect.move_ip(self.speed * Settings.DELTATIME, 0)
                     if self.rect.left <= Settings.WINDOW.left:
                         self.turn("right")
                     if self.rect.right >= Settings.WINDOW.right:
@@ -120,10 +117,10 @@ class Bullet(pygame.sprite.Sprite):
         bulletspeed = 300
         number: dict[str, int] = {"left": 49, "right": 61, "up": 37, "down": 73}
         directions = {
-            "left": (-bulletspeed, 0),
-            "right": (bulletspeed, 0),
-            "up": (0, -bulletspeed),
-            "down": (0, bulletspeed),
+            "left": pygame.Vector2(-bulletspeed, 0),
+            "right": pygame.Vector2(bulletspeed, 0),
+            "up": pygame.Vector2(0, -bulletspeed),
+            "down": pygame.Vector2(0, bulletspeed),
         }
         fullfilename = os.path.join(Settings.PATH["image"], f"tankbrigade_part{number[tank.direction]}.png")
         self.image = pygame.image.load(fullfilename).convert()
@@ -132,7 +129,6 @@ class Bullet(pygame.sprite.Sprite):
         self.direction = tank.direction
         self.rect.center = tank.rect.center
         self.speed = directions[tank.direction]
-        self.position = pygame.math.Vector2(self.rect.left, self.rect.top)
 
         if Bullet._sound_fire == None:                      # Es braucht nur einen §\label{srcSound0107}§
             Bullet._sound_fire = pygame.mixer.Sound(Settings.get_sound("tank_fire1.wav"))
@@ -143,10 +139,7 @@ class Bullet(pygame.sprite.Sprite):
         self.channel.play(Bullet._sound_fire)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        self.position.x += self.speed[0] * Settings.DELTATIME
-        self.rect.left = round(self.position.x)
-        self.position.y += self.speed[1] * Settings.DELTATIME
-        self.rect.top = round(self.position.y)
+        self.rect.move_ip(self.speed * Settings.DELTATIME)
         if not Settings.WINDOW.contains(self.rect):
             self.kill()
 

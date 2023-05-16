@@ -1,7 +1,7 @@
 \newpage
 \section{Bitmaps bewegen}\index{Bitmap!bewegen}
 \subsection{Grundlagen}
-In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung von Bitmaps notiert, dass wir die linke, obere Ecke als Positionsangabe und die Höhe und Breite beispielsweise für Abstandsberechnungen brauchen. Diese Angaben lassen sich gut einem Rechteck kodieren. Pygame stellt dazu die Klasse \texttt{pygame.rect.Rect}\myindex{pyg}{\texttt{Rect}}\randnotiz{Rect} zur Verfügung. In \abbref[vref]{picRect01} finden Sie die meiner Ansicht nach wichtigsten Attribute der Klasse.
+In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung von Bitmaps notiert, dass wir die linke, obere Ecke als Positionsangabe und die Höhe und Breite beispielsweise für Abstandsberechnungen brauchen. Diese Angaben lassen sich gut einem Rechteck kodieren. Pygame stellt dazu die Klassen \texttt{pygame.rect.Rect}\myindex{pyg}{\texttt{rect}!\texttt{Rect}|underline}\randnotiz{Rect} (nur ganze Zahlen) und \texttt{pygame.rect.FRect}\myindex{pyg}{\texttt{rect}!\texttt{FRect}|underline}\randnotiz{FRect} (Fließkommazahlen) zur Verfügung. In \abbref[vref]{picRect01} finden Sie die meiner Ansicht nach wichtigsten Attribute der Klasse.
 
 \begin{figure}[H]
 \begin{tikzpicture}
@@ -88,18 +88,33 @@ In der Zusammenfassung des vorherigen Kapitels haben wir für die Darstellung vo
 \caption{Elemente eines \texttt{Rect}-Objekts}\label{picRect01}
 \end{figure}
 
-\myindex{pyg}{\texttt{Rect}!\texttt{centerx}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{right}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{left}|underline}%
-\myindex{pyg}{\texttt{Rect}!\texttt{centery}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{bottom}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{top}|underline}%
-\myindex{pyg}{\texttt{Rect}!\texttt{topleft}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{bottomright}}%
-\myindex{pyg}{\texttt{Rect}!\texttt{center}|underline}%
-\myindex{pyg}{\texttt{Rect}!\texttt{width}|underline}%
-\myindex{pyg}{\texttt{Rect}!\texttt{height}|underline}%
-In der Abbildung werden Strecken in normaler Schrift und Punkte in \textit{kursiver Schrift} angegeben. Die Strecken sind eindimensional und die Punkte zweidimensional $(x,y)$. Die Koordinate~$x$ ist dabei der horizontale und~$y$ der vertikale Abstand zum 0-Punkt des Koordinatensystems. Die Bedeutung der einzelnen Angaben sollte selbsterklärend sein. Der schöne Vorteil ist, dass die Angaben sich gegenseitig berechnen. Setze ich beispielsweise \texttt{topleft = (10,10)} und \texttt{width, height = 30, 40}, so werden alle anderen Angaben für mich ermittelt. Ich muss also nicht mehr den rechten Rand mit \texttt{left + width} ausrechnen; ich kann vielmehr sofort \texttt{right} verwenden. Auch oft nützlich ist die Berechnung des Mittelpunktes \texttt{center} oder die entsprechenden Längen \texttt{centerx} und \texttt{centery}. Ändere ich nun das Zentrum durch \texttt{center = (100, 10)}, so verschieben sich alle anderen Angaben ebenfalls und müssen nicht von mir neu bestimmt werden -- sehr praktisch.
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{centerx}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{right}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{left}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{centery}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{bottom}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{top}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{topleft}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{bottomright}}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{center}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{width}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{height}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{size}|underline}%
+
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{centerx}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{right}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{left}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{centery}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{bottom}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{top}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{topleft}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{bottomright}}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{center}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{width}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{height}|underline}%
+\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{size}|underline}%
+
+In der Abbildung werden Strecken in normaler Schrift und Punkte in \textit{kursiver Schrift} angegeben. Die Strecken sind eindimensional und die Punkte zweidimensional~$(x,y)$. Die Koordinate~$x$ ist dabei der horizontale und~$y$ der vertikale Abstand zum 0-Punkt des Koordinatensystems. Die Bedeutung der einzelnen Angaben sollte selbsterklärend sein. Der schöne Vorteil ist, dass die Angaben sich gegenseitig berechnen. Setze ich beispielsweise \texttt{topleft = (10,10)} und \texttt{width, height = 30, 40}, so werden alle anderen Angaben für mich ermittelt. Ich muss also nicht mehr den rechten Rand mit \texttt{left + width} ausrechnen; ich kann vielmehr sofort \texttt{right} verwenden. Auch oft nützlich ist die Berechnung des Mittelpunktes \texttt{center} oder die entsprechenden Längen \texttt{centerx} und \texttt{centery}. Ändere ich nun das Zentrum durch \texttt{center = (100, 10)}, so verschieben sich alle anderen Angaben ebenfalls und müssen nicht von mir neu bestimmt werden -- sehr praktisch.
 
 Schauen wir uns dazu eine reduzierte Version des letzten Quelltextes an. In \srcref[vref]{srcInvader05} wird die \texttt{Rect}-Klasse schon verwendet. So werden beispielsweise in \zeiref{srcInvader0504a} die Fenstermaße in einem \texttt{Rect}-Objekt verwaltet. In den Zeilen \zeiref{srcInvader0504b}, \zeiref{srcInvader0502} und \zeiref{srcInvader0503} können dadurch die Bildschirminformationen bequem und ohne eigene Berechnungen ausgelesen werden.
 
@@ -143,7 +158,7 @@ Probieren Sie doch mal aus, das Ganze mit einer vertikalen Bewegung zu kombinier
 
 Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem \texttt{Rect-}Objekt zugewiesen, obwohl sie vielleicht schon über den Rand ragt. Bei einer Geschwindigkeit von~\texttt{1} oder \texttt{2} mag das nicht so ins Auge fallen, aber wenn wir die Geschwindigkeit auf die Raumschiffbreite einstellen, wird das Problem offensichtlich (setzen Sie kurzfristig mal \texttt{Settings.FPS = 5}, damit man was sieht). Das Raumschiff verlässt zur Hälfte den Bildschirm. 
 
-Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.Rect.move()}\myindex{pyg}{\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
+Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.rect.Rect.move()}\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
 
 \lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{35}{42}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
 
@@ -324,21 +339,19 @@ Ursache ist ein Problem, welches wir hätten sofort lösen müssen. Bei der Zuwe
 	Fehler              & 0.8 & 1.3 & 2.4 & 3.2 & 4.0 & 4.8 & 5.6 & 6.4 & 7.2 \\ \hline
 \end{longtable} 
 
-Wir müssen die Positionswerte also unabhängig vom \texttt{Rect}-Objekt in einer zusätzlichen float-Variablen abspeichern, damit die Nachkommastellen erhalten bleiben. In \zeiref{srcInvader05h01} wird die aktuelle Position in einem \texttt{pygame.math.Vector2}\randnotiz{Vector2}\myindex{pyg}{\texttt{math}!\texttt{Vector2}|underline}-Objekt abgespeichert. Diese Klasse ist sehr gut dafür geeignet, Positionsangaben zu speichern. Mit Hilfe von \texttt{Vector2} und seinem Verwandten \texttt{pygame.math.Vector3}\randnotiz{Vector3}\myindex{pyg}{\texttt{math}!\texttt{Vector3}|underline} können Operationen wie Addition und Multiplikation einfacher implementiert werden. Mehr dazu später. 
+Seit kurzem gibt es in Pygame eine Variante von \texttt{Rect}, nämlich \texttt{FRect}\myindex{pyg}{\texttt{rect}!\texttt{FRect}|underline}\randnotiz{FRect}. Dort werden alle Werte als \texttt{float} abgespeichert, so dass Nachkommastellen nicht mehr abgeschnitten werden.\footnote{Alternativ müssten wir die Positionswerte unabhängig vom \texttt{Rect}-Objekt in einer zusätzlichen float-Variablen abspeichern, damit die Nachkommastellen erhalten bleiben, z.B. in ein \texttt{pygame.math.Vector2}\myindex{pyg}{\texttt{math}!\texttt{Vector2}}-Objekt.} 
 
 \newpage
-Auch werden die errechneten Positionswerte nicht einfach den Integer-Attributen des \texttt{Rect}-Objektes zugewiesen, sondern mit Hilfe von \texttt{round}\randnotiz{round()}\index{\texttt{round}} wird die Ganzzahl passend zu den Nachkommawerten nach den üblichen Rundungsregeln ermittelt (siehe \zeiref{srcInvader05h02}). 
-
 
 \lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{14}{57}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
 
 In \abbref[vref]{fpsbewegung03}  können wir sehen, dass das Ergebnis schon deutlich besser geworden ist. Auch hat sich die Abweichung von optimalen Wert~315 dramatisch verbessert. In \abbref[vref]{picFehlerFloat} wird der Unterschied sichtbar gemacht.
 
-\myebild{fehler_float.pdf}{1.0}{Vergleich des Positionsfehlers ohne und mit Vector2}{picFehlerFloat}
+\myebild{fehler_float.pdf}{1.0}{Vergleich des Positionsfehlers von Rect und FRect}{picFehlerFloat}
 
 Es gibt aber noch eine weitere Fehlerquelle: \texttt{pygame.clock.tick()}\myindex{pyg}{\texttt{clock}!\texttt{tick()}} liefert mir nicht genug Nachkommastellen. Bei langen Laufzeiten multipilizieren sich diese fehlenden Angaben nach vorne und führen wiederum zu Fehlern. Es gibt bessere Python-Funktionen zur Ermittlung von Laufzeiten.
 
-In \zeiref{srcInvader05i01} von \srcref[vref]{srcInvader05i} wird mit Hilfe von \texttt{time.time()}\randnotiz{time()}\index{\texttt{time}!\texttt{time()}|underline} die Anzahl der Sekunden nach dem 01.01.1970 als eine Fließkommazahl (float) zurückgeliefert. Die Nachkommastellen geben dabei die Sekundenbruchteile an. Diese Messung ist genauer als die durch \texttt{pygame.clock.tick()} und liefert mir je nach Zeitmessungsmöglichkeiten der Rechnerarchitektur und des Betriebssystems mehr Nachkommastellen -- bis in den Nanosekundenbereich.
+In \zeiref{srcInvader05i01} von \srcref[vref]{srcInvader05i} wird mit Hilfe von \texttt{time.time()}\randnotiz{time()}\index{time!time()|underline} die Anzahl der Sekunden nach dem 01.01.1970 als eine Fließkommazahl (float) zurückgeliefert. Die Nachkommastellen geben dabei die Sekundenbruchteile an. Diese Messung ist genauer als die durch \texttt{pygame.clock.tick()} und liefert mir je nach Zeitmessungsmöglichkeiten der Rechnerarchitektur und des Betriebssystems mehr Nachkommastellen -- bis in den Nanosekundenbereich.
 
 In \zeiref{srcInvader05i02} wird nach Ablauf eines Frame die aktuelle Zeit gemessen und in der Zeile danach der Zeitverbrauch ermittelt. Dieser ist dann die tatsächliche \emph{deltatime}\index{deltatime} des Frames, nun mit mehr Nachkommastellen. Anschließend wird in \zeiref{srcInvader05i04} dei neue Startzeit des nächsten Frames festgehalten, um nach dem nächsten Frame wieder den Zeitverbrauch ermitteln zu können.
 
@@ -415,40 +428,46 @@ In \zeiref{srcInvader05i02} wird nach Ablauf eines Frame die aktuelle Zeit gemes
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Was war neu?}
-Die Position eines Objektes wird in einem \texttt{Rect}-Objekt abgelegt. In jedem Frame wird die Position überprüft und ggf. verändert. Bei einer Bildschirmausgabe entsteht dadurch der Eindruck einer Bewegung. Das Ergebnis einer Bewegung wird in der Regel zunächst in einer Variablen zwischengespeichert und überprüft, bevor es zur Positionsänderung verwendt wird.
+Die Position eines Objektes wird in einem \texttt{Rect}- oder \texttt{FRect}-Objekt abgelegt. In jedem Frame wird die Position überprüft und ggf. verändert. Bei einer Bildschirmausgabe entsteht dadurch der Eindruck einer Bewegung. Das Ergebnis einer Bewegung wird in der Regel zunächst in einer Variablen zwischengespeichert und überprüft, bevor es zur Positionsänderung verwendt wird.
 
 Die Bewegungsrichtung wird durch das Vorzeichen und die Geschwindigkeit durch den Wert der Geschwindigkeitsvariablen kodiert. Dabei werden die horizontale und vertikale Richtung getrennt verarbeitet.
 
 Um unabhängig von der tatsächlichen Framerate zu werden, muss bei der Berechnung der neuen Position ein Korrekturwert (Deltatime) verwendet werden. Dieser kann selbst berechnet werden oder aus dem Aufruf von \texttt{pygame.time.Clock.tick()} verwendet werden.
 
-Das Rechteck des Bitmaps speichert seine Werte als Ganzzahlen ab. Dadurch gehen die Nachkommastellen verloren und führen zu Positionsfehlern. Parallel zum Rechteck sollte daher ein \texttt{Vector2}-Objekt zur Speicherung der Positionskoordinaten verwendet werden. Dieses speichert die Werte als Fließkommazahlen ab.
-
 Es wurden folgende Pygame-Elemente eingeführt:
 
 \begin{itemize}
 
-	\item \texttt{pygame.Rect}:
-	\myindex{pyg}{\texttt{Rect}}\\
-	\url{https://www.pygame.org/docs/ref/rect.html}
+	\item \texttt{pygame.rect.FRect}:
+	\myindex{pyg}{\texttt{rect}!\texttt{FRect}}\\
+	\url{https://pyga.me/docs/ref/rect.html}
 	
-	\item \texttt{pygame.Rect.move()}:
-    \myindex{pyg}{\texttt{Rect}!\texttt{move()}}\\
-    \url{https://www.pygame.org/docs/ref/rect.html#pygame.Rect.move}
+	\item \texttt{pygame.rect.FRect.move()}:
+    \myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{move()}}\\
+    \url{https://pyga.me/docs/ref/rect.html#pygame.Rect.move}
+
+	\item \texttt{pygame.rect.Rect}:
+    \myindex{pyg}{\texttt{rect}!\texttt{Rect}}\\
+    \url{https://pyga.me/docs/ref/rect.html}
+
+   \item \texttt{pygame.rect.Rect.move()}:
+   \myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{move()}}\\
+   \url{https://pyga.me/docs/ref/rect.html#pygame.Rect.move}
 
 	\item \texttt{pygame.Surface.get\_rect()}:
 	\myindex{pyg}{\texttt{Surface}!\texttt{get\_rect()}}\\
-	\url{https://www.pygame.org/docs/ref/surface.html#pygame.Surface.get_rect}
+	\url{https://pyga.me/docs/ref/surface.html#pygame.Surface.get_rect}
 
 	\item \texttt{pygame.time.get\_ticks()}:
     \myindex{pyg}{\texttt{time}!\texttt{get\_ticks()}}\\
-    \url{https://www.pygame.org/docs/ref/surface.html#pygame.time.get_ticks}
+    \url{https://pyga.me/docs/ref/surface.html#pygame.time.get_ticks}
 
     \item \texttt{pygame.math.Vector2}:
     \myindex{pyg}{\texttt{math}!\texttt{Vector2}}\\
-    \url{https://www.pygame.org/docs/ref/math.html#pygame.math.Vector2}
+    \url{https://pyga.me/docs/ref/math.html#pygame.math.Vector2}
 
     \item \texttt{pygame.math.Vector3}:
     \myindex{pyg}{\texttt{math}!\texttt{Vector3}}\\
-    \url{https://www.pygame.org/docs/ref/math.html#pygame.math.Vector3}
+    \url{https://pyga.me/docs/ref/math.html#pygame.math.Vector3}
 \end{itemize}
 
