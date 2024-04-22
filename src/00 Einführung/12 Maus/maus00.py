@@ -23,9 +23,7 @@ class Ball(pygame.sprite.Sprite):
                 self.rect.top = max(self.rect.top, Game.INNER_RECT.top)
                 self.rect.bottom = min(self.rect.bottom, Game.INNER_RECT.bottom)
                 c = self.rect.center  # altes Zentrum merken
-                self.image = pygame.transform.scale(
-                    self.image_orig, (self._scale, self._scale)
-                )
+                self.image = pygame.transform.scale(self.image_orig, (self._scale, self._scale))
                 self.rect = self.image.get_rect()
                 self.rect.center = c  # Zentrum zurücksetzen
 
@@ -77,7 +75,7 @@ class Game:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Game.DELTATIME)
+            self._clock.tick(Game.FPS)
             time_current = time()
             Game.DELTATIME = time_current - time_previous
             time_previous = time_current
@@ -90,9 +88,7 @@ class Game:
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self._running = False
-            elif (
-                event.type == MOUSEBUTTONDOWN
-            ):  # Maustaste gedrückt§\label{srcMaus0002}§
+            elif event.type == MOUSEBUTTONDOWN:  # Maustaste gedrückt§\label{srcMaus0002}§
                 if event.button == 1:  # left§\label{srcMaus0004}§
                     self._ball.update(rotate=90)
                 elif event.button == 2:  # middle§\label{srcMaus0005}§

@@ -7,17 +7,25 @@ import pygame
 class Settings:
     WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
-    DELTATIME = 1.0/FPS
+    DELTATIME = 1.0 / FPS
 
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.image = pygame.surface.Surface(Settings.WINDOW.size)
-        self.image.fill("black")
-        for ypos in range(2, Settings.WINDOW.bottom, 10):
-            pygame.draw.line(self.image, "white", (Settings.WINDOW.centerx, ypos), (Settings.WINDOW.centerx, ypos+5), 2)
+        self.image = pygame.surface.Surface(Settings.WINDOW.size).convert()
         self.rect = self.image.get_rect()
+        self.image.fill("darkred")
+        self._paint_net()
+
+    def _paint_net(self) -> None:  # Tennisnetz§\label{srcPong0101}§
+        net_rect = pygame.rect.Rect(0, 0, 0, 0)
+        net_rect.centerx = Settings.WINDOW.centerx
+        net_rect.top = 50
+        net_rect.size = (3, 30)
+        while net_rect.bottom < Settings.WINDOW.bottom:
+            pygame.draw.rect(self.image, "grey", net_rect, 0)
+            net_rect.move_ip(0, 40)
 
 
 class Game:
