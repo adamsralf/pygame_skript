@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Grafikprimitive}\index{Grafikprimitive}
 \subsection{Grundlagen}
-Unter Grafikprimitiven versteht man gezeichnete einfache grafische Figuren wie Linien\index{Linie}\index{Grafikprimitive!Linie}, Punkte\index{Punkt}\index{Grafikprimitive!Punkt}, Kreise\index{Kreis}\index{Grafikprimitive!Kreis} etc. Sie spielen in der Spieleprogrammierung nicht so eine große Rolle, können aber manchmal ganz nützlich sein. Ich will hier deshalb nur einige vorstellen. 
+Unter Grafikprimitiven versteht man gezeichnete einfache grafische Figuren wie Linien\index{Linie}\index{Grafikprimitive!Linie}, Punkte\index{Punkt}\index{Grafikprimitive!Punkt}, Kreise\index{Kreis}\index{Grafikprimitive!Kreis} etc. Sie spielen in der Spieleprogrammierung nicht so eine große Rolle, können aber ganz nützlich sein. Ich will hier deshalb nur einige vorstellen. 
 
 \lstsource{SRC/00 Einführung/02 Primitive/primitives00.py}{1}{44}{python}{Mein zweites \emph{Spiel}, Version 1.0}{srcPrimitives00}
 
@@ -66,19 +66,19 @@ Die beiden Positionsangaben werden nun durch eine Zufallszahl zwischen~$-2$ und~
 
 Nun wollen wir ein wenig Dynamik ins Spiel bringen. Die Partikel sollen zuerst nach oben steigen und dann nach unten fallen. Dazu habe ich in \texttt{Circle} die vertikale Geschwindigkeit \texttt{speedy} hinzugefügt und mit einem zufälligen Startwert versehen (\zeiref{srcCircles0301}). Die Division durch~$10.1$ sorgt dafür, dass keine glatten Werte entstehen. Spielen Sie auch hier mal mit den Werten rum, um die Effekte zu sehen.
 
-Auch muss die Klasse um die Methode \texttt{update()} erweitert werden. In dieser Methode wird die neue vertikale Position \texttt{posy} anhand der vertikalen Geschwindigkeit \texttt{speedy} berechnet und die Geschwindigkeit wiederum bzgl. der Schwerkraftn \randnotiz{Schwerkraft}\index{Schwerkraft}\index{gravity}\texttt{gravity} verändert. Damit alle Partikel immer der gleichen Schwerkraft unterliegen, habe ich \texttt{gravity} als statisches Attribut definiert (\zeiref{srcCircles0302}).
+Auch muss die Klasse um die Methode \texttt{update()} erweitert werden. In dieser Methode wird die neue vertikale Position \texttt{posy} anhand der vertikalen Geschwindigkeit \texttt{speedy} berechnet und die Geschwindigkeit wiederum bzgl. der Schwerkraft \randnotiz{Schwerkraft}\index{Schwerkraft}\index{GRAVITY}\texttt{GRAVITY} verändert. Damit alle Partikel immer der gleichen Schwerkraft unterliegen, habe ich \texttt{GRAVITY} als statisches Attribut definiert (\zeiref{srcCircles0302}).
 
-\lstsource{SRC/00 Einführung/02 Primitive/circles03.py}{7}{19}{python}{Partikelfontaine, Version 3.0, Klasse \texttt{Circle}}{srcCircles03a}
+\lstsource{SRC/00 Einführung/02 Primitive/circles03.py}{6}{18}{python}{Partikelfontaine, Version 3.0, Klasse \texttt{Circle}}{srcCircles03a}
 
 Verbleibt noch der Aufruf von \texttt{update()} in der Hauptprogrammschleife.
 
-\lstsource{SRC/00 Einführung/02 Primitive/circles03.py}{44}{49}{python}{Partikelfontaine, Version 3.0, Aufruf von \texttt{update()}}{srcCircles03b}
+\lstsource{SRC/00 Einführung/02 Primitive/circles03.py}{38}{42}{python}{Partikelfontaine, Version 3.0, Aufruf von \texttt{update()}}{srcCircles03b}
 
 So richtig spritzig ist die Fontaine aber immer noch nicht. Streuen wir also die Partikel auch horizontal. Im Konstruktor wird dazu das Attribut \texttt{speedx} hinzugefügt. Die obere und untere Grenze des Zufallszahlengenerators bestimmen die Breite der Partikelfontaine. Probieren Sie hier Werte aus, die ihrer Ästhetik entsprechen. In \texttt{update()} muss dann die neue horizontale Position \texttt{posx} berechnet werden. 
 
-Die horizontale Geschwindigkeit muss nicht angepasst werden, da \texttt{gravity} nur nach unten wirken soll.
+Die horizontale Geschwindigkeit muss nicht angepasst werden, da \texttt{GRAVITY} nur nach unten wirken soll.
 
-\lstsource{SRC/00 Einführung/02 Primitive/circles04.py}{10}{21}{python}{Partikelfontaine, Version 4.0, \texttt{Circle.update()}}{srcCircles04}
+\lstsource{SRC/00 Einführung/02 Primitive/circles04.py}{9}{20}{python}{Partikelfontaine, Version 4.0, \texttt{Circle.update()}}{srcCircles04}
 
 \begin{wrapfigure}[17]{r}{6.0cm}%
 	\begin{center}%
@@ -92,10 +92,10 @@ In \texttt{update()} wird dann nach der Berechnung der neuen Position überprüf
 
 In \zeiref{srcCircles0501} wird überprüft, ob der rechte Rand des Partikels (Mittelpunkt plus Radius), links außerhalb des Bildschirm liegt. Falls ja, muss das Löschflag auf \true\ gesetzt werden. Analog werden in \zeiref{srcCircles0502} und \zeiref{srcCircles0503} der rechte und der untere Rand des Bildschirm überprüft. 
 
-Dabei wird mit Hilfe der Methode \texttt{pygame.display.get\_window\_size()}\randnotiz{get\_window\_size()}\myindex{pyg}{\texttt{display}!\texttt{get\_window\_size()}|underline} jeweils die Breite bzw. Höhe des Bildschirms ermittelt. Diese Methode liefert mir an jedem Punkt meines Spiels die Bildschirmgröße als 2-Tupel wieder. Der nullte Wert ist dabei die Breite und der erste die Höhe. Ein Test, ob der Partikel nach oben verschwunden ist, wird nicht benötigt, da er ja irgendwann wieder runterfällt und damit wieder sichtbar wird.
+Dabei wird mit Hilfe des Attributs \texttt{pygame.Window.size}\randnotiz{size}\myindex{pyg}{\texttt{Window}!\texttt{size}} jeweils die Breite bzw. Höhe des Bildschirms ermittelt. Dieses Attribut liefert mir die Bildschirmgröße als 2-Tupel wieder. Der nullte Wert ist dabei die Breite und der erste die Höhe. Ein Test, ob der Partikel nach oben verschwunden ist, wird nicht benötigt, da er ja irgendwann wieder runterfällt und damit wieder sichtbar wird.
 
 \newpage
-\lstsource{SRC/00 Einführung/02 Primitive/circles05.py}{10}{28}{python}{Partikelfontaine, Version 5.0, Klasse \texttt{Circle}}{srcCircles05a}
+\lstsource{SRC/00 Einführung/02 Primitive/circles05.py}{6}{30}{python}{Partikelfontaine, Version 5.0, Klasse \texttt{Circle}}{srcCircles05a}
 
 Im Hauptprogramm muss ich nun einen passende Löschlogik implementieren. Vorab soll meine Fontaine aber noch mehr \emph{Wumms} bekommen: In \zeiref{srcCircles0504} wird nicht ein Partikel erzeugt, sondern immer gleich~5.
 
@@ -103,7 +103,7 @@ In \zeiref{srcCircles0505} wird eine leere Liste erstellt, die die zu löschende
 
 In \abbref[vref]{picCircles05} können Sie eine Fontaine sehen. So richtig cool sieht das aber erst aus, wenn Sie die Maus dabei bewegen.
 
-\lstsource{SRC/00 Einführung/02 Primitive/circles05.py}{45}{67}{python}{Partikelfontaine, Version 5.0, Hauptprogrammschleife}{srcCircles05b}
+\lstsource{SRC/00 Einführung/02 Primitive/circles05.py}{41}{64}{python}{Partikelfontaine, Version 5.0, Hauptprogrammschleife}{srcCircles05b}
 
 Warum rufe ich nicht den \texttt{remove()} schon innerhalb der Update-Schleife auf? Deshalb: \emph{Verlängern oder verkürzen Sie nie eine Liste, die Sie gerade durchwandern.} Es können höchst seltsame Effekte entstehen. Schätzen Sie mal die Anzahl der Schleifendurchgänge des folgendes Programmes.
 
@@ -162,9 +162,9 @@ Es wurden folgende Pygame-Elemente eingeführt:
 	\myindex{pyg}{\texttt{draw}!\texttt{rect()}}\\
 	\url{https://pyga.me/docs/ref/draw.html#pygame.draw.rect}
 	
-	\item \texttt{pygame.display.get\_window\_size()}:
-	\myindex{pyg}{\texttt{display}!\texttt{get\_window\_size()}}\\
-	\url{https://pyga.me/docs/ref/display.html#pygame.display.get_window_size}
+	%\item \texttt{pygame.display.get\_window\_size()}:
+	%\myindex{pyg}{\texttt{display}!\texttt{get\_window\_size()}}\\
+	%\url{https://pyga.me/docs/ref/display.html#pygame.display.get_window_size}
 
 	\item \texttt{pygame.gfxdraw.pixel()}:
     \myindex{pyg}{\texttt{gfxdraw}!\texttt{pixel()}}\\ \url{https://pyga.me/docs/ref/gfxdraw.html#pygame.gfxdraw.pixel}
@@ -185,5 +185,9 @@ Es wurden folgende Pygame-Elemente eingeführt:
 	\myindex{pyg}{\texttt{Surface}!\texttt{set\_at()}}\\
 	\url{https://pyga.me/docs/ref/surface.html#pygame.Surface.set_at}
 	
+	\item \texttt{pygame.Window.size}:
+	\myindex{pyg}{\texttt{Window}!\texttt{size}}\\
+	\url{https://pyga.me/docs/ref/window.html#pygame.Window.size}
+
 \end{itemize}
 

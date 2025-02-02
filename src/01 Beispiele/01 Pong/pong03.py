@@ -80,10 +80,6 @@ class Ball(pygame.sprite.Sprite):
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
                 self._move()
-            elif kwargs["action"] == "hflip":
-                self._horizontal_flip()
-            elif kwargs["action"] == "vflip":
-                self._vertical_flip()
             elif kwargs["action"] == "service":
                 self._service()
         return super().update(*args, **kwargs)
@@ -117,9 +113,8 @@ class Ball(pygame.sprite.Sprite):
 
 class Game:
     def __init__(self):
-        pygame.init()
-        self._display = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("My Kind of Pong")
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
         self._background = pygame.sprite.GroupSingle(Background())
         self._all_sprites = pygame.sprite.Group()
@@ -145,9 +140,9 @@ class Game:
         self._all_sprites.update(action="move")
 
     def draw(self):
-        self._background.draw(self._display)
-        self._all_sprites.draw(self._display)
-        pygame.display.update()
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
+        self._window.flip()
 
     def watch_for_events(self):
         for event in pygame.event.get():
@@ -172,8 +167,7 @@ class Game:
 
 
 def main():
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

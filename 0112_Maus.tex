@@ -19,7 +19,7 @@ Die eigentliche Musik spielt in der Hauptklasse \texttt{Game}, da dort die Mausa
 
 \newpage
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{55}{71}{python}{Mausaktionen: Statics und Konstruktor von \texttt{Game}}{srcMaus00a} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{58}{71}{python}{Mausaktionen: Statics und Konstruktor von \texttt{Game}}{srcMaus00a} 
 
 Auch die Methode \texttt{run()} birgt keine Überraschungen.
 
@@ -33,13 +33,14 @@ Wird also die linke Maustaste gedrückt (\zeiref{srcMaus0004}), wird an den Ball
 
 Mit \texttt{event.pos}\myindex{pyg}{\texttt{event}!\texttt{pos}} könnte man jetzt sofort die Mausposition abfragen -- was wir hier nicht tun.\randnotiz{event.pos}
 
+\newpage
 \lstsource{SRC/00 Einführung/12 Maus/maus00.py}{85}{102}{python}{Mausaktionen: \texttt{Game.watch\_for\_events()}}{srcMaus00c} 
 
 Eine Anforderung war, dass der Systemmauszeiger nur außerhalb des inneren Rechtecks sichtbar ist. Innerhalb des Rechtecks soll ja der Ball als Mauszeiger herhalten. In \zeiref{srcMaus0003} wird dies durch die Methode \texttt{\texttt{pygame.mouse.set\_visible()}}\randnotiz{set\_visible()}\myindex{pyg}{\texttt{mouse}!\texttt{set\_visible()}|underline} erreicht. Diese steuert, ob der Systemmauszeiger -- welcher Ausprägung auch immer -- angezeigt werden soll oder nicht. 
 
-Als Entscheider dient dabei, ob die aktuelle Mausposition innerhalb des inneren Rechtecks liegt. Die Methode \texttt{pygame.mouse.get\_pos()}\randnotiz{get\_pos()}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}|underline} liefert mir dazu die aktuelle Mausposition. Diese wird nun einfach in eine schon vorhandene Kollisionsprüfung gesteckt: \texttt{pygame.Rect.collidepoint()}\randnotiz{collidepoint()}\myindex{pyg}{\texttt{Rect}!\texttt{collidepoint()}|underline}. Ist die Mausposition innerhalb des Rechtecks, liefert diese den Wert \true, ansonsten \false; daher muss der Wahrheitswert noch mit \texttt{not} negiert werden.
+Als Entscheider dient dabei, ob die aktuelle Mausposition innerhalb des inneren Rechtecks liegt. Die Methode \texttt{pygame.mouse.get\_pos()}\randnotiz{get\_pos()}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}|underline} liefert mir dazu die aktuelle Mausposition. Diese wird nun einfach in eine schon vorhandene Kollisionsprüfung gesteckt: \texttt{pygame.Rect.collidepoint()}\randnotiz{collidepoint()}\myindex{pyg}{\texttt{Rect}!\texttt{collidepoint()}|underline}. Ist die Mausposition innerhalb des Rechtecks, liefert diese den Wert \true, ansonsten \false.%; daher muss der Wahrheitswert noch mit \texttt{not} negiert werden.
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{104}{115}{python}{Mausaktionen: \texttt{Game.update()} und \texttt{Game.draw()}}{srcMaus00d} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{104}{117}{python}{Mausaktionen: \texttt{Game.update()} und \texttt{Game.draw()}}{srcMaus00d} 
 
 Verbleibt noch die Klasse \texttt{Ball}. Diese enthält zwar keine direkten Mausaktionen mehr, aber die Methode \texttt{update()} sieht nun ganz anders als bei den vorherigen Beispielen aus. In früheren Beispielen wurden Methoden wie \texttt{rotate()} oder \texttt{resize()} direkt aus \texttt{watch\_for\_events()} oder vergleichbaren Methoden von \texttt{Game} aufgerufen. Das ist auch soweit in Ordnung, aber wenn man diese Kindklassen von \texttt{pygame.sprite.Sprite} einer \texttt{pygame.sprite.Group} oder \texttt{pygame.sprite.GroupSingle} hinzugefügt hat, kriegt man ein Problem. Diese Klassen erwarten nur \texttt{Sprite}-Objekt als Elemente. Deshalb kann man eigentlich im Sinne der objektorientierten Programmierung nur Methoden und Attribute verwwenden, die der Elternklasse \texttt{pygame.sprite.Sprite} bekannt sind -- also beispielsweise \texttt{update()}. Methoden wie \texttt{rotate()} wären dann der Spritegruppe unbekannt.
 
@@ -52,7 +53,7 @@ Mit anderen Worten, man kann der Methode beliebige frei definierbare Parameter �
 Dabei wird im ersten Schritt gefragt, ob der Parameter übergeben wurde wie in \zeiref{srcMaus0009}, \zeiref{srcMaus0010}, \zeiref{srcMaus0011} oder \zeiref{srcMaus0012}. Anschließend wird der Parameterwert der entsprechenden Methode der Kindklasse übergeben. Somit muss die Spritegruppe nicht auf Methoden der Kindklasse zugreifen, sondern kann die Methode der Elternklasse verwenden.
 
 
-\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{9}{52}{python}{Mausaktionen: \texttt{Ball}}{srcMaus00e} 
+\lstsource{SRC/00 Einführung/12 Maus/maus00.py}{9}{55}{python}{Mausaktionen: \texttt{Ball}}{srcMaus00e} 
 
 Noch ein Hinweis zu \texttt{pygame.transform.rotate()}\randnotiz{rotate()}\myindex{pyg}{\texttt{transform}!\texttt{rotate()}|underline}. Anders als bei vielen anderen Systemen, die Winkel verarbeiten, wird der Winkel hier in \gls{grad} und nicht in \gls{radiant} gemessen.
 
@@ -63,6 +64,10 @@ Mausaktionen werden ähnlich wie Tastaturevents verarbeitet. Die Mausposition ka
 
 Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
+	\item \texttt{pygame.constants}:
+	\myindex{pyg}{\texttt{constants}}\\ 
+	\url{https://pyga.me/docs/ref/locals.html}
+
 	\item \texttt{pygame.MOUSEBUTTONDOWN}, \texttt{pygame.MOUSEBUTTONDOWN}:
 	\myindex{pyg}{\texttt{MOUSEBUTTONDOWN}}\myindex{pyg}{\texttt{MOUSEBUTTONUP}}\\ \url{https://pyga.me/docs/ref/event.html}
 

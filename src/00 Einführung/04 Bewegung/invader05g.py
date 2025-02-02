@@ -1,22 +1,18 @@
-import os
-
 import pygame
 import pygame.time
 
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (120, 650))
-    FPS = 10                                            # 10 30 60 120 240 300 600
+    FPS = 10  # 10 30 60 120 240 300 600
     LIMIT = 500
-    DELTATIME = 1.0/FPS
+    DELTATIME = 1.0 / FPS
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Bewegung")
+    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
 
     defender_image = pygame.image.load("images/defender01.png").convert_alpha()
@@ -48,12 +44,12 @@ def main():
         screen.fill("white")
         pygame.draw.line(screen, "red", (0, 315), (Settings.WINDOW.width, 315), 2)
         screen.blit(defender_image, defender_rect)
-        pygame.display.flip()
-        Settings.DELTATIME = clock.tick(Settings.FPS) / 1000.0    # Korrekturwert ermitteln§\label{srcInvader05g01}§
+        window.flip()
+        Settings.DELTATIME = clock.tick(Settings.FPS) / 1000.0  # Korrekturwert ermitteln§\label{srcInvader05g01}§
     print(f"top={defender_rect.top}")
 
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

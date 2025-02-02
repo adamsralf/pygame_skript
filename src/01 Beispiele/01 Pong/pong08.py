@@ -218,8 +218,8 @@ class Score(pygame.sprite.Sprite):
 class Game:
     def __init__(self):
         pygame.init()
-        self._display = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("My Kind of Pong")
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
         self._background = pygame.sprite.GroupSingle(Background())
         self._all_sprites = pygame.sprite.Group()
@@ -255,13 +255,13 @@ class Game:
             self._all_sprites.update(action="move")
 
     def draw(self):
-        self._background.draw(self._display)
-        self._all_sprites.draw(self._display)
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
         if self._pausing:  # Pausedarstellung§\label{srcPong0806}§
-            self._pause.draw(self._display)
+            self._pause.draw(self._screen)
         elif self._helping:  # Hilfedarstellung§\label{srcPong0807}§
-            self._help.draw(self._display)
-        pygame.display.update()
+            self._help.draw(self._screen)
+        self._window.flip()
 
     def watch_for_events(self):
         for event in pygame.event.get():

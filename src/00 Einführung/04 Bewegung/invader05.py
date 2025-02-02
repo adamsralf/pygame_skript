@@ -1,5 +1,3 @@
-import os
-
 import pygame
 
 
@@ -9,11 +7,12 @@ class Settings:
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)  # Zugriff auf ein Rect-Attribut §\label{srcInvader0504b}§
-    pygame.display.set_caption("Bewegung")
+    window = pygame.Window(
+        size=Settings.WINDOW.size,                          # Zugriff auf ein Rect-Attribut §\label{srcInvader0504b}§
+        title="Bewegung", 
+        position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
 
     defender_image = pygame.image.load("images/defender01.png").convert_alpha()
@@ -34,7 +33,7 @@ def main():
         # Draw
         screen.fill("white")
         screen.blit(defender_image, defender_rect)          # blit kann auch rect §\label{srcInvader0504}§
-        pygame.display.flip()
+        window.flip()
         clock.tick(Settings.FPS)
 
     pygame.quit()

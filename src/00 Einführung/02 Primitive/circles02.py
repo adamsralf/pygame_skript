@@ -1,4 +1,3 @@
-import os
 from random import randint
 
 import pygame
@@ -11,17 +10,15 @@ class Circle:
         self.radius = 2
         self.color = [randint(100, 255), randint(50, 255), 0]
 
-    def draw(self):
-        screen = pygame.display.get_surface()
+    def draw(self, screen: pygame.surface.Surface) -> None:
         pygame.draw.circle(screen, self.color, (self.posx, self.posy), self.radius)
 
 
 def main():
     size = (300, 600)
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-    pygame.display.set_caption('Partikelschwarm')
-    screen = pygame.display.set_mode(size)
+    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []
 
@@ -31,14 +28,14 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        if pygame.mouse.get_pressed()[0]:   # Linke Maustaste?§\label{srcCircles0105}§
+        if pygame.mouse.get_pressed()[0]:           # Linke Maustaste?§\label{srcCircles0105}§
             circles.append(Circle(pygame.mouse.get_pos()))
 
         screen.fill("white")
         for p in circles:
-            p.draw()
+            p.draw(screen)
 
-        pygame.display.flip()
+        window.flip()
         clock.tick(60)
 
     pygame.quit()

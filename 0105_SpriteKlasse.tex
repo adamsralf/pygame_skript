@@ -7,19 +7,19 @@ Diese Klasse soll alle Informationen bzgl. der Aktualisierung und Darstellung de
 
 Formulieren wir also die Klasse \texttt{Defender} als eine Kindklasse von \texttt{Sprite} (\zeiref{srcInvader06a01}).
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06a.py}{13}{37}{python}{Sprites (1), Version 1.0}{srcInvader06a1}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06a.py}{12}{37}{python}{Sprites (1), Version 1.0}{srcInvader06a1}
 
 Die Zeilen des Konstruktors (\zeiref{srcInvader06a02}ff.) entsprechen denen der vorherigen Version. Lediglich der Präfix \texttt{defender\_} wird durch \texttt{self.} ersetzt, wodurch die Variablen zu Attributen der Klasse werden. Sie sollten keine Schwierigkeiten haben, diese zu verstehen.
 
 Jede Kindklasse von \texttt{Sprite} muss zwei Attribute haben: \texttt{rect}\index{Sprite!self.rect|underline}\randnotiz{self.rect} und \texttt{image}\index{Sprite!self.image|underline}\randnotiz{self.image}. Auf diese beiden Attribute greifen nämlich die schon vorformulierten Lösungen zur Kollisionserkennung, Bildschirmausgabe etc. zu. Wir werden später noch den Nutzen sehen.
 
-In \zeiref{srcInvader06a03}ff. werden die Kollisionserkennungen und die Zustandsänderungen formuliert. Hier fällt besonders die Berechnung der neuen Position mit \texttt{move()}\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{move()}} auf. 
+In \zeiref{srcInvader06a03}ff. werden die Randkollisionen und die Zustandsänderungen formuliert. Hier fällt besonders die Berechnung der neuen Position mit \texttt{move()}\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{move()}} auf. 
 
 Neu ist der Aufruf der Methode \texttt{change\_direction()}. Diese Methode (\zeiref{srcInvader06a08}) ist mehr \emph{OO-like} also die vorherige Version. In der objektorientierten Programmierung werden Algorithmen nicht direkt programmiert, sondern man sendet an das Objekt Nachrichten, und diese werden dann intern -- und von außen nicht sichtbar wie -- umgesetzt. Hier bedeutet dies, dass ich an der entsprechenden Stelle nicht den Richtungswechsel direkt durchführe, sondern mir selbst die Nachricht zusende, dass die Richtung geändert werden muss. 
 
 Mit der Methode \texttt{draw()} in \zeiref{srcInvader06a04} wird die Bildschirmausgabe gekapselt.
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06a.py}{40}{69}{python}{Sprites (2), Version 1.0}{srcInvader06a2}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06a.py}{40}{67}{python}{Sprites (2), Version 1.0}{srcInvader06a2}
 
 Die Verwendung der Klasse \texttt{Defender} ist nun denkbar einfach geworden. In der \zeiref{srcInvader06a05} wird ein Objekt der Klasse erzeugt. In \zeiref{srcInvader06a06} wird \texttt{update()} aufgerufen und in \zeiref{srcInvader06a07} \texttt{draw()}.
 
@@ -35,39 +35,39 @@ Los geht's: Da wir die Kollisionsprüfung anders organisieren wollen, wird erstm
 Dabei wird in \zeiref{srcInvader06b01} die Methode \texttt{pygame.rect.FRect.move\_ip()}\myindex{pyg}{\texttt{rect}!\texttt{FRect}!\texttt{move\_ip()}|underline}\randnotiz{move\_ip()} eingeführt. Sie arbeitet wie \texttt{move()}, nur dass hier die Änderung direkt im Rechteck durchgeführt wird; \texttt{ip} steht hier für \emph{in place}. Bei \texttt{move()} bleibt das ursprüngliche Rechteck unverändert.
 
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{24}{25}{python}{Sprites (1), Version 1.1}{srcInvader06b1}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{23}{24}{python}{Sprites (1), Version 1.1}{srcInvader06b1}
 
 Damit die Ränder sichtbar werden und ich die Kollision besser erkennen kann, werden die Ränder nun zu zwei Steinwänden rechts und links; auch diese Bitmaps werden als Kindklasse von \texttt{pygame.sprite.Sprite} implementiert. Da der Zustand der beiden Wände sich nie verändert, kann ich auf die Programmierung von \texttt{update()} verzichten.
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{34}{45}{python}{Sprites (2), Version 1.1}{srcInvader06b2}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{33}{44}{python}{Sprites (2), Version 1.1}{srcInvader06b2}
 
 Nun erzeuge ich die beiden Ränder:
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{56}{57}{python}{Sprites (3), Version 1.1}{srcInvader06b3}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{54}{55}{python}{Sprites (3), Version 1.1}{srcInvader06b3}
 
 Bisher war alles easy. 
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{68}{72}{python}{Sprites (4), Version 1.1}{srcInvader06b4}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06b.py}{65}{70}{python}{Sprites (4), Version 1.1}{srcInvader06b4}
 
 Was passiert hier? Mit der Methode \texttt{pygame.sprite.collide\_rect()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}}\randnotiz{collide\_rect()} werden die Rechtecke zweier \texttt{Sprite}-Objekte auf Kollision untersucht. Eine eigene Abfrage der linken und rechten Grenzen bleibt mir damit erspart.
 
 Für beide Ränder -- allgemeiner gesprochen für viele \texttt{Sprite}-Objekte -- wird hier die Kollision mit einem einzelnen Objekt überprüft. Grundsätzlich kommen Sprites selten einzeln daher, sondern oft in Gruppen. Auch dies ist schon in Pygame vorgesehen und führt zu weiteren Vereinfachungen.
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06c.py}{42}{77}{python}{Sprites (1), Version 1.2}{srcInvader06c1}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06c.py}{41}{75}{python}{Sprites (1), Version 1.2}{srcInvader06c1}
 
 Der Verteidiger wird nicht mehr direkt angesprochen, sondern in eine Luxuskiste gepackt. Ich komme später nochmal darauf zurück. Die beiden \texttt{Border}-Objekte werden nicht mehr in zwei Objektvariablen abgelegt, sondern ebenfalls in eine Luxuskiste, der \texttt{pygame.sprite.Group}\myindex{pyg}{\texttt{sprite}!\texttt{Group}|underline}\randnotiz{Group}. Hier könnte ich nun noch andere Grenzen oder Grenzwälle ablegen. Von der Spiellogik her würden diese nun immer mit einem Schlag gemeinsam verarbeitet. Deutlich wird das bei diesem Minibeispiel an zwei Stellen.
 
-Die erste Stelle ist \zeiref{srcInvader06c01} und dort wird eine andere Version der Kollisionsprüfung verwendet: \texttt{pygame.sprite.\-sprite\-collide()}\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}|underline}\randnotiz{spritecollide()}. Der erste Parameter ist \emph{ein} \texttt{Sprite}-Objekt. In unserem Fall ist es der Verteidiger. Der zweite Parameter ist eine Spritegruppe mit allen \texttt{Border}-Objekten. Also wird der Verteidiger mit allen Mitgliedern der Gruppe auf Kollisionen überprüft. Dies funktioniert nur, wenn alle Sprites ein \texttt{Rect}-Objekt mit dem Namen \texttt{rect} als Attribut haben. Der dritte Parameter -- hier \false\ -- steuert, ob das kollidierende Sprite aus der Liste entfernt werden soll. Dieses Feature ist in Spielen recht interessant, will man doch beispielsweise Felsen, die von einem Raumschiff zerschossen wurden, löschen.
+Die erste Stelle ist \zeiref{srcInvader06c01} und dort wird eine andere Version der Kollisionsprüfung verwendet: \texttt{pygame.sprite.\-sprite\-collide()}\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}|underline}\randnotiz{spritecollide()}. Der erste Parameter ist \emph{ein} \texttt{Sprite}-Objekt. In unserem Fall ist es der Verteidiger. Der zweite Parameter ist eine Spritegruppe mit allen \texttt{Border}-Objekten. Also wird der Verteidiger mit allen Mitgliedern der Gruppe auf Kollisionen überprüft. Dies funktioniert nur, wenn alle Sprites ein \texttt{Rect}- oder \texttt{FRect}-Objekt mit dem Namen \texttt{rect} als Attribut haben. Der dritte Parameter -- hier \false\ -- steuert, ob das kollidierende Sprite aus der Liste entfernt werden soll. Dieses Feature ist in Spielen recht interessant, will man doch beispielsweise Felsen, die von einem Raumschiff zerschossen wurden, löschen.
 
 Die zweite Stelle ist \zeiref{srcInvader06c03}. Hier wird nicht mehr für jedes Objekt einzeln \texttt{draw()} aufgerufen, sondern für die ganze Gruppe. Nutzt man diesen Service, kann man die Methode \texttt{draw()} aus seiner eigenen Klasse (hier \texttt{Border} und \texttt{Defender}) entfernen, wodurch schon wieder alles einfacher wird.
 
-Es scheint also eine gute Idee zu sein, die Sprites in solche Luxuskisten zu packen. Aber was war nochmal mit dem Defender? Um die Vorteile eine Spritegruppe nutzen zu können, kann man auch Gruppen anlegen, die nur ein Element enthalten. Damit diese Gruppen aber etwas effizienter arbeiten können -- schließlich weiß man ja, dass nur ein Element in der Gruppe ist --, gibt es dafür den Spezialfall \texttt{pygame.sprite.GroupSingle}\myindex{pyg}{\texttt{sprite}!\texttt{GroupSingle}|underline}\randnotiz{GroupSingle}. Da man oft den Bedarf hat auf das einzige \texttt{Sprite}-Objekt der \emph{Gruppe} zuzugreifen, hat diese Gruppe das zusätzliche Attribut \texttt{sprite}\myindex{pyg}{\texttt{sprite}!\texttt{GroupSingle}!\texttt{sprite}} (siehe \zeiref{srcInvader06c01}f.).
+Es scheint also eine gute Idee zu sein, die Sprites in solche Luxuskisten zu packen. Aber was war nochmal mit dem Defender? Um die Vorteile eine Spritegruppe nutzen zu können, kann man auch Gruppen anlegen, die nur ein Element enthalten. Damit diese Gruppen aber etwas effizienter arbeiten können -- schließlich weiß man ja, dass nur ein Element in der Gruppe ist --, gibt es dafür den Spezialfall \texttt{pygame.sprite.GroupSingle}\myindex{pyg}{\texttt{sprite}!\texttt{GroupSingle}|underline}\randnotiz{GroupSingle}. Da man oft den Bedarf hat, auf das einzige \texttt{Sprite}-Objekt der \emph{Gruppe} zuzugreifen, hat diese Gruppe das zusätzliche Attribut \texttt{sprite}\myindex{pyg}{\texttt{sprite}!\texttt{GroupSingle}!\texttt{sprite}} (siehe \zeiref{srcInvader06c01}f.).
 
 
 Am Ende möchte ich meinen OO-Ansatz noch weiterverfolgen und auch das Hauptprogramm in eine \texttt{Game}-Klasse umwandeln. Wichtig ist mir dabei, gleich von Beginn an eine Strukturdisziplin zu etablieren. Je länger Sie in der Softwareentwicklung tätig bleiben, desto mehr freunden Sie sich mit Begriffen wie \emph{Ordnung} oder \emph{Struktur} an. Sie helfen auch bei komplexeren Spielen, nicht den roten Faden zu verlieren. Besonders hilfreich ist dabei das \Gls{srp}.
 
 \newpage
-\lstsource{SRC/00 Einführung/05 Sprite/invader06d.py}{42}{83}{python}{\texttt{Game}-Klasse}{srcInvader06d}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06d.py}{41}{82}{python}{\texttt{Game}-Klasse}{srcInvader06d}
 
 Ein Beispiel für den letzten Punkt ist die Einrichtung der Klasse \texttt{Game}. Hier wird der Quelltext nicht einfach ins \texttt{\_\_main\_\_}\index{\_\_main\_\_} gestellt, sondern gekapselt und geordnet und damit flexibel verfügbar gemacht. Ein Beispiel für das SRP sind die Methoden \texttt{watch\_for\_e\-vents()}, \texttt{update()} und \texttt{draw()}. Es ist eben nicht die Aufgabe von \texttt{run()} alles zu organisieren. Aus Sicht der Hauptprogrammschleife interessiert es mich nicht, welche Events abgefragt und wie sie verarbeitet werden. Ich will nur, dass die Events pro Frame einmal betrachet werden. Auch will sich \texttt{run()} nicht um die Reihenfolge kümmern, wie die Sprites auf den Bildschirm gezeichnet werden. Das soll die Methode \texttt{draw()} erledigen. Die Methode \texttt{run()} stellt nur sicher, dass zuerst die Sprites ihre neuen Zustände berechnen und dann die Ausgabe erfolgt.
 
@@ -78,11 +78,11 @@ Die Spritegruppe ist eine Liste von \texttt{Sprite}-Objekten. Die Klasse \texttt
 
 Es bietet sich vielmehr an, die Methode \texttt{update()} anzupassen. Schaut man sich die \gls{signatur} der Methode \texttt{pygame.sprite.Sprite.update()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{update()}}\randnotiz{update()} genauer an, so sehen Sie, dass hier eigentlich frei definierbare Übergabeparameter vorgesehen sind.  Ich habe mir angewöhnt, einen Parameter mit Namen \texttt{action} zu benutzen, um Methoden der Kindklasse aufzurufen. So wird \texttt{change\_direction()} nach \zeiref{srcInvader06e02} durch \texttt{update()} aufgerufen und nicht mehr von außen.
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06e.py}{25}{30}{python}{\texttt{Defender.update()}}{srcInvader06e1}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06e.py}{24}{29}{python}{\texttt{Defender.update()}}{srcInvader06e1}
 
 Der Aufruf erfolgt dann in \srcref[vref]{srcInvader06e2} in \zeiref{srcInvader06e03} indirekt durch die Verwendung des Übergabeparameters.
 
-\lstsource{SRC/00 Einführung/05 Sprite/invader06e.py}{79}{82}{python}{\texttt{Game.update()}}{srcInvader06e2}
+\lstsource{SRC/00 Einführung/05 Sprite/invader06e.py}{78}{81}{python}{\texttt{Game.update()}}{srcInvader06e2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Was war neu?}

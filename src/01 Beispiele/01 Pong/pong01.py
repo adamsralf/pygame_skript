@@ -1,5 +1,5 @@
 from time import time
-from typing import Any, Tuple
+from typing import Tuple
 
 import pygame
 
@@ -18,21 +18,20 @@ class Background(pygame.sprite.Sprite):
         self.image.fill("darkred")
         self._paint_net()
 
-    def _paint_net(self) -> None:  # Tennisnetz§\label{srcPong0101}§
+    def _paint_net(self) -> None:
         net_rect = pygame.rect.Rect(0, 0, 0, 0)
         net_rect.centerx = Settings.WINDOW.centerx
         net_rect.top = 50
         net_rect.size = (3, 30)
-        while net_rect.bottom < Settings.WINDOW.bottom:
+        while net_rect.bottom < Settings.WINDOW.bottom:  # Netz als Folge von Rechtecken §\label{srcPong0101}§
             pygame.draw.rect(self.image, "grey", net_rect, 0)
             net_rect.move_ip(0, 40)
 
 
 class Game:
     def __init__(self):
-        pygame.init()
-        self._display = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("My Kind of Pong")
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
         self._background = pygame.sprite.GroupSingle(Background())
         self._running = True
@@ -53,8 +52,8 @@ class Game:
         pass
 
     def draw(self):
-        self._background.draw(self._display)
-        pygame.display.update()
+        self._background.draw(self._screen)
+        self._window.flip()
 
     def watch_for_events(self):
         for event in pygame.event.get():
@@ -66,8 +65,7 @@ class Game:
 
 
 def main():
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

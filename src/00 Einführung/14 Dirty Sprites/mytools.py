@@ -13,11 +13,11 @@ class Timer:
             duration (int): duration of the time interval in milli seconds
             with_start (bool, optional): Controls if the first period will count (True) or not (False). Defaults to True.
         """
-        self.duration = duration
+        self._duration = duration
         if with_start:
             self._next = pygame.time.get_ticks()
         else:
-            self._next = pygame.time.get_ticks() + self.duration
+            self._next = pygame.time.get_ticks() + self._duration
 
     def is_next_stop_reached(self) -> bool:
         """Checks if the end of a time period is reached or exceeded.
@@ -26,32 +26,32 @@ class Timer:
             bool: True if the end of the period is reached or exceeded; otherwise False
         """
         if pygame.time.get_ticks() > self._next:
-            self._next = pygame.time.get_ticks() + self.duration
+            self._next = pygame.time.get_ticks() + self._duration
             return True
         return False
 
 
 class Animation(object):
     def __init__(self, spritelist: list[pygame.surface.Surface], endless: bool, animationtime: int, colorkey: None | str | list[int] = None) -> None:
-        self.images = spritelist
-        self.endless = endless
-        self.timer = Timer(animationtime)
-        self.imageindex = -1
+        self._images = spritelist
+        self._endless = endless
+        self._timer = Timer(animationtime)
+        self._imageindex = -1
 
     def next(self) -> pygame.surface.Surface:
-        if self.timer.is_next_stop_reached():
-            self.imageindex += 1
-            if self.imageindex >= len(self.images):
-                if self.endless:
-                    self.imageindex = 0
+        if self._timer.is_next_stop_reached():
+            self._imageindex += 1
+            if self._imageindex >= len(self._images):
+                if self._endless:
+                    self._imageindex = 0
                 else:
-                    self.imageindex = len(self.images) - 1
-        return self.images[self.imageindex]
+                    self._imageindex = len(self._images) - 1
+        return self._images[self._imageindex]
 
     def is_ended(self) -> bool:
-        if self.endless:
+        if self._endless:
             return False
-        elif self.imageindex >= len(self.images) - 1:
+        elif self._imageindex >= len(self._images) - 1:
             return True
         else:
             return False

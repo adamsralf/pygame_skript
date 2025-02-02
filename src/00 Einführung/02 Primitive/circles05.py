@@ -1,11 +1,10 @@
-import os
 from random import randint
 
 import pygame
 
 
 class Circle:
-    gravity = 0.3
+    GRAVITY = 0.3
 
     def __init__(self, pos) -> None:
         self.posx = pos[0] + randint(-2, 2)
@@ -14,30 +13,28 @@ class Circle:
         self.color = [randint(100, 255), randint(50, 255), 0]
         self.speedx = randint(-10, 10) / 10.01
         self.speedy = randint(-100, 0) / 10.01
-        self.todelete = False               # Löschflag §\label{srcCircles0500}§
+        self.todelete = False                       # Löschflag §\label{srcCircles0500}§
 
-    def update(self):
-        self.speedy += Circle.gravity
+    def update(self, window: pygame.Window) -> None:
+        self.speedy += Circle.GRAVITY
         self.posx += self.speedx
         self.posy += self.speedy
-        if self.posx - self.radius < 0:     # links raus §\label{srcCircles0501}§
+        if self.posx - self.radius < 0:             # links raus §\label{srcCircles0501}§
             self.todelete = True
-        elif self.posx + self.radius > pygame.display.get_window_size()[0]:  # rechts raus§\label{srcCircles0502}§
+        elif self.posx + self.radius > window.size[0]:  # rechts raus§\label{srcCircles0502}§
             self.todelete = True
-        elif self.posy - self.radius > pygame.display.get_window_size()[1]:  # unten raus§\label{srcCircles0503}§
+        elif self.posy - self.radius > window.size[1]:  # unten raus§\label{srcCircles0503}§
             self.todelete = True
 
-    def draw(self):
-        screen = pygame.display.get_surface()
+    def draw(self, screen: pygame.surface.Surface) -> None:
         pygame.draw.circle(screen, self.color, (self.posx, self.posy), self.radius)
 
 
 def main():
     size = (300, 600)
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-    pygame.display.set_caption('Partikelschwarm')
-    screen = pygame.display.set_mode(size)
+    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []
 
@@ -48,22 +45,22 @@ def main():
                 running = False
 
         if pygame.mouse.get_pressed()[0]:
-            for i in range(5):              # 5 Partikel gleichzeitig§\label{srcCircles0504}§
+            for i in range(5):                      # 5 Partikel gleichzeitig§\label{srcCircles0504}§
                 circles.append(Circle(pygame.mouse.get_pos()))
 
-        todelete = []                       # Zwischenspeicher§\label{srcCircles0505}§
+        todelete = []                               # Zwischenspeicher§\label{srcCircles0505}§
         for p in circles:
-            p.update()
-            if p.todelete:                  # Zu löschen?§\label{srcCircles0506}§
+            p.update(window)
+            if p.todelete:                          # Zu löschen?§\label{srcCircles0506}§
                 todelete.append(p)
-        for p in todelete:                  # Löschen§\label{srcCircles0507}§
+        for p in todelete:                          # Löschen§\label{srcCircles0507}§
             circles.remove(p)
 
         screen.fill("white")
         for p in circles:
-            p.draw()
+            p.draw(screen)
 
-        pygame.display.flip()
+        window.flip()
         clock.tick(60)
 
     pygame.quit()

@@ -1,14 +1,14 @@
-import os
-
 import pygame
 import pygame.gfxdraw  # Muss sein! §\label{srcPrimitives15}§
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-    pygame.display.set_caption('Mein zweites Pygame-Programm')
-    screen = pygame.display.set_mode((530, 530))
+    window = pygame.Window( size=(530, 530), 
+                            title = "Mein zweites Pygame-Programm", 
+                            position = (10, 50))         
+    screen = window.get_surface()                   
+
     clock = pygame.time.Clock()
 
     mygrey = pygame.Color(200, 200, 200)                     # Eigene Farben §\label{srcPrimitives01}§
@@ -38,7 +38,7 @@ def main():
                 screen.fill((i, j, 255), ((10+i, 265+j), (1, 1)) )       # Variante 2 §\label{srcPrimitives13}§
                 pygame.gfxdraw.pixel(screen, 265+i, 265+j, (i, 255, j))  # Variante 3 §\label{srcPrimitives14}§
 
-        pygame.display.flip()
+        window.flip()
         clock.tick(60)
 
     pygame.quit()

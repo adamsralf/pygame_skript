@@ -128,7 +128,7 @@ Das Ergebnis ist unspektakulär (siehe \abbref[vref]{picInvader05}) und hat noch
 
 Bewegung wird in Spielen durch veränderte Positionen animiert. Soll das Raumschiff sich nach rechts bewegen, muss sich daher die horizontale Koordinate des Schiffs erhöhen. Welche horizontale Koordinate Sie dazu verwenden -- \texttt{left}, \texttt{right} oder \texttt{centerx} --, können Sie von ihrer Spiellogik abhängig machen. In unserem Beispiel ist das egal; ich nehme daher \texttt{left}.
 
-\lstset{firstnumber=38}
+\lstset{firstnumber=32}
 \begin{lstlisting}
 defender_rect.left = defender_rect.left + 1
 \end{lstlisting}
@@ -140,9 +140,9 @@ Allein diese kleine Ergänzung lässt unser Raumschiff nun nach rechts wandern. 
 	\item \textbf{Geschwindigkeit:}\randnotiz{Ge\-schwin\-dig\-keit}\index{Geschwindigkeit} Die \texttt{1} legt fest, um welche Größenordnung sich \texttt{left} verändert. Je größer der Wert ist, desto größer sind die Sprünge zwischen den Frames; die Bewegung erscheint schneller. 
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{24}{40}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05b.py}{15}{35}{python}{Bitmaps bewegen, Version 1.2}{srcInvader05b}
 
-Diese beiden Informationen werden nun in \srcref[vref]{srcInvader05b} dazu genutzt, die Bewegung erheblich flexibler zu gestalten. In \zeiref{srcInvader0505} die Geschwindigkeit nun durch die Variable \texttt{defender\_speed} repräsentiert. So könnten wir im Laufe des Spiels die Geschwindigkeit dynamisch gestalten, z.B. bei einer Beschleunigung durch Raketentreibstoffausstoß. 
+Diese beiden Informationen werden nun in \srcref[vref]{srcInvader05b} dazu genutzt, die Bewegung erheblich flexibler zu gestalten. In \zeiref{srcInvader0505} wird die Geschwindigkeit nun durch die Variable \texttt{defender\_speed} repräsentiert. So könnten wir im Laufe des Spiels die Geschwindigkeit dynamisch gestalten, z.B. bei einer Beschleunigung durch Raketentreibstoffausstoß.
 
 Die Richtung wird in \zeiref{srcInvader0506} ebenfalls in einer Variablen abgelegt: \texttt{defender\_direction}. Derzeit ist sie positiv, aber wir werden schon bald sehen, dass wir diese auch für Richtungswechsel nutzen können.
 
@@ -150,9 +150,11 @@ Beide Informationen können nun in \zeiref{srcInvader0507} zur Berechnung der ne
 
 Wenn Sie das Programm laufen lassen, verabschiedet sich der Verteidiger nach einiger Zeit und verschwindet hinter dem rechten Bildschirmrand und ward nicht mehr gesehen. Nutzen wir nun unser Rechteck zu einer ersten einfachen Kollisionsprüfung. Ich möchte, dass das Raumschiff von den Rändern \emph{abprallt} und die Richtung wechselt. 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{35}{40}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05c.py}{30}{35}{python}{Bitmaps bewegen, Version 1.3}{srcInvader05c}
 
 Ich hoffe, dass Sie die Idee hinter dem Code erkennen. Nach Berechnung der neuen horizontalen Position, wird in \zeiref{srcInvader0508} überprüft, ob der neue rechte Rand des Bitmaps die rechte Bildschirmseite erreicht oder überschreitet. Wenn ja, dann wird einfach das Vorzeichen der Richtungsvariable vertauscht\index{Richtungswechsel}\randnotiz{Rich\-tungs\-wechs\-el}! Analog klappt das beim Erreichen des linken Bildschirmrandes. 
+
+%Das Bitmap könnte dabei über den rechten bzw. linken Rand hinausreichen. Deshalb wird das Bitmap am jeweiligen Rand ausgerichtet. 
 
 Probieren Sie doch mal aus, das Ganze mit einer vertikalen Bewegung zu kombinieren.
 
@@ -160,13 +162,13 @@ Ein Problem habe ich noch: In \zeiref{srcInvader0507} wird die neue Position dem
 
 Wir sollten somit die neue Position überprüfen und erst dann diese dem \texttt{Rect}-Objekt \texttt{defender\_rect} zuweisen. Führen wir in diesem Zusammenhang eine recht nützliche Methode der \texttt{Rect}-Klasse ein: \texttt{pygame.rect.Rect.move()}\myindex{pyg}{\texttt{rect}!\texttt{Rect}!\texttt{move()}|underline}\randnotiz{move()}.
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{35}{42}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05d.py}{30}{38}{python}{Bitmaps bewegen, Version 1.4}{srcInvader05d}
 
 Die neue Funktion taucht in \zeiref{srcInvader0510} zum ersten Mal auf. Sie hat zwei Parameter. Mit dem ersten wird die Verschiebung der horizontalen Koordinate angegeben und mit der zweiten die vertikale Verschiebung. Da wir keine Höhenposition ändern wollen, ist dieser Parameter in unserem Beispiel konstant~0. Als Rückgabe liefert die Funktion ein neues \texttt{Rect}-Objekt mit den neuen Positionsangaben. Dieses speichern wir in \texttt{newpos} zwischen.
 
-Die nachfolgenden Kollisionsprüfungen werden dann mit dem \texttt{newpos}-Rechteck durchgeführt. Bei einer Kollision werden wie eben die Richtungswerte verändert. Falls keine Kollision mit dem Rand vorliegt, wird \texttt{newpos} zu unserem neuen Rechteck für den Verteidiger (\zeiref{srcInvader0511}).
+Die nachfolgenden Kollisionsprüfungen werden dann mit dem \texttt{newpos}-Rechteck durchgeführt. Bei einer Kollision werden wie eben die Richtungswerte verändert. Ebenso wird der linke Rand des Bitmap am linken Bildschirmrand ausgerichtet und der rechte am rechten. Danach wird \texttt{newpos} zu unserem neuen Rechteck für den Verteidiger (\zeiref{srcInvader0511}).
 
-Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eben nicht verändert, sondern erst im nächsten Frame.
+%Wenn Sie jetzt das Programm ausführen, wird die Position bei einer Kollision eben nicht verändert, sondern erst im nächsten Frame.
 
 \begin{figure}[H]
 \begin{center}
@@ -210,7 +212,7 @@ Innerhalb der Hauptprogrammschleife wandert das Raumschiff nun pro Frame eine ge
 
 Nach einer festen Zeitspanne (\texttt{Settings.LIMIT}, hier $500~ms$) wird die Richtung in \texttt{defender\_direction} auf~0 gesetzt, so dass die Bewegung stoppt. Dazu wird in \zeiref{srcInvader05e04} abgefragt, ob die aktuelle Anzahl von Millisekunden seit dem Start des Programmes größer als \texttt{start\_time} plus \texttt{Settings.LIMIT} ist. Oder in Zahlen: Beim ersten Schleifendurchlauf (Frame~1) stünde dort beispielsweise die Abfrage \emph{Sind $17~ms$ größer als $5~ms + 500~ms$}. Die Antwort ist \emph{Nein}, so dass das Raumschiff sich nach oben bewegt. Bei Frame~61 stünde dort die Abfrage \emph{Sind $508~ms$ größer als $5~ms + 500~ms$}. Nun ist die Antwort \emph{Ja} und die Richtungsvariable wird deshalb auf~0 gesetzt, die Bewegung stoppt.
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05e.py}{7}{53}{python}{Nicht normalisierte Bewegung}{srcInvader05e}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05e.py}{5}{49}{python}{Nicht normalisierte Bewegung}{srcInvader05e}
 
 In \abbref[vref]{fpsbewegung00} können Sie Bildschirmfotos der Strecken sehen, die das Raumschiff nach einer halben Sekunde zurückgelegt hat. In allen Experimenten blieb die Geschwindigkeit \texttt{defender\_speed} immer gleich -- nämlich 2. Nur die Framerate hat sich erhöht.
 
@@ -303,12 +305,12 @@ In \tabref[vref]{tabFpsBewegung03} habe ich mal berechnet, welche Endposition (\
 
 \tabref{tabFpsBewegung03} sieht zwar kompliziert aus, die Umsetzung ist aber überraschend einfach. In \zeiref{srcInvader05f01} wird der Korrekturwert -- wie oben besprochen -- als Inverses von der Framerate definiert. Die Geschwindigkeit wird von~2 auf~600 in \zeiref{srcInvader05f02} angepasst und in \zeiref{srcInvader05f03} wird der Korrekturwert \texttt{DELTATIME} in Berechnung als Faktor eingebaut. Das war's; in \abbref[vref]{fpsbewegung01} können wir das \emph{perfekte} Ergebnis auf einem meiner langsameren Rechner bewundern. 
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05f.py}{7}{55}{python}{Normalisierte Bewegung mit $1/fps$}{srcInvader05f}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05f.py}{5}{51}{python}{Normalisierte Bewegung mit $1/fps$}{srcInvader05f}
 
-Zwei Probleme verursachen diese Fehler:
+Zwei Probleme verursachen den Fehler in \abbref[vref]{fpsbewegung01}:
 
 \begin{itemize}
-    \item Rundungsfehler: Eigentlich sollte die Multiplikation der Framerate mit der Deltatime immer~$1.0$ ergeben. Das passiert leider aber nicht. Bei der Berechnung der Deltatime wird wegen des Formats einer \gls{float}\randnotiz{Rundungsfehler} ein Wert nahe des tatsächlichen Wertes abgespeichert; also beispielsweise bei $\frac{1.0}{30.0}$ nicht $0.0\overline{3}$, sondern $0.03333333333333330$. Dieser Rundungsfehler addiert sich im Laufe der Zeit zu wahrnehmbaren Größen auf.
+    \item Rundungsfehler: Eigentlich sollte die Multiplikation der Framerate mit der Deltatime immer~$1.0$ ergeben. Das passiert leider aber nicht. Bei der Berechnung der Deltatime wird wegen der Kodierung einer \gls{float}\randnotiz{Rundungsfehler} ein Wert nahe des tatsächlichen Wertes abgespeichert; also beispielsweise bei $\frac{1.0}{30.0}$ nicht $0.0\overline{3}$, sondern $0.03333333333333330$. Dieser Rundungsfehler addiert sich im Laufe der Zeit zu wahrnehmbaren Größen auf.
 
     \item Falsches Verständnis von $fps$: Die Framerate definiert nicht, dass \emph{immer} die Hauptprogrammschleife beispielsweise 60 mal in der Sekunde durchlaufen wird, sondern dass sie \emph{maximal} 60 mal in der Sekunde durchlaufen wird. Nimmt die Spiellogik oder das Zeichnen der Oberfläche mehr Zeit in Anspruch als $1/60~s$, so wird mindestens ein Frame übersprungen. Dies tritt auch auf, wenn der Rechner durch andere Operationen (z.B. einer Cloud-Sync) Performance verliert. 
 \end{itemize}
@@ -318,7 +320,7 @@ Das erste Problem können wir nicht ohne erheblichen Performaceverlust lösen un
 \myebild{fehler_invers.pdf}{1.0}{Vergleich des Positionsfehlers von $1/fps$ und \texttt{pygame.clock.tick()}}{picFehlerInvers}
 
 \newpage
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05g.py}{47}{52}{python}{Normalisierte Bewegung mit \texttt{pygame.clock.tick()}}{srcInvader05g}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05g.py}{47}{49}{python}{Normalisierte Bewegung mit \texttt{pygame.clock.tick()}}{srcInvader05g}
 
 Ursache ist ein Problem, welches wir hätten sofort lösen müssen. Bei der Zuweisung in \zeiref{srcInvader05f03} in \srcref[vref]{srcInvader05f} steht auf der rechten Seite eine Fließkommazahl\index{float} und auf der linken ein \gls{int}\index{int}. Dies führt dazu, dass die Nachkommastellen bei jedem Schleifendurchlauf abgeschnitten werden. Würde beispielsweise in jedem Frame das Raumschiff sich um $5.8~px$ bewegen müssen, entstünden diese Werte:
 
@@ -343,7 +345,7 @@ Seit kurzem gibt es in Pygame eine Variante von \texttt{Rect}, nämlich \texttt{
 
 \newpage
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{14}{57}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05h.py}{12}{49}{python}{Normalisierte Bewegung mit Positionsangaben in float}{srcInvader05h}
 
 In \abbref[vref]{fpsbewegung03}  können wir sehen, dass das Ergebnis schon deutlich besser geworden ist. Auch hat sich die Abweichung von optimalen Wert~315 dramatisch verbessert. In \abbref[vref]{picFehlerFloat} wird der Unterschied sichtbar gemacht.
 
@@ -423,7 +425,7 @@ In \zeiref{srcInvader05i02} wird nach Ablauf eines Frame die aktuelle Zeit gemes
 \end{figure}
 \newpage
 
-\lstsource{SRC/00 Einführung/04 Bewegung/invader05i.py}{15}{60}{python}{Normalisierte Bewegung mit \texttt{time.time()}}{srcInvader05i}
+\lstsource{SRC/00 Einführung/04 Bewegung/invader05i.py}{14}{55}{python}{Normalisierte Bewegung mit \texttt{time.time()}}{srcInvader05i}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

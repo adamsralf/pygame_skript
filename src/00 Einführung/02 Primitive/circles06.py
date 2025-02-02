@@ -1,12 +1,11 @@
-import os
 from random import randint
 
 import pygame
 
 
 class Circle:
-    gravity = 0.3
-    radius_inc = -0.1                                       # Radiusinkrement§\label{srcCircles0600}§
+    GRAVITY = 0.3
+    RADIUS_INC = -0.1                                       # Radiusinkrement§\label{srcCircles0600}§
 
     def __init__(self, pos) -> None:
         self.posx = pos[0] + randint(-4, 4)                 # Veränderte Streuung§\label{srcCircles0601}§
@@ -17,31 +16,29 @@ class Circle:
         self.speedy = randint(-100, 0) / 10.01
         self.todelete = False
 
-    def update(self):
-        self.speedy -= Circle.gravity
+    def update(self, window: pygame.Window) -> None:
+        self.speedy -= Circle.GRAVITY
         self.posx += self.speedx
         self.posy += self.speedy
-        self.radius += Circle.radius_inc
+        self.radius += Circle.RADIUS_INC
         if self.posx - self.radius < 0:
             self.todelete = True
-        elif self.posx + self.radius > pygame.display.get_window_size()[0]:
+        elif self.posx + self.radius > window.size[0]:
             self.todelete = True
-        elif self.posy - self.radius > pygame.display.get_window_size()[1]:
+        elif self.posy - self.radius > window.size[1]:
             self.todelete = True
         elif self.radius <= 0.0:                            # Können raus§\label{srcCircles0603}§
             self.todelete = True
 
-    def draw(self):
-        screen = pygame.display.get_surface()
+    def draw(self, screen: pygame.surface.Surface) -> None:
         pygame.draw.circle(screen, self.color, (self.posx, self.posy), self.radius)
 
 
 def main():
     size = (300, 600)
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-    pygame.display.set_caption('Partikelschwarm')
-    screen = pygame.display.set_mode(size)
+    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []
 
@@ -57,7 +54,7 @@ def main():
 
         todelete = []
         for p in circles:
-            p.update()
+            p.update(window)
             if p.todelete:
                 todelete.append(p)
         for p in todelete:
@@ -65,9 +62,9 @@ def main():
 
         screen.fill("white")
         for p in circles:
-            p.draw()
+            p.draw(screen)
 
-        pygame.display.flip()
+        window.flip()
         clock.tick(60)
 
     pygame.quit()

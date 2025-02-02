@@ -4,13 +4,12 @@ from time import time
 from typing import Any, Dict
 
 import pygame
-from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
 
 
 class Settings:
     WINDOW = pygame.rect.Rect(0, 0, 1220, 1002)
     FPS = 60
-    DELTATIME = 1.0/FPS
+    DELTATIME = 1.0 / FPS
     PATH: Dict[str, str] = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
@@ -20,7 +19,6 @@ class Settings:
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
     MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000  # Erfahrungswert§\label{srcBubble0301}§
-
 
     @staticmethod
     def get_file(filename: str) -> str:
@@ -33,7 +31,6 @@ class Settings:
     @staticmethod
     def get_sound(filename: str) -> str:
         return os.path.join(Settings.PATH["sound"], filename)
-
 
 
 class Timer:
@@ -51,14 +48,13 @@ class Timer:
         return False
 
 
-class Background(pygame.sprite.DirtySprite):
+class Background(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         imagename = Settings.get_image("aquarium.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
         self.image = pygame.transform.scale(self.image, Settings.WINDOW.size)
         self.rect = self.image.get_rect()
-        self.dirty = 1
 
 
 class Bubble(pygame.sprite.DirtySprite):
@@ -69,7 +65,6 @@ class Bubble(pygame.sprite.DirtySprite):
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.image = pygame.transform.scale(self.image, (Settings.RADIUS["min"], Settings.RADIUS["min"]))
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.dirty = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         pass
@@ -84,27 +79,26 @@ class Bubble(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.CAPTION)
+        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
-        self._background = Background()
+        self._background = pygame.sprite.GroupSingle(Background())
         self._timer_bubble = Timer(500, False)
-        self._all_sprites = pygame.sprite.LayeredDirty()
-        self._all_sprites.clear(self._screen, self._background.image)
-        self._all_sprites.set_timing_treshold(1000.0/Settings.FPS)
+        self._all_sprites = pygame.sprite.Group()
         self._running = True
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 self._running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self._running = False
 
     def draw(self) -> None:
-        rects = self._all_sprites.draw(self._screen)
-        pygame.display.update(rects)
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
+        self._window.flip()
 
     def update(self) -> None:
         self.spawn_bubble()
@@ -137,9 +131,7 @@ class Game:
 
 
 def main():
-    os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

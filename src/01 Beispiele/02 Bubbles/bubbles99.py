@@ -4,6 +4,7 @@ Credits:
  * Fishtank image: https://www.pngwing.com/en/free-png-vadpk
  * Sound: https://www.fesliyanstudios.com/royalty-free-sound-effects-download
 """
+
 import os
 from math import sqrt
 from random import randint
@@ -11,7 +12,6 @@ from time import time
 from typing import Any, Dict, Tuple
 
 import pygame
-from pygame.constants import K_ESCAPE, KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, K_j, K_n, K_p
 
 
 class Settings:
@@ -29,18 +29,6 @@ class Settings:
     MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000
     BOX = pygame.rect.Rect(90, 770, 1055, 1300)
     POINTS = 0
-
-    @staticmethod
-    def get_file(filename: str) -> str:
-        return os.path.join(Settings.PATH["file"], filename)
-
-    @staticmethod
-    def get_image(filename: str) -> str:
-        return os.path.join(Settings.PATH["image"], filename)
-
-    @staticmethod
-    def get_sound(filename: str) -> str:
-        return os.path.join(Settings.PATH["sound"], filename)
 
     @staticmethod
     def get_file(filename: str) -> str:
@@ -134,7 +122,7 @@ class Timer:
         return False
 
 
-class Background:
+class Background(pygame.sprite.Sprite):
     """Sprite class with nearly no function for drawing the background image."""
 
     def __init__(self) -> None:
@@ -146,7 +134,7 @@ class Background:
         self.rect = self.image.get_rect()
 
 
-class Message(pygame.sprite.DirtySprite):
+class Message(pygame.sprite.Sprite):
     """Draws a shadow and a text in the foreground of the game."""
 
     def __init__(self, filename: str) -> None:
@@ -154,10 +142,9 @@ class Message(pygame.sprite.DirtySprite):
         imagename = Settings.get_image(filename)
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.rect = self.image.get_rect()
-        self.dirty = 1
 
 
-class Bubble(pygame.sprite.DirtySprite):
+class Bubble(pygame.sprite.Sprite):
     """The sprite class of the bubble."""
 
     def __init__(self, speed: int) -> None:
@@ -167,7 +154,6 @@ class Bubble(pygame.sprite.DirtySprite):
         self.radius = Settings.RADIUS["min"]
         self.image = Game.BUBBLE_CONTAINER[self.mode].get(self.radius)
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.dirty = 1
         self.fradius = float(self.radius)
         self.speed = speed
 
@@ -189,7 +175,6 @@ class Bubble(pygame.sprite.DirtySprite):
                 self.image = Game.BUBBLE_CONTAINER[self.mode].get(self.radius)
                 self.rect = self.image.get_rect()
                 self.rect.center = center
-                self.dirty = 1
             elif kwargs["action"] == "sting":
                 self.stung()
         elif "mode" in kwargs.keys():
@@ -202,7 +187,6 @@ class Bubble(pygame.sprite.DirtySprite):
             mode (str): "red" oder "blue"
         """
         if mode != self.mode:
-            self.dirty = 1
             self.mode = mode
             self.image = Game.BUBBLE_CONTAINER[self.mode].get(self.radius)
 
@@ -219,7 +203,7 @@ class Bubble(pygame.sprite.DirtySprite):
         Settings.POINTS += self.radius
 
 
-class Points(pygame.sprite.DirtySprite):
+class Points(pygame.sprite.Sprite):
     """Class in order to generate a image of the score."""
 
     def __init__(self) -> None:
@@ -227,7 +211,6 @@ class Points(pygame.sprite.DirtySprite):
         super().__init__()
         self._font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.oldpoints = -1
-        self.dirty = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         """Let the bubble grow.
@@ -241,7 +224,6 @@ class Points(pygame.sprite.DirtySprite):
             self.rect = self.image.get_rect()
             self.rect.left = Settings.BOX.left
             self.rect.top = Settings.BOX.top
-            self.dirty = 1
 
 
 class Game:
@@ -253,18 +235,16 @@ class Game:
     def __init__(self) -> None:
         """Constructor."""
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.CAPTION)
+        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
         Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("blase1.png")
         Game.BUBBLE_CONTAINER["red"] = BubbleContainer("blase2.png")
-        Game.SOUND_CONTAINER["bubble"] = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))
+        Game.SOUND_CONTAINER["bubble"] = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))  # §\label{srcBubble1302}§
         Game.SOUND_CONTAINER["burst"] = pygame.mixer.Sound(Settings.get_sound("burst.mp3"))
         Game.SOUND_CONTAINER["clash"] = pygame.mixer.Sound(Settings.get_sound("glas.wav"))
-        self._background = Background()
-        self._all_sprites = pygame.sprite.LayeredDirty()
-        self._all_sprites.clear(self._screen, self._background.image)
-        self._all_sprites.set_timing_treshold(1000.0 / Settings.FPS)
+        self._background = pygame.sprite.GroupSingle(Background())
+        self._all_sprites = pygame.sprite.Group()
         self._running = True
         self._pausing = False
         self._pause = Message("pause.png")
@@ -275,32 +255,33 @@ class Game:
     def watch_for_events(self) -> None:
         """Looking for any type of event and poke a reaction."""
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 self._running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self._running = False
-            elif event.type == KEYUP:
-                if event.key == K_p:
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_p:
                     self.setpause()
-                elif event.key == K_j:
+                elif event.key == pygame.K_j:
                     self._do_start = True
-                elif event.key == K_n:
+                elif event.key == pygame.K_n:
                     self._running = False
-            elif event.type == MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 3:
                     self.setpause()
-            elif event.type == MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # left
                     self.sting(pygame.mouse.get_pos())
 
     def draw(self) -> None:
         """Draws all sprite on the screen."""
-        rects = self._all_sprites.draw(self._screen)
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
         # pygame.draw.rect(self._screen, "red", Settings.playground, 2)
         # for b in self._all_bubbles:
         #     pygame.draw.rect(self._screen, "red", b.rect, 2)  # type: ignore
-        pygame.display.update(rects)  # type: ignore
+        self._window.flip()
 
     def update(self) -> None:
         """This method is responsible for the main game logic."""
@@ -425,14 +406,11 @@ class Game:
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
-        # pygame.time.wait(2000)
         pygame.quit()
 
 
 def main():
-    os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

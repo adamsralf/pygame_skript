@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import pygame
@@ -22,7 +21,7 @@ class Defender(pygame.sprite.Sprite):
         self.speed = 300
 
     def update(self) -> None:
-        self.rect.move_ip(self.speed * Settings.DELTATIME, 0)   # §\label{srcInvader06b01}§
+        self.rect.move_ip(self.speed * Settings.DELTATIME, 0)  # §\label{srcInvader06b01}§
 
     def draw(self, screen: pygame.surface.Surface) -> None:
         screen.blit(self.image, self.rect)
@@ -38,7 +37,7 @@ class Border(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.width))
         self.rect = self.image.get_rect()
-        if leftright == 'right':
+        if leftright == "right":
             self.rect.left = Settings.WINDOW.width - self.rect.width
 
     def draw(self, screen: pygame.surface.Surface) -> None:
@@ -46,15 +45,14 @@ class Border(pygame.sprite.Sprite):
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Sprite")
+    window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
+
     defender = Defender()
-    border_left = Border('left')
-    border_right = Border('right')
+    border_left = Border("left")
+    border_right = Border("right")
 
     time_previous = time()
     running = True
@@ -76,7 +74,7 @@ def main():
         defender.draw(screen)
         border_left.draw(screen)
         border_right.draw(screen)
-        pygame.display.flip()
+        window.flip()
 
         clock.tick(Settings.FPS)
         time_current = time()
@@ -86,5 +84,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

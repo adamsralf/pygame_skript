@@ -149,19 +149,19 @@ Die Klasse \texttt{Bullet} ähnelt in Vielem der Klasse \texttt{Obstacle}. Da wi
 
 Und jetzt die Klasse \texttt{Game}. Im Konstruktor passieren die üblichen Dinge. Besonders erwähnenswert ist hier eigentlich nichts.
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{68}{83}{python}{Kollisionsarten (4): Konstruktor von \texttt{Game}, Konstruktor}{srcKollision00d} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{68}{82}{python}{Kollisionsarten (4): Konstruktor von \texttt{Game}, Konstruktor}{srcKollision00d} 
 
 Auch die Methoden \texttt{run()} und \texttt{watch\_for\_events()} folgen ausgetretenen Pfaden.
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{85}{117}{python}{Kollisionsarten (5): \texttt{run()} und \texttt{watch\_for\_events()} von \texttt{Game}}{srcKollision00e} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{84}{115}{python}{Kollisionsarten (5): \texttt{run()} und \texttt{watch\_for\_events()} von \texttt{Game}}{srcKollision00e} 
 
 Ebenso so \texttt{update()} und \texttt{draw()};
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{119}{130}{python}{Kollisionsarten (6): \texttt{update()} und \texttt{draw()} von \texttt{Game}}{srcKollision00f} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{118}{129}{python}{Kollisionsarten (6): \texttt{update()} und \texttt{draw()} von \texttt{Game}}{srcKollision00f} 
 
 Die Methode \texttt{resize()} hat nichts mit der eigentlichen Kollisionsprüfung zu tun, sondern soll nur sicherstellen, dass die \texttt{Obstacle}-Objekte äquidistant auf die Fensterbreite verteilt werden. Die erste \forSchleife\ ermittelt mir die Summe der Breiten der \texttt{Obstacle}-Objekte. Diese Info brauche ich, um in \zeiref{srcKollision04} den Abstand auszurechnen. Dazu ziehe ich von der Fensterbreite \texttt{total\_width} ab. Diese Anzahl an Pixel kann nun auf die Zwischenräume verteilt werden. Und wie viele Zwischenräume haben wir? Zwei zwischen den drei \texttt{Obstacle}-Objekten, einen zum linken Rand und einen zum rechten; also sind es insgesamt vier Zwischenräume. Den Abstand merke ich mir in \texttt{padding}. Jetzt kann ich in der zweiten \forSchleife\ die linke Position der \texttt{Obstacle}-Objekte bestimmen und setzen.
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{132}{141}{python}{Kollisionsarten (7): \texttt{resize()} von \texttt{Game}}{srcKollision00g} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{131}{140}{python}{Kollisionsarten (7): \texttt{resize()} von \texttt{Game}}{srcKollision00g} 
 
 Und jetzt -- Trommelwirbel -- die eigentliche Kollisionsprüfung. Je nachdem welche Kollisionsprüfung wir eingestellt haben, wird innerhalb der \forSchleife\ die entsprechende Methode zur Kollisionsprüfung aufgerufen: \texttt{pygame.sprite.collide\_circle()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_circle()}|underline}, \texttt{pygame.\-sprite.\-collide\_mask()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_mask()}} oder \texttt{pygame.sprite.collide\_rect()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}}. Die Semantik ist eigentlich simpel. Den Methoden werden zwei \texttt{Sprite}-Objekte übergeben und sie liefern \true\ falls eine Kollision vorliegt, ansonsten \false. Dabei ist -- wie oben schon erwähnt -- darauf zu achten, dass die benutzte Methode auch die Infos im Sprite vorfindet, die sie braucht:
 
@@ -171,13 +171,13 @@ Und jetzt -- Trommelwirbel -- die eigentliche Kollisionsprüfung. Je nachdem wel
     \item \texttt{pygame.sprite.collide\_rect()}: \texttt{self.rect}
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{143}{152}{python}{Kollisionsarten (8): \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision00h} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision00.py}{142}{151}{python}{Kollisionsarten (8): \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision00h} 
 
 Noch ein Hinweis: Die Kollisionsprüfung mit Rechtecken einer Liste -- also kollidiert ein Sprite mit irgendeinem Sprite einer SpriteGroup -- wird so oft gebraucht, dass es dafür eine eigene Methode gibt: \texttt{pygame.sprite.spritecollide()}\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}}\randnotiz{spritecollide()}. Der erste Parameter ist ein einzelnes \texttt{Sprite}-Objekt -- hier unsere Feuerkugel. Der zweite Parameter ist die Liste von Sprites, in der nach einer Kollision gesucht werden soll. Der dritte Parameter regelt, ob die kollidierenden Objekte aus der Liste entfernt werden soll. Dies ist ganz nützlich, wenn beispielsweise das Hindernis durch Berührung verschwinden soll. 
 
 Hinweis: Die Methode hat noch einen vierten Parameter. Diesem kann man einen Funktionszeiger auf eine andere Kollisionsprüfungsmethode mitgeben. Diese Funktion muss zwei \texttt{Sprite}-Objekte als Parameter akzeptieren. Man kann also etwas Selbsterstelltes oder eine der drei Methoden \texttt{collide\_circle()}, \texttt{collide\_mask()} oder \texttt{collide\_rect()} verwenden. Wird hier nichts angegeben -- so wie in unserem Quelltext -- wird automatisch \texttt{collide\_rect()} verwendet.
 
-\lstsource{SRC/00 Einführung/09 Kollision/kollision01.py}{143}{153}{python}{Kollisionsarten (9): Variante von \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision01a} 
+\lstsource{SRC/00 Einführung/09 Kollision/kollision01.py}{142}{152}{python}{Kollisionsarten (9): Variante von \texttt{check\_for\_collision()} von \texttt{Game}}{srcKollision01a} 
 
 Und zu guter letzt noch der Aufruf:
 

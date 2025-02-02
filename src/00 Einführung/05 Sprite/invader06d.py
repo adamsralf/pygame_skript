@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import pygame
@@ -35,22 +34,22 @@ class Border(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
-        if leftright == 'right':
+        if leftright == "right":
             self.rect.right = Settings.WINDOW.right
 
 
 class Game(object):
 
     def __init__(self) -> None:
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("Sprite")
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+
         self.defender = pygame.sprite.GroupSingle(Defender())
         self.all_border = pygame.sprite.Group()
-        self.all_border.add(Border('left'))
-        self.all_border.add(Border('right'))
+        self.all_border.add(Border("left"))
+        self.all_border.add(Border("right"))
         self.running = False
 
     def run(self) -> None:
@@ -80,9 +79,9 @@ class Game(object):
         self.screen.fill((255, 255, 255))
         self.defender.draw(self.screen)
         self.all_border.draw(self.screen)
-        pygame.display.flip()
+        self.window.flip()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     game = Game()
     game.run()

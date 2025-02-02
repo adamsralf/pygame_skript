@@ -1,7 +1,4 @@
-import os
-
 import pygame
-from pygame.constants import K_DOWN, K_ESCAPE, K_UP, KEYDOWN, QUIT
 
 
 class Settings:
@@ -10,7 +7,7 @@ class Settings:
 
 
 class TextSprite(pygame.sprite.Sprite):
-    def __init__(self, fontname: str, fontsize: int = 24, fontcolor: list[int] = [255, 255, 255], text: str = '') -> None:
+    def __init__(self, fontname: str, fontsize: int = 24, fontcolor: list[int] = [255, 255, 255], text: str = "") -> None:
         super().__init__()
         self.image = None
         self.fontname = fontname
@@ -46,7 +43,7 @@ class BigImage(pygame.sprite.Sprite):
         self.image_total.fill((200, 200, 200))
         self.update(0)
 
-    def update(self, delta: int) -> None:                        # Ermittle der Ausschnitt §\label{srcTextoutputFontlist01}§
+    def update(self, delta: int) -> None:  # Ermittle der Ausschnitt §\label{srcTextoutputFontlist01}§
         if self.offset.top + delta >= 0:
             if self.offset.bottom + delta <= self.image_total.get_rect().height:
                 self.offset.move_ip(0, delta)
@@ -59,13 +56,12 @@ class BigImage(pygame.sprite.Sprite):
 
 
 def main():
-
     pygame.init()
+    window = pygame.Window(size=Settings.WINDOW.size, title="Fontliste", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Fontliste")
 
-    fonts = pygame.font.get_fonts()                 # Ermittle installierte Fonts §\label{srcTextoutputFontlist02}§
+    fonts = pygame.font.get_fonts()  # Ermittle installierte Fonts §\label{srcTextoutputFontlist02}§
 
     list_of_fontsprites = pygame.sprite.Group()
     height = 0
@@ -89,22 +85,22 @@ def main():
     running = True
     while running:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     running = False
-                if event.key == K_UP:
-                    bigimage.update(-Settings.WINDOW.height//3)
-                if event.key == K_DOWN:
-                    bigimage.update(Settings.WINDOW.height//3)
+                if event.key == pygame.K_UP:
+                    bigimage.update(-Settings.WINDOW.height // 3)
+                if event.key == pygame.K_DOWN:
+                    bigimage.update(Settings.WINDOW.height // 3)
 
         bigimage.draw(screen)
-        pygame.display.flip()
+        window.flip()
         clock.tick(Settings.FPS)
 
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

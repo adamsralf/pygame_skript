@@ -1,10 +1,9 @@
-import os
 from random import choice, randint
 from time import time
 from typing import Any, Tuple
 
 import pygame
-from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT, WINDOWPOS_CENTERED
 
 
 class MyEvents:
@@ -16,7 +15,7 @@ class MyEvents:
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 150))
     FPS = 60
-    DELTATIME = 1.0/FPS
+    DELTATIME = 1.0 / FPS
     STARTNOFPARTICLES = 500
     NEWNOFPARTICLES = 10
     NOFBOXES = 5
@@ -28,7 +27,7 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, text: str, position: Tuple[int], *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
         self.font = pygame.font.SysFont(None, 30)
-        self.centerxy = (Settings.WINDOW.centerx, self.font.get_height()//2)
+        self.centerxy = (Settings.WINDOW.centerx, self.font.get_height() // 2)
         self._text = text
         self.image = self.font.render(self._text, True, "black")
         self.rect = self.image.get_rect(topleft=(position))
@@ -52,7 +51,10 @@ class Particle(pygame.sprite.Sprite):
         self.image.fill((Particle.r, Particle.g, Particle.b))
         self._nextcolor()
         self.rect = pygame.rect.FRect(self.image.get_rect())
-        self.rect.topleft = (randint(30, Settings.WINDOW.right-30), randint(30, Settings.WINDOW.bottom-30), )
+        self.rect.topleft = (
+            randint(30, Settings.WINDOW.right - 30),
+            randint(30, Settings.WINDOW.bottom - 30),
+        )
         self._speed = randint(100, 400)
         self._direction = pygame.Vector2(choice((-1, 1)), choice((-1, 1)))
 
@@ -67,7 +69,7 @@ class Particle(pygame.sprite.Sprite):
                 Particle.halted = True
 
     def _move(self) -> None:
-        self.rect.move_ip(self._speed*self._direction*Settings.DELTATIME)
+        self.rect.move_ip(self._speed * self._direction * Settings.DELTATIME)
         if self.rect.left < 0:
             self._direction[0] *= -1
             self.rect.left = 0
@@ -123,11 +125,10 @@ class Box(pygame.sprite.Sprite):
 class Game:
 
     def __init__(self) -> None:
-        os.environ["SDL_VIDEO_WINDOW_POS"] = "650, 70"
         pygame.init()
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="Event (2)", position=WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("Event (2)")
         self._all_sprites = pygame.sprite.Group()
         self._all_particles = pygame.sprite.Group()
         self._generate_particles(Settings.STARTNOFPARTICLES)
@@ -136,7 +137,7 @@ class Game:
         self._all_buttons.add(Button("Stop", (100, Settings.WINDOW.bottom - 30), self._all_sprites))
         self._all_boxes = pygame.sprite.Group()
         self._generate_boxes(Settings.NOFBOXES)
-        pygame.time.set_timer(MyEvents.NEWPARTICLES, 500)       # Periodischer Timer §\label{srcEvent0201}§
+        pygame.time.set_timer(MyEvents.NEWPARTICLES, 500)  # Periodischer Timer §\label{srcEvent0201}§
         self._running = True
 
     def run(self) -> None:
@@ -164,9 +165,9 @@ class Game:
             elif event.type == MyEvents.BUTTONPRESSED:
                 self._all_particles.update(action=event.text)
             elif event.type == MyEvents.OVERFLOW:
-                if event.index < Settings.NOFBOXES-1:
-                    self._all_boxes.sprites()[event.index+1].update(counter="inc")
-            elif event.type == MyEvents.NEWPARTICLES:       # Periodisches Event §\label{srcEvent0202}§
+                if event.index < Settings.NOFBOXES - 1:
+                    self._all_boxes.sprites()[event.index + 1].update(counter="inc")
+            elif event.type == MyEvents.NEWPARTICLES:  # Periodisches Event §\label{srcEvent0202}§
                 self._generate_particles(Settings.NEWNOFPARTICLES)
 
     def update(self):
@@ -177,7 +178,7 @@ class Game:
     def draw(self) -> None:
         self._screen.fill("white")
         self._all_sprites.draw(self._screen)
-        pygame.display.update()
+        self._window.flip()
 
     def _generate_boxes(self, number: int) -> None:
         for i in range(number):
@@ -201,8 +202,7 @@ class Game:
 
 
 def main():
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

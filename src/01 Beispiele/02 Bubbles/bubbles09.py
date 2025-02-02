@@ -5,7 +5,6 @@ from time import time
 from typing import Any, Dict, Tuple
 
 import pygame
-from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 
 
 class Settings:
@@ -52,14 +51,13 @@ class Timer:
         return False
 
 
-class Background(pygame.sprite.DirtySprite):
+class Background(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         imagename = Settings.get_image("aquarium.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
         self.image = pygame.transform.scale(self.image, Settings.WINDOW.size)
         self.rect = self.image.get_rect()
-        self.dirty = 1
 
 
 class BubbleContainer:
@@ -74,14 +72,13 @@ class BubbleContainer:
         return self._images[radius]
 
 
-class Bubble(pygame.sprite.DirtySprite):
+class Bubble(pygame.sprite.Sprite):
     def __init__(self, bubble_container: BubbleContainer, speed: int) -> None:
         super().__init__()
         self._bubble_container = bubble_container
         self.radius = Settings.RADIUS["min"]
         self.image = self._bubble_container.get(self.radius)
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.dirty = 1
         self.fradius = float(self.radius)
         self.speed = speed  # Wachstumsgeschwindigkeit§\label{srcBubble0900}§
 
@@ -95,7 +92,6 @@ class Bubble(pygame.sprite.DirtySprite):
                 self.image = self._bubble_container.get(self.radius)
                 self.rect = self.image.get_rect()
                 self.rect.center = center
-                self.dirty = 1
             elif kwargs["action"] == "sting":
                 self.stung()
 
@@ -110,12 +106,11 @@ class Bubble(pygame.sprite.DirtySprite):
         Settings.POINTS += self.radius
 
 
-class Points(pygame.sprite.DirtySprite):
+class Points(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self._font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.oldpoints = -1
-        self.dirty = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if self.oldpoints != Settings.POINTS:
@@ -123,43 +118,38 @@ class Points(pygame.sprite.DirtySprite):
             self.rect = self.image.get_rect()
             self.rect.left = Settings.BOX.left
             self.rect.top = Settings.BOX.top
-            self.dirty = 1
 
 
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.CAPTION)
+        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
+        self._background = pygame.sprite.GroupSingle(Background())
         self._bubble_container = BubbleContainer()
-        self._background = Background()
         self._timer_bubble = Timer(500, False)
         self._timer_bubble_speed = Timer(1000, False)  # §\label{srcBubble0901}§
         self._bubble_speed = 10
-        self._all_sprites = pygame.sprite.LayeredDirty()
-        self._all_sprites.clear(self._screen, self._background.image)
-        self._all_sprites.set_timing_treshold(1000.0 / Settings.FPS)
+        self._all_sprites = pygame.sprite.Group()
         self._all_sprites.add(Points())
         self._running = True
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 self._running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self._running = False
-            elif event.type == MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # left
                     self.sting(pygame.mouse.get_pos())
 
     def draw(self) -> None:
-        rects = self._all_sprites.draw(self._screen)
-        # pygame.draw.rect(self._screen, "red", Settings.playground, 2)
-        # for b in self._all_bubbles:
-        #     pygame.draw.rect(self._screen, "red", b.rect, 2)  # type: ignore
-        pygame.display.update(rects)  # type: ignore
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
+        self._window.flip()
 
     def update(self) -> None:
         if self.check_bubblecollision():
@@ -187,9 +177,9 @@ class Game:
 
     def collidepoint(self, point: Tuple[int, int], sprite: pygame.sprite.Sprite) -> bool:
         if hasattr(sprite, "radius"):
-            deltax = point[0] - sprite.rect.centerx  # type: ignore
-            deltay = point[1] - sprite.rect.centery  # type: ignore
-            return sqrt(deltax * deltax + deltay * deltay) <= sprite.radius  # type: ignore
+            deltax = point[0] - sprite.rect.centerx
+            deltay = point[1] - sprite.rect.centery
+            return sqrt(deltax * deltax + deltay * deltay) <= sprite.radius
         return False
 
     def set_mousecursor(self) -> None:
@@ -238,9 +228,7 @@ class Game:
 
 
 def main():
-    os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

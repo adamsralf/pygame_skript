@@ -1,4 +1,3 @@
-import os
 from time import time
 from typing import Any
 
@@ -24,9 +23,9 @@ class Defender(pygame.sprite.Sprite):
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
-            if kwargs["action"] == "newpos":        # Neue Position berechnen §\label{srcInvader06e01}§
+            if kwargs["action"] == "newpos":  # Neue Position berechnen §\label{srcInvader06e01}§
                 self.rect.move_ip(self.speed * Settings.DELTATIME, 0)
-            elif kwargs["action"] == "direction":   # Richtung wechseln§\label{srcInvader06e02}§
+            elif kwargs["action"] == "direction":  # Richtung wechseln§\label{srcInvader06e02}§
                 self.change_direction()
 
     def change_direction(self) -> None:
@@ -40,22 +39,22 @@ class Border(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
-        if leftright == 'right':
+        if leftright == "right":
             self.rect.left = Settings.WINDOW.width - self.rect.width
 
 
 class Game(object):
 
     def __init__(self) -> None:
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("Sprite")
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+
         self.defender = pygame.sprite.GroupSingle(Defender())
         self.all_border = pygame.sprite.Group()
-        self.all_border.add(Border('left'))
-        self.all_border.add(Border('right'))
+        self.all_border.add(Border("left"))
+        self.all_border.add(Border("right"))
         self.running = False
 
     def run(self) -> None:
@@ -85,9 +84,9 @@ class Game(object):
         self.screen.fill((255, 255, 255))
         self.defender.draw(self.screen)
         self.all_border.draw(self.screen)
-        pygame.display.flip()
+        self.window.flip()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     game = Game()
     game.run()

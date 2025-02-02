@@ -1,30 +1,29 @@
 import os
 from time import time
-from typing import Any, Tuple
+from typing import Any
 
 import pygame
-from pygame.constants import K_ESCAPE, K_MINUS, K_PLUS, KEYDOWN, QUIT
 
 
-class Settings():
+class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (300, 200))
     FPS = 60
     DELTATIME = 1.0 / FPS
     TITLE = "Animation"
     PATH: dict[str, str] = {}
-    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
-    PATH['image'] = os.path.join(PATH['file'], "images")
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.PATH['file'], name)
+        return os.path.join(Settings.PATH["file"], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.PATH['image'], name)
+        return os.path.join(Settings.PATH["image"], name)
 
 
-class Timer():
+class Timer:
 
     def __init__(self, duration: int, with_start: bool = True):
         self.duration = duration
@@ -50,7 +49,7 @@ class Cat(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.images: list[pygame.surface.Surface] = []
-        for i in range(6):                                  # Animations-Sprites laden §\label{srcAnimation0001}§
+        for i in range(6):  # Animations-Sprites laden §\label{srcAnimation0001}§
             bitmap = pygame.image.load(Settings.imagepath(f"cat{i}.bmp")).convert()
             bitmap.set_colorkey("black")
             self.images.append(bitmap)
@@ -74,17 +73,16 @@ class Cat(pygame.sprite.Sprite):
         self.animation_time.change_duration(delta)
 
 
-class CatAnimation():
+class CatAnimation:
 
     def __init__(self) -> None:
-        super().__init__()
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.TITLE)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.TITLE)
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
-        self.cat = pygame.sprite.GroupSingle(Cat())         # Meine Katze §\label{srcAnimation0002}§
+        self.cat = pygame.sprite.GroupSingle(Cat())  # Meine Katze §\label{srcAnimation0002}§
         self.running = False
 
     def run(self) -> None:
@@ -102,14 +100,14 @@ class CatAnimation():
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self.running = False
-                elif event.key == K_PLUS:
+                elif event.key == pygame.K_PLUS:
                     self.cat.sprite.update(animation_delta=-10)
-                elif event.key == K_MINUS:
+                elif event.key == pygame.K_MINUS:
                     self.cat.sprite.update(animation_delta=10)
 
     def update(self) -> None:
@@ -123,7 +121,7 @@ class CatAnimation():
         text_rect.centerx = Settings.WINDOW.centerx
         text_rect.bottom = Settings.WINDOW.bottom - 50
         self.screen.blit(text_image, text_rect)
-        pygame.display.flip()
+        self.window.flip()
 
 
 def main():
@@ -131,5 +129,5 @@ def main():
     anim.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

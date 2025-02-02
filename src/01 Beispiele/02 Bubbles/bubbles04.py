@@ -4,7 +4,6 @@ from time import time
 from typing import Any, Dict
 
 import pygame
-from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
 
 
 class Settings:
@@ -49,14 +48,13 @@ class Timer:
         return False
 
 
-class Background(pygame.sprite.DirtySprite):
+class Background(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         imagename = Settings.get_image("aquarium.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert()
         self.image = pygame.transform.scale(self.image, Settings.WINDOW.size)
         self.rect = self.image.get_rect()
-        self.dirty = 1
 
 
 class BubbleContainer:
@@ -71,14 +69,13 @@ class BubbleContainer:
         return self._images[radius]
 
 
-class Bubble(pygame.sprite.DirtySprite):
+class Bubble(pygame.sprite.Sprite):
     def __init__(self, bubble_container: BubbleContainer) -> None:
         super().__init__()
         self._bubble_container = bubble_container  # Verweis auf Container§\label{srcBubble0406}§
         self.radius = Settings.RADIUS["min"]
         self.image = self._bubble_container.get(self.radius)  # Zugriff auf Bubbles §\label{srcBubble0407}§
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        self.dirty = 1
         self.fradius = float(self.radius)
         self.speed = 100
 
@@ -92,7 +89,6 @@ class Bubble(pygame.sprite.DirtySprite):
                 self.image = self._bubble_container.get(self.radius)  # Neues Image §\label{srcBubble0412}§
                 self.rect = self.image.get_rect()
                 self.rect.center = center  # Neuer MP = Alter MP §\label{srcBubble0413}§
-                self.dirty = 1
 
     def randompos(self) -> None:
         bubbledistance = Settings.DISTANCE + Settings.RADIUS["min"]
@@ -104,28 +100,27 @@ class Bubble(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.CAPTION)
+        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
+        self._background = pygame.sprite.GroupSingle(Background())
         self._bubble_container = BubbleContainer()
-        self._background = Background()
         self._timer_bubble = Timer(500, False)
-        self._all_sprites = pygame.sprite.LayeredDirty()
-        self._all_sprites.clear(self._screen, self._background.image)
-        self._all_sprites.set_timing_treshold(1000.0 / Settings.FPS)
+        self._all_sprites = pygame.sprite.Group()
         self._running = True
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 self._running = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self._running = False
 
     def draw(self) -> None:
-        rects = self._all_sprites.draw(self._screen)
-        pygame.display.update(rects)  # type: ignore
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
+        self._window.flip()
 
     def update(self) -> None:
         self._all_sprites.update(action="grow")  # Bubbles aktualisieren §\label{srcBubble0414}§
@@ -159,9 +154,7 @@ class Game:
 
 
 def main():
-    os.environ["SDL_VIDEO_WINDOW_POS"] = "10, 30"
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

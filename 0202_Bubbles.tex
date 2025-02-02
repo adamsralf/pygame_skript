@@ -17,9 +17,9 @@ Das Spiel lässt sich beliebig erweitern: Animation des Zerplatzens, Highscoresl
     \item Fenster hat eine angemessene Größe.\label{reqStandardGröße}
     \item Hintergrund ist eine passende Bitmap oder einfarbig.\label{reqStandardHintergrund}
     \item Beendet wird mit der ESC-Taste oder per Mausklick auf rote~„X“.\label{reqStandardBeenden}
-    \item Alle Bitmaps werden als \texttt{pygame.sprite.DirtySprite}-Objekt erzeugt und nach dem Laden konvertiert und passend skaliert.\label{reqStandardSprite}\myindex{pyg}{\texttt{sprite}!{\texttt{DirtySprite}}}
+    \item Alle Bitmaps werden nach dem Laden konvertiert und passend skaliert.\label{reqStandardSprite}\myindex{pyg}{\texttt{sprite}!{\texttt{DirtySprite}}}
     \item Alle Bitmaps -- außer dem Hintergrund -- sind transparent.\label{reqStandardTransparenz}
-    \item Alle Bitmaps -- bis auf „Einzelkämpfer“ oder Hintergrund -- werden in \texttt{pygame.sprite.LayeredGroup}-Objekten abgelegt.\label{reqStandardGruppe}\myindex{pyg}{\texttt{sprite}!{\texttt{LayeredGroup}}}
+    \item Alle Bitmaps werden in \texttt{pygame.sprite.Group}- oder \texttt{pygame.sprite.GroupSingle}-Objekten abgelegt.\label{reqStandardGruppe}\myindex{pyg}{\texttt{sprite}!{\texttt{LayeredGroup}}}
     \item Das Spiel hat eine von der \emph{fps} unabhängige Ablaufgeschwindigkeit.\label{reqStandardFps}
 \end{enumerate}
 \er
@@ -33,21 +33,20 @@ Es wird gefordert, dass das Fenster eine angemessene Größe hat. Mit $1220~px \
 
 \myebild{aquarium01}{0.15}{Bubbles: Hintergrundbild (aquarium.png)}{picAquarium01}
 
+\newpage
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{1}{29}{python}{Bubbles (\reqref{reqStandard}.\ref{reqStandardGröße}) -- Präambel
 }{srcBubbles01a}
 
 
-Die Klasse \texttt{Background} ist eine Kindklasse von \texttt{DirtySprite}, welches nur geladen und passend skaliert wird. Weil sich der Hintergrund nicht ändert, muss kein \texttt{update()} implementiert werden. Dass wir eine eigene Kindklasse programmieren, ist ein wenig wie mit Pistolen auf Spatzen schießen. Wir hätten es auch als \texttt{DirtySprite}-Objekt implementieren können. Ich habe das hier nur der Übersichtlichkeit wegen gemacht. 
+Die Klasse \texttt{Background} ist eine Kindklasse von \texttt{Sprite}, welches nur geladen und passend skaliert wird. Weil sich der Hintergrund nicht ändert, muss kein \texttt{update()} implementiert werden. Dass wir eine eigene Kindklasse programmieren, ist ein wenig wie mit Pistolen auf Spatzen schießen. Wir hätten es auch direkt als \texttt{Sprite}-Objekt implementieren können. Ich habe das hier nur der Übersichtlichkeit wegen gemacht. Das Hintergrundbild ist in \abbref[vref]{picAquarium01} zu sehen.
 
-Interessant ist \zeiref{srcBubble0101}. Hier wird nicht ein \texttt{self.screen} verwendet, sondern der aktuelle Bildschirm wird aus Pygame heraus mit \texttt{pygame.display.get\_surface()}\myindex{pyg}{\texttt{display}!\texttt{get\_surface()}}\randnotiz{get\_surface()} ermittelt. Das Hintergrundbild ist in \abbref[vref]{picAquarium01} zu sehen.
-
-
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{31}{41}{python}{Bubbles (\reqref{reqStandard}.\ref{reqStandardHintergrund}) -- \texttt{Background
+\newpage
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{31}{37}{python}{Bubbles (\reqref{reqStandard}.\ref{reqStandardHintergrund}) -- \texttt{Background
 }}{srcBubbles01c}
 
-In der Klasse \texttt{Game} werden in \texttt{\_\_init\_\_()} die Pygame üblichen Methoden \texttt{init()}\myindex{pyg}{\texttt{init()}}, \texttt{set\_mode()}\myindex{pyg}{\texttt{display}!\texttt{set\_mode()}}, \texttt{clock()}\myindex{pyg}{\texttt{time}!\texttt{Clock}} und \texttt{set\_caption()}\myindex{pyg}{\texttt{display}!\texttt{set\_caption()}} am Start aufgerufen. Auch wird das Flag der Hauptprogrammschleife erzeugt. Die Methoden \texttt{run()}, \texttt{watch\_for\_events()}, \texttt{update()} und \texttt{draw()} enthalten nur Basisfunktionalitäten, die hier nicht weiter erläutert werden müssen. 
+In der Klasse \texttt{Game} werden in \texttt{\_\_init\_\_()} die Pygame üblichen Verdächtigen \texttt{init()}\myindex{pyg}{\texttt{init()}}, \texttt{Window()}\myindex{pyg}{\texttt{Window}} und \texttt{clock()}\myindex{pyg}{\texttt{time}!\texttt{Clock}} und aufgerufen bzw. erzeugt. Auch wird das Flag der Hauptprogrammschleife \texttt{\_running} initialisiert. Die Methoden \texttt{run()}, \texttt{watch\_for\_events()}, \texttt{update()} und \texttt{draw()} enthalten nur Basisfunktionalitäten, die hier nicht weiter erläutert werden müssen. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{44}{80}{python}{Bubbles (\reqref{reqStandard}) -- Methoden von \texttt{Game}}{srcBubbles01d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{40}{76}{python}{Bubbles (\reqref{reqStandard}) -- Methoden von \texttt{Game}}{srcBubbles01d}  
 
 
 Durch diese Methoden ist aber schon der generelle Ablauf des Spiels vorgegeben. Alle weiteren Eigenschaften des Spiels, sind nur noch Erweiterungen dieses Ablaufs, keine Veränderungen mehr. 
@@ -55,7 +54,7 @@ Durch diese Methoden ist aber schon der generelle Ablauf des Spiels vorgegeben. 
 Zum Schluss erfolgt der Aufruf (siehe \srcref[vref]{srcBubbles01s}). 
 Damit sind alle Unterpunkte von \reqref[vref]{reqStandard}, die hier Anwendung finden, erfüllt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{83}{999}{python}{Bubbles (\reqref{reqStandard}) -- Aufruf}{srcBubbles01s}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{79}{999}{python}{Bubbles (\reqref{reqStandard}) -- Aufruf}{srcBubbles01s}  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\reqref{reqBlasenErscheinen}: Blasen erscheinen}
@@ -81,27 +80,24 @@ Für die Blase wird die schon transparente Grafik aus \abbref{picBlase1} verwend
 
 Die Spielfläche ist ein Rechteck\index{Rechteck}\index{self.rect} mit einem Abstand zum linken und oberen Bildschirmrand -- \texttt{left}\myindex{pyg}{\texttt{Rect}!\texttt{left}} und \texttt{top}\myindex{pyg}{\texttt{Rect}!\texttt{top}} -- und einer Breite (\texttt{width}\myindex{pyg}{\texttt{Rect}!\texttt{width}}) und Höhe (\texttt{height}\myindex{pyg}{\texttt{Rect}!\texttt{height}}). In \zeiref{srcBubble0203} werden die entsprechenden Werte festgehalten. Der Abstand von Spielfeldrand und der Blasen untereinander wird in \zeiref{srcBubble0202} entsprechend \reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenAbstand} mit $10~px$ definiert. Der Startradius\index{self.radius} -- und damit der minimale Radius -- wird wegen \reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenRadius} in \zeiref{srcBubble0201} mit $15~px$ festgelegt. Während des Spielens ist mir aufgefallen, dass kleinere Startradien einfach zu schlecht gesehen werden.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{19}{21}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- Ergänzungen in \texttt{Settings}}{srcBubbles02a}
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{18}{20}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- Ergänzungen in \texttt{Settings}}{srcBubbles02a}
 
 Die Klasse \texttt{Timer} ist exakt die oben in \kapref[vref]{secZeitstuerung}\index{Timer} beschriebene; dort wird alles erklärt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{36}{48}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{Timer}}{srcBubbles02b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{35}{47}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{Timer}}{srcBubbles02b}  
 
 Schauen wir uns jetzt die Klasse \texttt{Bubble} an. Der Konstruktor ist selbsterklärend, hier werden nur die üblichen Verdächtigen bearbeitet: \texttt{image}, \texttt{rect} und \texttt{radius}. Die Methode \texttt{update()} ist derzeit leer, da noch keine Veränderung verlangt wurde. Die Methode \texttt{randompos()} wird allerdings wegen \reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenZufall} benötigt. Sie berechnet eine neues Blasenzentrum und weist dieses \texttt{rect} zu. Ggf. muss diese Methode solange wiederholt werden, bis eine freie Fläche gefunden wird (siehe \reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenAbstand} und~\reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenMindestabstand}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{61}{78}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{Bubble}}{srcBubbles02c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{59}{75}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{Bubble}}{srcBubbles02c}  
 
 Die Klasse \texttt{Game} muss nun entsprechend erweitert werden. In der \zeiref{srcBubble0204} wird das \texttt{Background}-Objekt angelegt. \zeiref{srcBubble0205} erzeugt ein \texttt{Timer}-Objekt mit einer Intervalllänge von $500~ms$, wobei im ersten Intervall noch keine Blasen erzeugt werden sollen (siehe \reqref{reqBlasenErscheinen}.\ref{reqBlasenErscheinenIntervall}).
 
-Der Hintergrund wird nun über den Mechanismus des DirtySprite-Konzepts geblittet. Mit Hilfe von \texttt{pygame.sprite.LayeredDirty.clear()}\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}!\texttt{clear()}}\randnotiz{clear()} wird in \zeiref{srcBubble0209} das entsprechende Image festgelegt. Die Methode \texttt{Background.draw()} kann daher gelöscht werden.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{81}{92}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- Konstruktor von \texttt{Game}}{srcBubbles02d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{78}{87}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- Konstruktor von \texttt{Game}}{srcBubbles02d}  
 
-In der Methode \texttt{draw()} werden lediglich die \texttt{draw()}-Methoden der Spritegruppe aufgerufen. Der Hintergrund wird über den Mechanismus des DirtySprite-Konzepts ausgegeben (siehe \abschnittref[vref]{secDirtySprites}). 
+In der Methode \texttt{draw()} werden lediglich die \texttt{draw()}-Methoden der Spritegruppen aufgerufen. Auch \texttt{update()} wurde angepasst, es ruft jetzt die Methode \texttt{spawn\_bubble()} auf und delegiert damit die Aufgabe, neue Blasen zu erzeugen.
 
-Auch \texttt{update()} wurde angepasst, es ruft jetzt die Methode \texttt{spawn\_bubble()} auf und delegiert damit die Aufgabe, neue Blasen zu erzeugen.
-
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{102}{107}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{draw()} und \texttt{update()} von \texttt{Game}}{srcBubbles02e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{97}{103}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{draw()} und \texttt{update()} von \texttt{Game}}{srcBubbles02e}  
 
 Die Grundidee hinter \texttt{spawn\_bubble()} ist, solange eine Position für eine neue Blase zu raten, bis man eine freie Fläche gefunden hat. Damit man damit nicht in einer \Gls{endlosschleife} landet, wird die Anzahl der Versuche auf~100 begrenzt. Wird keine Freifläche gefunden, wird die Blase nicht der Spritegruppe hinzugefügt -- sie verfällt also. 
 
@@ -109,7 +105,7 @@ Der Radius wird dazu kurzfristig erweitert (\zeiref{srcBubble0207}) und nach der
 
 Sie sehen hier ein Beispiel dafür, dass der Methode \texttt{pygame.sprite.spritecollide()}\myindex{pyg}{\texttt{sprite}!\texttt{spritecollide()}}\randnotiz{sprite\-collide()} eine Methodenreferenz mitgegeben wird -- hier \texttt{pygame.sprite.collide\_circle()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_circle()}}\randnotiz{collide\_\-circle()} --  und somit nicht die übliche Rechtecksprüfung vorgenommen wird.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{109}{119}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{spawn\_bubble()} von \texttt{Game}}{srcBubbles02f}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles02.py}{105}{115}{python}{Bubbles (\reqref{reqBlasenErscheinen}) -- \texttt{spawn\_bubble()} von \texttt{Game}}{srcBubbles02f}  
 
 Das Ergebnis können Sie in \abbref[vref]{picAquarium02} sehen. Gleichmäßig sind die Bubbles auf der Spielfläche verteilt und der geforderte Abstand zum Rand und zwischen den Blasen ist dabei eingehalten.
 
@@ -124,11 +120,11 @@ Das Ergebnis können Sie in \abbref[vref]{picAquarium02} sehen. Gleichmäßig si
 
 Die maximale Anzahl will ich in \texttt{Game} festlegen. Ausgehend von der Fläche wird eine Obergrenze festgelegt:
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{22}{22}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Settings}}{srcBubbles03a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{20}{20}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Settings}}{srcBubbles03a}  
 
 Diese Obergrenze aus \zeiref{srcBubble0301} wird in \zeiref{srcBubble0306} abgefragt. Nur wenn die maximale Anzahl noch nicht erreicht wurde, wird eine neue Blase erzeugt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{112}{123}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Game} in \texttt{spawn\_bubbles()}}{srcBubbles03b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{106}{117}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Game} in \texttt{spawn\_bubbles()}}{srcBubbles03b}  
 
 Der Rest des Programmes bleibt unverändert.
 
@@ -146,11 +142,11 @@ Der Sinn von \reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumContainer} ist das
 
 Die Methode \texttt{get()} liefert mir dann zu einem Radius das passend skalierte und schon fertige Image. Vorab wird in den Zeilen~\ref{srcBubble0404} und~\ref{srcBubble0405} überprüft, ob der Radius innerhalb des Gültigkeitsbereich liegt. Falls der Radius dabei zu groß ist, wird der maximale genommen und falls er zu klein ist, der minimale.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{62}{71}{python}{Bubbles (\reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumContainer}) -- \texttt{BubbleContainer}}{srcBubbles04a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{60}{69}{python}{Bubbles (\reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumContainer}) -- \texttt{BubbleContainer}}{srcBubbles04a}  
 
 Bisher wurde nur ein Startwert und damit eine untere Grenze für den Blasenradius in \texttt{Game} definiert. Diese Definition wird nun in \zeiref{srcBubble0400} passend zu \reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumMax} um die Angabe eines maximalen Radius erweitert.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{19}{19}{python}{Bubbles (\reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumMax}) -- Erweiterung von \texttt{Settings}}{srcBubbles04b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{18}{18}{python}{Bubbles (\reqref{reqBlasenWachstum}.\ref{reqBlasenWachstumMax}) -- Erweiterung von \texttt{Settings}}{srcBubbles04b}  
 
 Der \texttt{BubbleContainer} wird dem Konstruktor von \texttt{Bubble} mitgegeben, so dass diese Klasse sich daraus bedienen kann. Ein Beispiel dafür ist direkt in \zeiref{srcBubble0407} zu finden. Das Attribut \texttt{image} wird passend zum \texttt{radius} besetzt.
 
@@ -158,19 +154,19 @@ Die Methode \texttt{update()} ist nun auch nicht mehr leer. Ihre wesentliche Fun
 
 Was hat es aber mit den Zeilen~\ref{srcBubble0411} und~\ref{srcBubble0413} auf sich? Der Referenzpunkt eines Image in einem Sprite ist die linke, obere Ecke. Wächst jetzt die Blase, würde sie sich nach rechts und unten vergrößern; der linke und obere Rand blieben gleich, was hässlich aussieht. Daher merken wir uns den alten Mittelpunkt, laden das neue Image, erzeugen das passende \texttt{Rect}-Objekt und verschieben es dann wieder auf den alten Mittelpunkt, so dass optisch die Blase vom Mittelpunkt aus in alle Richtungen wächst.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{74}{101}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{Bubble}}{srcBubbles04c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{72}{91}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{Bubble}}{srcBubbles04c}  
 
 Die Methode \texttt{update()} in \texttt{Game} muss nur noch um den Aufruf aller \texttt{update()} in den Blasen erweitert werden. Dies geht sehr bequem über den Mechanismus der Spritegruppe. Wie bei \texttt{draw()} kann auch für die gesamte Gruppe mit einem Schlag \texttt{update()} aufgerufen werden (siehe \zeiref{srcBubble0414}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{130}{133}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{update()} in \texttt{Game}}{srcBubbles04d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{125}{127}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{update()} in \texttt{Game}}{srcBubbles04d}  
 
 Der BubbleContainer wird angelegt
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{109}{111}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung im Konstruktor von \texttt{Game}}{srcBubbles04f}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{106}{108}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung im Konstruktor von \texttt{Game}}{srcBubbles04f}  
 
 und in der Methode \texttt{spawn\_bubble()} wird der Aufruf des Konstruktors von \texttt{Bubble} um den \texttt{BubbleContainer} ergänzt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{134}{138}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{spawn\_bubble()} in \texttt{Game}}{srcBubbles04e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles04.py}{129}{133}{python}{Bubbles (\reqref{reqBlasenWachstum}) -- Ergänzung von \texttt{spawn\_bubble()} in \texttt{Game}}{srcBubbles04e}  
 
 Die Blasen wachsen nun um ihren Mittelpunkt herum nach außen. Das Ergebnis könnte dann wie in \abbref[vref]{picAquarium03} aussehen.
 
@@ -230,17 +226,17 @@ Der Wert~$d$ ist der Abstand in Pixel zwischen dem Mittelpunkt des Kreises $(x_1
 \end{center}
 \end{figure}
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{149}{154}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{collidepoint()} in \texttt{Game}}{srcbubbles05a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{144}{149}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{collidepoint()} in \texttt{Game}}{srcbubbles05a}  
 
 Mit Hilfe dieser Methode ist die Lösung nun kein Problem mehr. Die Variable \texttt{is\_over} ist ein Flag, welches sich merken soll, ob die Mauskoordinaten innerhalb der Blase liegen oder nicht. Der Normalfall ist, dass die Maus nicht innerhalb einer Blase liegt, und daher wird die Variable mit \false\ initialisiert. 
 
 Danach wird mit \texttt{pygame.mouse.\-get\-\_pos()}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}} die aktuelle Mausposition ermittelt. Diese Mausposition wird in \zeiref{srcBubble0502} in die Methode \texttt{Bubble.collidepoint()} gestopft. Falls eine Blase gefunden wurde, die mit der Maus kollidiert, wird das Flag auf \true\ gesetzt und die Schleife mit \texttt{break} beendet, was uns ein wenig Rechenzeit einspart, da so nicht mehr alle anderen Blasen untersucht werden. Abhängig vom Flag wird dann der Mauscursor gesetzt.\myindex{pyg}{\texttt{SYSTEM\_CURSOR\_HAND}}\myindex{pyg}{\texttt{SYSTEM\_CURSOR\_CROSSHAIR}}
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{160}{170}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{set\_mousecursor()} in \texttt{Game}}{srcbubbles05b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{151}{161}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{set\_mousecursor()} in \texttt{Game}}{srcbubbles05b}  
 
 Die Methode \texttt{update()} in \texttt{Game} muss noch um den Aufruf der Überprüfung erweitert werden.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{131}{134}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{update()} in \texttt{Game}}{srcbubbles05c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles05.py}{126}{129}{python}{Bubbles (\reqref{reqMauscursor}) -- \texttt{update()} in \texttt{Game}}{srcbubbles05c}  
 
 Testen Sie das Programm mal aus. Positionieren Sie die Maus in eine linke untere Ecke außerhalb einer Blase und warten Sie, bis durch das Wachsen die Blase die Maus berührt.
 
@@ -254,11 +250,11 @@ Für die Umsetzung dieser Anforderung ist schon mit der Implementierung der Meth
 
 Hinweis: Implementieren Sie grundsätzlich so wenig Logik wie möglich in \texttt{watch\_\-for\_\-e\-vents()}. Diese Methode ist ein Verteiler; die Verarbeitung sollte immer in Methoden ausgelagert werden.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles06.py}{119}{128}{python}{Bubbles (\reqref{reqBlasenzerplatzen}) -- \texttt{watch\_for\_event()} in \texttt{Game}}{srcbubbles06a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles06.py}{113}{122}{python}{Bubbles (\reqref{reqBlasenzerplatzen}) -- \texttt{watch\_for\_event()} in \texttt{Game}}{srcbubbles06a}  
 
 Die Methode \texttt{sting()} ist nun denkbar simpel. Es werden alle \texttt{Bubble}-Objekte durchwandert und dahingehend abgefragt, ob die Mausposition innerhalb des Radius liegt (\zeiref{srcBubble0603}). Wenn \emph{Ja}, dann wird das entsprechende Objekt aus der Spritegroup mit \texttt{kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}}\randnotiz{kill()} entfernt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles06.py}{171}{174}{python}{Bubbles (\reqref{reqBlasenzerplatzen}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles06b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles06.py}{166}{169}{python}{Bubbles (\reqref{reqBlasenzerplatzen}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles06b}  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\reqref{reqPunktestand}: Punktestand}
@@ -272,33 +268,34 @@ Die Methode \texttt{sting()} ist nun denkbar simpel. Es werden alle \texttt{Bubb
 
 Das Anstechen der Blasen soll natürlich mit Punkten belohnt werden. Dazu müssen die Punkte ermittelt und ausgegeben werden. Die einfachste Art den Punktestand festzuhalten ist eine statische Variable in \texttt{Settings} oder eine globale Variable. Ich bevorzuge Variante~1 (\srcref[vref]{srcbubbles07a}). 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{24}{24}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandNull}) -- Erweiterung von \texttt{Game}}{srcbubbles07a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{23}{23}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandNull}) -- Erweiterung von \texttt{Game}}{srcbubbles07a}  
 
 Da das Anstechen nun nicht mehr nur für ein Verschwinden sorgt, sondern auch für die Aktualisierung des Punktestands, habe ich dazu einen neue Methode in \texttt{Bubble} angelegt. In \zeiref{srcBubble0702} wird einfach der Radius der Blase auf den Punktestand addiert.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{108}{110}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{stung()} in \texttt{Bubble}}{srcbubbles07b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{104}{106}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{stung()} in \texttt{Bubble}}{srcbubbles07b}  
 
 Der Aufruf von \texttt{stung()} erfolgt durch ein angepasstes \texttt{update()}.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{88}{100}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Bubble}}{srcbubbles07b1}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{85}{96}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Bubble}}{srcbubbles07b1}  
 
 Die Methoden \texttt{sting()} und \texttt{update()} in \texttt{Game} müssen dazu passend verändert werden (\zeiref{srcBubble0704} und \zeiref{srcBubble0705}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{196}{199}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles07c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{188}{191}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles07c}  
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{159}{162}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Game}}{srcbubbles07d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{151}{154}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Game}}{srcbubbles07d}  
 
 Verbleibt \reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}. Ähnlich wie für die Spielfläche möchte ich die Maße für den unteren Teil als Ausgabebox in \texttt{Settings} festlegen.\randnotiz{Rect}\myindex{pyg}{\texttt{Rect}}
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{25}{25}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- Erweiterung von \texttt{Settings}}{srcbubbles07e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{24}{24}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- Erweiterung von \texttt{Settings}}{srcbubbles07e}  
 
 Für die Punktausgabe selbst bastle ich mir wieder eine kleine Klasse, die das Problem kapselt: \texttt{Points}. Im Konstruktor wird ein \texttt{Font}-Objekt erzeugt, welches mir in \texttt{update()} den Punktestand rendert. Die Position der Textausgabe wird aus den Angaben in \texttt{Settings} ermittelt. Den Rest erledigt die \texttt{Sprite}-Klasse für mich.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{113}{126}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- \texttt{Points}}{srcbubbles07f}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{109}{120}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- \texttt{Points}}{srcbubbles07f}  
 
-Verbleiben einige Erweiterungen in \texttt{Game}. Im Konstruktor wird das \texttt{Points}-Objekt in das \texttt{LayeredDirty}-Objekt\myindex{pyg}{\texttt{sprite}!\texttt{LayeredDirty}} gesteckt.
+Verbleiben einige Erweiterungen in \texttt{Game}. Im Konstruktor wird das \texttt{Points}-Objekt in das \texttt{Group}-Objekt\myindex{pyg}{\texttt{sprite}!\texttt{Group}} gesteckt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{140}{142}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- Erweiterung des Konstruktors von \texttt{Game}}{srcbubbles07g}  
+\newpage
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{132}{134}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}) -- Erweiterung des Konstruktors von \texttt{Game}}{srcbubbles07g}  
 
 \myebild{aquarium04}{0.30}{Bubbles: Ausgabe Punktestand}{picAquarium04}
 
@@ -316,12 +313,12 @@ In \abbref[vref]{picAquarium04} können Sie die Punkteausgabe in der unteren Hä
 
 Hinweis: Damit das Spiel spielbar wird, habe ich die Wachstumsgeschwindigkeit einer Bubble auf 10 gesetzt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{86}{86}{python}{Bubbles (\reqref{reqSpielende}) -- \texttt{Bubble.speed}}{srcbubbles08x}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{83}{83}{python}{Bubbles (\reqref{reqSpielende}) -- \texttt{Bubble.speed}}{srcbubbles08x}  
 
 
 Die Grundstruktur unseres Spiels ermöglicht es, diese Anforderung recht leicht durch eine Erweiterung von \texttt{update()} in \texttt{Game} zu realisieren. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{162}{168}{python}{Bubbles (\reqref{reqSpielende}) -- Erweiterung von \texttt{update()} in \texttt{Game}}{srcbubbles08a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{155}{161}{python}{Bubbles (\reqref{reqSpielende}) -- Erweiterung von \texttt{update()} in \texttt{Game}}{srcbubbles08a}  
 
 In der neuen Methode \texttt{check\_\-bubble\-coll\-ision()} wird überprüft, ob sich Blasen berühren oder eine Blase an den Rand stößt. Diese Methode wird einfach als Entscheider (\zeiref{srcBubble0801}) dafür genommen, ob das Spiel zu beenden ist. Falls \emph{Ja}, wird das Flag der Hauptprogrammschleife gesetzt; falls \emph{Nein}, wird wie gewohnt die restliche Spiellogik abgearbeitet. Die beiden verschachtelten \forSchleife n ab \zeiref{srcBubble0802} durchwandern die Gruppe der Blasen zweimal und vermeiden dabei zwei Dinge:\myindex{pyg}{\texttt{sprite}!\texttt{Group}!\texttt{sprites()}}\randnotiz{sprites()}
 
@@ -338,11 +335,11 @@ In \zeiref{srcBubble0803} wird \reqref{reqSpielende}.\ref{reqSpielendeBlase} üb
 
 \newpage
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{207}{218}{python}{Bubbles (\reqref{reqSpielende}) -- \texttt{check\_bubblecollision()} in \texttt{Game}}{srcbubbles08b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{200}{212}{python}{Bubbles (\reqref{reqSpielende}) -- \texttt{check\_bubblecollision()} in \texttt{Game}}{srcbubbles08b}  
 
 In \abbref[vref]{picAquarium05} wird die Kollision der Blase mit dem Rand dargestellt. Um das besser erkennen zu können, habe ich Hilfslinien ausgegeben. Sie können gut sehen, dass das Rechteck der Blase nicht mehr im Rechteck der Spielfläche liegt. \abbref[vref]{picAquarium06} zeigt die Kollision zweier Blasen. Auch hier sind Hilfslinien eingezeichnet. Die Hilfslinien werden Ihnen eingezeichnet, wenn Sie die drei Kommentarzeichen in \texttt{Game.draw()} entfernen.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{155}{160}{python}{Bubbles (\reqref{reqSpielende}) -- Hilfslinien in \texttt{Game}}{srcbubbles08c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles08.py}{147}{153}{python}{Bubbles (\reqref{reqSpielende}) -- Hilfslinien in \texttt{Game}}{srcbubbles08c}  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -353,15 +350,15 @@ In \abbref[vref]{picAquarium05} wird die Kollision der Blase mit dem Rand darges
 
 Weil im Laufe der Zeit die Blasen schneller wachen sollen, will ich ihnen die Wachstumsgeschwindigkeit als Übergabeparameter im Konstruktor mitgeben. In \zeiref{srcBubble0900} wird dieser Parameter in ein Attribut geparkt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{77}{86}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- \texttt{Bubble}}{srcBubbles09a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{75}{83}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- \texttt{Bubble}}{srcBubbles09a}  
 
 Das sind schon alle Anpassungen in \texttt{Bubble}, der Rest passiert in \texttt{Game}. In \zeiref{srcBubble0901} wird ein Timer\randnotiz{Timer}\index{Timer} erstellt, der mir alle $1000~ms$ ein Signal geben wird. Darunter wird die anfängliche Wachstumsgeschwindigkeit der Blasen auf $10~px/s$ gestellt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{136}{140}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- Konstruktor von \texttt{Game}}{srcBubbles09b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{130}{134}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- Konstruktor von \texttt{Game}}{srcBubbles09b}  
 
 In \texttt{spawn\_bubble()} wird der Timer abgefragt und ggf. die Blasenwachstumsgeschwindigkeit\footnote{Deutsch ist schon eine coole Sprache ;-)} erhöht (\zeiref{srcBubble0902}). Die maximale Wachstumsgeschwindigkeit wird dabei auf~$100~px/s$ begrenzt; schneller scheint mir nicht spielbar. Bei jedem Timer-Signal wird dabei die Geschwindigkeit um~$5~px/s$ erhöht. Dies geschieht in dieser Methode, da dann die neue Geschwindigkeit für die zu erstellenden Blasen zur Verfügung steht.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{172}{186}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- \texttt{Game.spawn\_bubble()}}{srcBubbles09c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles09.py}{162}{176}{python}{Bubbles (\reqref{reqZeitanpassungen}) -- \texttt{Game.spawn\_bubble()}}{srcBubbles09c}  
 
 
 Wenn Sie jetzt das Spiel ausprobieren (\texttt{bubbles09.py}), werden Sie einen leichten Start und eine moderate Steigerung der Spielschwierigkeit bemerken.
@@ -384,31 +381,31 @@ Dazu braucht es einen zweiten \texttt{BubbleContainer} mit den skalierten roten 
 
 In \zeiref{srcBubble1001} ist dazu ein Dictionary angelegt worden. Unter einem Schlüssel kann ich dort nun beliebige \texttt{BubbleContainer}-Objekte ablegen.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{137}{138}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Erweiterung von \texttt{Game}}{srcbubbles10a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{130}{131}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Erweiterung von \texttt{Game}}{srcbubbles10a}  
 
 Der Konstruktor von \texttt{BubbleContainer} bekommt nun einen Dateinamen mitgegeben, so dass hier verschiedene Grafiken zu Grunde gelegt werden können.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{65}{69}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Änderung Konstruktor von \texttt{BubbleContainer}}{srcbubbles10b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{63}{67}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Änderung Konstruktor von \texttt{BubbleContainer}}{srcbubbles10b}  
 
 Der Konstruktor von \texttt{Game} füllt nun das statische Dictionary \texttt{BUBBLE\_CONTAINER} auf (\zeiref{srcBubble1003} und \zeiref{srcBubble1004}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{144}{147}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Änderung vom Konstruktor von \texttt{Game}}{srcbubbles10c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{137}{140}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Änderung vom Konstruktor von \texttt{Game}}{srcbubbles10c}  
 
 In \texttt{Bubble} sind nun mehrere Änderungen nötig. Durch das neue Attribut \texttt{mode} (\zeiref{srcBubble1005}) wird die Farbe der Blase bestimmt. Jedesmal, wenn nun das Image aus dem \texttt{Bubble\-Con\-tainer} geladen wird, wird über dieses Attribut gesteuert, welcher der beiden \texttt{Bubble\-Con\-tainer} als Datenquelle verwendet werden soll. Beispielhaft sei hier \zeiref{srcBubble1006} in \texttt{update()} erwähnt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{77}{102}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Konstruktor von \texttt{Bubble} und \texttt{update()}}{srcbubbles10d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{75}{98}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Konstruktor von \texttt{Bubble} und \texttt{update()}}{srcbubbles10d}  
 
 Ändert sich der Modus, muss die andere Farbe nachgeladen werden. Dies erfüllt die Methode \texttt{set\_mode} in \texttt{Bubble}.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{104}{108}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- \texttt{set\_mode()} in \texttt{Bubble}}{srcbubbles10e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{100}{103}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- \texttt{set\_mode()} in \texttt{Bubble}}{srcbubbles10e}  
 
 Jetzt muss nur noch im Falle einer Kollision -- also eines Spielendes -- der Modus geändert werden. In \abbref[vref]{picAquarium07} können Sie sehen, wie die beiden kollidierenden Blasen rot erscheinen. Wie das geschieht, können Sie beispielhaft in \zeiref{srcBubble1008} sehen.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{223}{239}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- \texttt{check\_bubblecollision()} in \texttt{Game}}{srcbubbles10f}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{212}{228}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- \texttt{check\_bubblecollision()} in \texttt{Game}}{srcbubbles10f}  
 
 Damit mir Zeit bleibt, die Kollision zu sehen, will ich am Ende $2~s$ warten. Die Methode \texttt{pygame.time.wait()}\myindex{pyg}{\texttt{time}!\texttt{wait()}}\randnotiz{wait()} hält die Anwendung entsprechend lang an (\zeiref{srcBubble1007}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{241}{253}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Wartezeit in \texttt{run()}}{srcbubbles10g}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles10.py}{230}{242}{python}{Bubbles (\reqref{reqKollisionanzeigen}) -- Wartezeit in \texttt{run()}}{srcbubbles10g}  
 
 \myebild{aquarium07}{0.30}{Bubbles: Kollision anzeigen}{picAquarium07}
 
@@ -419,32 +416,30 @@ Damit mir Zeit bleibt, die Kollision zu sehen, will ich am Ende $2~s$ warten. Di
 \er
 
 Die Idee hinter dieser Anforderung ist, dass eine notwendige Unterbrechung nicht zwangsläufig bedeutet, dass man verliert. In \abbref[vref]{picAquarium08} können Sie sehen, wie der Pausenbildschirm aussehen sollte.
-Zunächst werden die Pygame-Konstanten \texttt{KEYUP}\myindex{pyg}{\texttt{KEYUP}}, \texttt{MOUSEBUTTONUP}\myindex{pyg}{\texttt{MOUSEBUTTONUP}} und K\_p importiert (\zeiref{srcBubble1101}).
 
 \myebild{aquarium08}{0.30}{Bubbles: Pausenbildschirm}{picAquarium08}
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{8}{9}{python}{Bubbles (\reqref{reqPause}) -- Zusätzliche Konstanten}{srcbubbles11a}  
-
 Im Konstruktor von \texttt{Game} wird das Flag \texttt{pausing} definiert. Dieser steuert später, ob sich das Spiel im Pausenmodus befindet oder nicht.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{164}{164}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Konstruktor} in \texttt{Game}}{srcbubbles11b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{154}{156}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Konstruktor} in \texttt{Game}}{srcbubbles11b}  
 
 In \texttt{watch\_for\_events()} wird nun abgefragt, ob die \texttt{P}-Taste (\zeiref{srcBubble1103}) oder die rechte Maustaste (\zeiref{srcBubble1104}) gedrückt wurde. In beiden Fällen wird die neue Methode \texttt{setpause()} aufgerufen. 
 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{167}{182}{python}{Bubbles (\reqref{reqPause}) -- \texttt{watch\_for\_events()} in \texttt{Game}}{srcbubbles11c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{158}{173}{python}{Bubbles (\reqref{reqPause}) -- \texttt{watch\_for\_events()} in \texttt{Game}}{srcbubbles11c}  
 
 Für die Darstellung der Pause, habe ich die -- vielleicht etwas überflüssige -- Klasse \texttt{Pause} implementiert. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{76}{82}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Pause}}{srcbubbles11d}  
+\newpage
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{75}{80}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Pause}}{srcbubbles11d}  
 
 Im Konstruktor von \texttt{Game} wird ein Objekt der Klasse \texttt{Pause} angelegt, damit es in \texttt{draw()} verwendet werden kann. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{165}{165}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Konstruktor} in \texttt{Game}}{srcbubbles11g}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{156}{156}{python}{Bubbles (\reqref{reqPause}) -- \texttt{Konstruktor} in \texttt{Game}}{srcbubbles11g}  
 
 Ich muss aber noch die Methode \texttt{setpause()} erklären. Diese fügt das \texttt{Pause}-Objekt in die Liste der Sprites ein oder holt sie wieder raus, abhängig davon, ob ich im Pausenmodus bin oder nicht. Anschließend wird der Boolesche-Wert des Flags negiert (\gls{toggling}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{200}{205}{python}{Bubbles (\reqref{reqPause}) -- \texttt{setpause()} in \texttt{Game}}{srcbubbles11h}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles11.py}{189}{194}{python}{Bubbles (\reqref{reqPause}) -- \texttt{setpause()} in \texttt{Game}}{srcbubbles11h}  
 
 Mehr ist nicht nötig, da der Rest von den üblichen \texttt{update()}- und \texttt{draw()}-Mechanismen erledigt wird.
 
@@ -458,37 +453,33 @@ Die Grundidee der Implementierung ist dabei, dass mit Hilfe von zwei Flags\index
 
 Das andere Flag -- \texttt{\_do\_start} -- markiert, ob der Spieler einen Neustart möchte. An den entscheidenden Stellen in \texttt{update()} und \texttt{draw()} werden dann diese Flags abgefragt.
 
-Zunächst werden die Tastaturkonstanten für die Antwort importiert (\zeiref{srcBubble1201}).
-
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{8}{8}{python}{Bubbles (\reqref{reqNeustart}) -- Erweiterung des Imports}{srcbubbles12a}  
-
 Die Aufgabe, eine Rückfrage in den Vordergrund zu schieben, ist eigentlich schon mit der Klasse \texttt{Pause} gelöst; ich kann daher die Klasse verallgemeinern, indem ich sie in \texttt{Message} umbenenne und den Dateinamen dem Konstruktor als String-Parameter übergebe (\zeiref{srcBubble1202}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{76}{82}{python}{Bubbles (\reqref{reqNeustart}) -- von \texttt{Pause} zu \texttt{Message}}{srcbubbles12b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{75}{80}{python}{Bubbles (\reqref{reqNeustart}) -- von \texttt{Pause} zu \texttt{Message}}{srcbubbles12b}  
 
 \myebild{aquarium09}{0.3}{Bubbles: Neustartbildschirm}{picAquarium09}
 
 In \texttt{Game} werden im Konstruktor ab \zeiref{srcBubble1203} die Anpassungen für den Neustart programmiert. Im wesentlichen werden für die Pause und den Neustart die beiden \texttt{Message}-Objekte erzeugt und alle Attribute, die bei einem Start/Neustart zurückgesetzt werden müssen, werden in der neuen Methode \texttt{restart()} bearbeitet.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{148}{163}{python}{Bubbles (\reqref{reqNeustart}) -- Umbau Konstruktor von \texttt{Game}}{srcbubbles12c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{151}{154}{python}{Bubbles (\reqref{reqNeustart}) -- Umbau Konstruktor von \texttt{Game}}{srcbubbles12c}  
 
 Der Punktestand wird zurückgesetzt, die Spritegroup von den Blasen geleert, die Timer neu aufgesetzt, die Blasenwachstumsgeschwindigkeit auf Anfang gesetzt und die beiden oben beschriebenen Flags auf \false\ gesetzt.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{206}{214}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{restart()} in \texttt{Game}}{srcbubbles12d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{195}{203}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{restart()} in \texttt{Game}}{srcbubbles12d}  
 
 
 Aufgerufen wird die Methode in \texttt{update()}, wenn das entsprechende Flag \texttt{do\_start} gesetzt ist. Auch wird in \texttt{update()} der Neustart-Bildschirm in die Spritegroup eingefügt und das Flag \texttt{\_restarting} auf \true\ gesetzt, wenn eine Kollision erkannt wurde. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{193}{204}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{update()} in \texttt{Game}}{srcbubbles12e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{182}{193}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{update()} in \texttt{Game}}{srcbubbles12e}  
 
 
 Die Antwort auf den Neustart-Bildschirm wird in \texttt{watch\_for\_events()} abgefragt und in entsprechende Flaginhalte umgesetzt. Antwortet der Spieler mit~\emph{J} (\zeiref{srcBubble1205}), muss das Spiel ja neu gestartet werden. Deshalb wird \texttt{do\_start} auf \true\ gesetzt. Gibt er \emph{N} ein, soll das Spiel beendet werden, weshalb das Flag der Hauptprogrammschleife mit \false\ bestückt wird (\zeiref{srcBubble1206}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{172}{178}{python}{Bubbles (\reqref{reqNeustart}) -- Erweiterung von \texttt{watch\_for\_events()}}{srcbubbles12f}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{163}{169}{python}{Bubbles (\reqref{reqNeustart}) -- Erweiterung von \texttt{watch\_for\_events()}}{srcbubbles12f}  
 
 Da wir nun am Spielende eine halbtransparente Vordergrundausgabe haben, brauchen wir keine zweisekündige Pause, um die kollidierenden Blasen anzusehen (siehe \abbref[vref]{picAquarium09}). Daher kann \zeiref{srcBubble1209} auskommentiert werden.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{292}{292}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{run()} in \texttt{Game}}{srcbubbles12g}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{281}{281}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{run()} in \texttt{Game}}{srcbubbles12g}  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\reqref{reqSound}: Sound}
@@ -502,25 +493,24 @@ Da wir nun am Spielende eine halbtransparente Vordergrundausgabe haben, brauchen
 
 Zum Schluss noch eine kleine Sound-Untermalung. Ähnlich wie bei den Blasen-Sprites, möchte ich keine Performance durch permanentes Laden der Sound-Dateien verlieren. Daher werden die Sounds in einem statischen Dictionary abgelegt (\zeiref{srcBubble1301}). 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{145}{147}{python}{Bubbles (\reqref{reqSound}) -- \texttt{SOUND\_CONTAINER}}{srcbubbles13a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{138}{140}{python}{Bubbles (\reqref{reqSound}) -- \texttt{SOUND\_CONTAINER}}{srcbubbles13a}  
 
 
 Im Konstrukor von Game wird das Dictionary mit Objekten der \texttt{Sound}-Klasse aufgefüllt. Die Klasse für Soundeffekte ist \texttt{pygame.mixer.Sound}\myindex{pyg}{\texttt{mixer}!\texttt{Sound}}\randnotiz{Sound} (siehe \zeiref{srcBubble1302}ff.).
 
-\newpage
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{155}{159}{python}{Bubbles (\reqref{reqSound}) -- \texttt{SOUND\_CONTAINER} auffüllen}{srcbubbles13b}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{149}{151}{python}{Bubbles (\reqref{reqSound}) -- \texttt{SOUND\_CONTAINER} auffüllen}{srcbubbles13b}  
 
 Nun müssen die Sounds nur noch an der geeigneten Stelle mit \texttt{pygame.mixer.Sound.\-play()}\myindex{pyg}{\texttt{mixer}!\texttt{Sound}!\texttt{play()}}\randnotiz{play()} abgespielt werden. Zuerst der Sound, wenn eine neue Blase erscheint: in \texttt{spawn\_\-bubb\-le()} in \zeiref{srcBubble1303}.
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{241}{244}{python}{Bubbles  (\reqref{reqSound}.\ref{reqSoundErscheinen}) -- \texttt{spawn\_bubble()}}{srcbubbles13c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{230}{233}{python}{Bubbles  (\reqref{reqSound}.\ref{reqSoundErscheinen}) -- \texttt{spawn\_bubble()}}{srcbubbles13c}  
 
 Dann, wenn in \texttt{sting()} eine Blase zerplatzt (\zeiref{srcBubble1304}):
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{265}{269}{python}{Bubbles (\reqref{reqSound}.\ref{reqSoundZerstechen}) -- \texttt{sting()}}{srcbubbles13d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{256}{258}{python}{Bubbles (\reqref{reqSound}.\ref{reqSoundZerstechen}) -- \texttt{sting()}}{srcbubbles13d}  
 
 Und zum Schluss bei der Kollision mit anderen Blasen oder dem Rand in \texttt{update()}. Dabei muss noch berücksichtigt werden, ob das Spiel gerade den Abfrage für den Neustart anzeigt. Wenn \emph{Ja}, darf der Sound nicht noch einmal abgespielt werden; ansonsten würde permanent der Berühren-Sound abgespielt. 
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{199}{211}{python}{Bubbles (\reqref{reqSound}.\ref{reqSoundBerühren}) -- \texttt{update()}}{srcbubbles13e}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles13.py}{190}{195}{python}{Bubbles (\reqref{reqSound}.\ref{reqSoundBerühren}) -- \texttt{update()}}{srcbubbles13e}  
 
 Und Schluss :-)
 

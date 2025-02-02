@@ -1,11 +1,10 @@
-import os
 from random import randint
 
 import pygame
 
 
 class Circle:
-    gravity = 0.3
+    GRAVITY = 0.3
 
     def __init__(self, pos) -> None:
         self.posx = pos[0] + randint(-2, 2)
@@ -15,22 +14,20 @@ class Circle:
         self.speedx = randint(-10, 10) / 10.01
         self.speedy = randint(-100, 0) / 10.01
 
-    def update(self):
-        self.speedy += Circle.gravity
+    def update(self) -> None:
+        self.speedy += Circle.GRAVITY
         self.posx += self.speedx
         self.posy += self.speedy
 
-    def draw(self):
-        screen = pygame.display.get_surface()
+    def draw(self, screen: pygame.surface.Surface) -> None:
         pygame.draw.circle(screen, self.color, (self.posx, self.posy), self.radius)
 
 
 def main():
     size = (300, 600)
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-    pygame.display.set_caption('Partikelschwarm')
-    screen = pygame.display.set_mode(size)
+    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []
 
@@ -48,9 +45,9 @@ def main():
 
         screen.fill("white")
         for p in circles:
-            p.draw()
+            p.draw(screen)
 
-        pygame.display.flip()
+        window.flip()
         clock.tick(60)
 
     pygame.quit()

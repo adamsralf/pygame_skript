@@ -1,30 +1,30 @@
 import os
 from time import time
-from typing import Any, Tuple
+from typing import Any
 
 import pygame
 from pygame.constants import K_ESCAPE, K_KP_MINUS, K_KP_PLUS, KEYDOWN, QUIT
 
 
-class Settings():
+class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (300, 200))
     FPS = 60
     DELTATIME = 1.0 / FPS
     TITLE = "Animation"
     PATH: dict[str, str] = {}
-    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
-    PATH['image'] = os.path.join(PATH['file'], "images")
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.PATH['file'], name)
+        return os.path.join(Settings.PATH["file"], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.PATH['image'], name)
+        return os.path.join(Settings.PATH["image"], name)
 
 
-class Animation():
+class Animation:
 
     def __init__(self, namelist: list[str], endless: bool, animationtime: int, colorkey: tuple[int, int, int] | None = None) -> None:
         self.images: list[pygame.surface.Surface] = []
@@ -35,7 +35,7 @@ class Animation():
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert_alpha()
             else:
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert()
-                bitmap.set_colorkey(colorkey)           # Transparenz herstellen §\label{srcAnimation0101}§
+                bitmap.set_colorkey(colorkey)  # Transparenz herstellen §\label{srcAnimation0101}§
             self.images.append(bitmap)
         self.imageindex = -1
 
@@ -55,7 +55,7 @@ class Animation():
         return self.imageindex >= len(self.images) - 1
 
 
-class Timer():
+class Timer:
 
     def __init__(self, duration: int, with_start: bool = True):
         self.duration = duration
@@ -95,15 +95,14 @@ class Cat(pygame.sprite.Sprite):
         self.animation.timer.change_duration(delta)
 
 
-class CatAnimation():
+class CatAnimation:
 
     def __init__(self) -> None:
-        super().__init__()
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.TITLE)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.TITLE)
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.cat = pygame.sprite.GroupSingle(Cat())
         self.running = False
@@ -144,7 +143,7 @@ class CatAnimation():
         text_rect.centerx = Settings.WINDOW.centerx
         text_rect.bottom = Settings.WINDOW.bottom - 50
         self.screen.blit(text_image, text_rect)
-        pygame.display.flip()
+        self.window.flip()
 
 
 def main():
@@ -152,5 +151,5 @@ def main():
     anim.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,7 +1,4 @@
-import os
 from time import time
-from typing import Any, Dict, Tuple
-from random import randint, choice
 
 import pygame
 from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
@@ -10,17 +7,16 @@ from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 300))
     FPS = 60
-    DELTATIME = 1.0/FPS
+    DELTATIME = 1.0 / FPS
 
 
 class Game:
 
     def __init__(self) -> None:
-        os.environ["SDL_VIDEO_WINDOW_POS"] = "650, 70"
         pygame.init()
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="Event (0)", position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
-        self._screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("Event (0)")
         self._running = True
 
     def run(self) -> None:
@@ -37,7 +33,7 @@ class Game:
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            print(event)                                    # Eventinfo ausgeben§\label{srcEvents0001}§
+            print(event)  # Eventinfo ausgeben§\label{srcEvents0001}§
             if event.type == QUIT:
                 self._running = False
             elif event.type == KEYDOWN:
@@ -49,7 +45,7 @@ class Game:
 
     def draw(self) -> None:
         self._screen.fill((250, 250, 250))
-        pygame.display.update()
+        self._window.flip()
 
 
 def main():

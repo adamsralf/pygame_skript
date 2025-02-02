@@ -1,7 +1,7 @@
 import os
 import random
 from time import time
-from typing import Any, Tuple
+from typing import Any
 
 import pygame
 from pygame.constants import K_ESCAPE, KEYDOWN, QUIT
@@ -13,19 +13,19 @@ class Settings(object):
     TITLE = "Animation"
     DELTATIME = 1.0 / FPS
     PATH: dict[str, str] = {}
-    PATH['file'] = os.path.dirname(os.path.abspath(__file__))
-    PATH['image'] = os.path.join(PATH['file'], "images")
+    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
+    PATH["image"] = os.path.join(PATH["file"], "images")
 
     @staticmethod
     def filepath(name: str) -> str:
-        return os.path.join(Settings.PATH['file'], name)
+        return os.path.join(Settings.PATH["file"], name)
 
     @staticmethod
     def imagepath(name: str) -> str:
-        return os.path.join(Settings.PATH['image'], name)
+        return os.path.join(Settings.PATH["image"], name)
 
 
-class Timer():
+class Timer:
 
     def __init__(self, duration: int, with_start: bool = True):
         self.duration = duration
@@ -46,7 +46,7 @@ class Timer():
             self.duration = 0
 
 
-class Animation():
+class Animation:
 
     def __init__(self, namelist: list[str], endless: bool, animationtime: int, colorkey: tuple[int, int, int] | None = None) -> None:
         self.images: list[pygame.surface.Surface] = []
@@ -81,13 +81,13 @@ class Rock(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        rocknb = random.randint(6, 9)                                    # Felsennummer §\label{srcAnimation0201}§
+        rocknb = random.randint(6, 9)  # Felsennummer §\label{srcAnimation0201}§
         self.image = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width-self.rect.width)
-        self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height-self.rect.height)
+        self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width - self.rect.width)
+        self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height - self.rect.height)
         self.anim = Animation([f"explosion0{i}.png" for i in range(1, 5)], False, 50)  # §\label{srcAnimation0202}§
-        self.timer_lifetime = Timer(random.randint(100, 2000), False)   # Lebenszeit §\label{srcAnimation0203}§
+        self.timer_lifetime = Timer(random.randint(100, 2000), False)  # Lebenszeit §\label{srcAnimation0203}§
         self.bumm = False
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -95,7 +95,7 @@ class Rock(pygame.sprite.Sprite):
             self.bumm = True
         if self.bumm:
             self.image = self.anim.next()
-            c = self.rect.center                                        # Zentrum §\label{srcAnimation0204}§
+            c = self.rect.center  # Zentrum §\label{srcAnimation0204}§
             self.rect = self.image.get_rect()
             self.rect.center = c
         if self.anim.is_ended():
@@ -105,14 +105,13 @@ class Rock(pygame.sprite.Sprite):
 class ExplosionAnimation(object):
 
     def __init__(self) -> None:
-        super().__init__()
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption(Settings.TITLE)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.TITLE)
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+
         self.all_rocks = pygame.sprite.Group()
-        self.timer_newrock = Timer(500)                                  # Timer §\label{srcAnimation0205}§
+        self.timer_newrock = Timer(500)  # Timer §\label{srcAnimation0205}§
         self.running = False
 
     def run(self) -> None:
@@ -137,14 +136,14 @@ class ExplosionAnimation(object):
                     self.running = False
 
     def update(self) -> None:
-        if self.timer_newrock.is_next_stop_reached():                   # 500ms? §\label{srcAnimation0206}§
+        if self.timer_newrock.is_next_stop_reached():  # 500ms? §\label{srcAnimation0206}§
             self.all_rocks.add(Rock())
         self.all_rocks.update()
 
     def draw(self) -> None:
         self.screen.fill("black")
         self.all_rocks.draw(self.screen)
-        pygame.display.flip()
+        self.window.flip()
 
 
 def main():
@@ -152,5 +151,5 @@ def main():
     anim.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

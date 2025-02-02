@@ -1,5 +1,3 @@
-import os
-
 import pygame
 import pygame.time
 
@@ -11,11 +9,9 @@ class Settings:
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Bewegung")
+    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
 
     defender_image = pygame.image.load("images/defender01.png").convert_alpha()
@@ -46,12 +42,12 @@ def main():
         # Draw
         screen.fill("white")
         screen.blit(defender_image, defender_rect)
-        pygame.display.flip()
+        window.flip()
         clock.tick(Settings.FPS)
     print(f"top={defender_rect.top}")
 
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

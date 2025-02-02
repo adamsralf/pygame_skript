@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import pygame
@@ -35,21 +34,20 @@ class Border(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
-        if leftright == 'right':
+        if leftright == "right":
             self.rect.right = Settings.WINDOW.right
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Sprite")
+    window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
+
     defender = pygame.sprite.GroupSingle(Defender())
     all_border = pygame.sprite.Group()
-    all_border.add(Border('left'))
-    all_border.add(Border('right'))
+    all_border.add(Border("left"))
+    all_border.add(Border("right"))
 
     time_previous = time()
     running = True
@@ -67,8 +65,8 @@ def main():
         # Draw
         screen.fill((255, 255, 255))
         defender.draw(screen)
-        all_border.draw(screen)                 # Mit einem Rutsch §\label{srcInvader06c03}§
-        pygame.display.flip()
+        all_border.draw(screen)  # Mit einem Rutsch §\label{srcInvader06c03}§
+        window.flip()
 
         clock.tick(Settings.FPS)
         time_current = time()
@@ -77,5 +75,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

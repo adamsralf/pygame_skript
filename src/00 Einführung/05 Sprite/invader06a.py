@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import pygame
@@ -10,9 +9,9 @@ class Settings:
     DELTATIME = 1.0 / FPS
 
 
-class Defender(pygame.sprite.Sprite):               # Kindklasse von Sprite §\label{srcInvader06a01}§
+class Defender(pygame.sprite.Sprite):  # Kindklasse von Sprite §\label{srcInvader06a01}§
 
-    def __init__(self) -> None:                     # Konstruktor §\label{srcInvader06a02}§
+    def __init__(self) -> None:  # Konstruktor §\label{srcInvader06a02}§
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
@@ -21,30 +20,29 @@ class Defender(pygame.sprite.Sprite):               # Kindklasse von Sprite §\l
         self.rect.bottom = Settings.WINDOW.bottom - 5
         self.speed = 300
 
-    def update(self) -> None:                       # Zustandsberechnung §\label{srcInvader06a03}§
+    def update(self) -> None:  # Zustandsberechnung §\label{srcInvader06a03}§
         newpos = self.rect.move(self.speed * Settings.DELTATIME, 0)
         if newpos.right >= Settings.WINDOW.right:
             self.change_direction()
+            newpos.right = Settings.WINDOW.right
         elif newpos.left <= Settings.WINDOW.left:
             self.change_direction()
-        else:
-            self.rect = newpos
+            newpos.left = Settings.WINDOW.left
+        self.rect = newpos
 
     def draw(self, screen: pygame.surface.Surface) -> None:  # Malen §\label{srcInvader06a04}§
         screen.blit(self.image, self.rect)
 
-    def change_direction(self) -> None:             # OO style §\label{srcInvader06a08}§
+    def change_direction(self) -> None:  # OO style §\label{srcInvader06a08}§
         self.speed *= -1
 
 
 def main():
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "10, 50"
     pygame.init()
-
-    screen = pygame.display.set_mode(Settings.WINDOW.size)
-    pygame.display.set_caption("Sprite")
+    window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
+    screen = window.get_surface()
     clock = pygame.time.Clock()
-    defender = Defender()                           # Objekt anlegen §\label{srcInvader06a05}§
+    defender = Defender()  # Objekt anlegen §\label{srcInvader06a05}§
 
     time_previous = time()
     running = True
@@ -55,12 +53,12 @@ def main():
                 running = False
 
         # Update
-        defender.update()                           # Aufruf §\label{srcInvader06a06}§
+        defender.update()  # Aufruf §\label{srcInvader06a06}§
 
         # Draw
         screen.fill("white")
-        defender.draw(screen)                       # Aufruf §\label{srcInvader06a07}§
-        pygame.display.flip()
+        defender.draw(screen)  # Aufruf §\label{srcInvader06a07}§
+        window.flip()
 
         clock.tick(Settings.FPS)
         time_current = time()
@@ -69,5 +67,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -385,7 +385,8 @@ class Game:
     """Represents a game of Pong.
 
     Attributes:
-        _display (pygame.Surface): The game display surface.
+        _window (pygame.Window): The game Window.
+        _screen (pygame.Surface): The game surface.
         _clock (pygame.time.Clock): The game clock.
         _background (pygame.sprite.GroupSingle): The background sprite group.
         _all_sprites (pygame.sprite.Group): The group containing all moving game sprites.
@@ -413,9 +414,10 @@ class Game:
             None
         """
         pygame.init()
-        self._display = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("My Kind of Pong")
+        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
+
         self._background = pygame.sprite.GroupSingle(Background())
         self._all_sprites = pygame.sprite.Group()
         self._paddle = {}
@@ -452,14 +454,14 @@ class Game:
             self._all_sprites.update(action="move")
 
     def draw(self):
-        """Draws the game on the display."""
-        self._background.draw(self._display)
-        self._all_sprites.draw(self._display)
+        """Draws the game on the screen."""
+        self._background.draw(self._screen)
+        self._all_sprites.draw(self._screen)
         if self._pausing:
-            self._pause.draw(self._display)
+            self._pause.draw(self._screen)
         elif self._helping:
-            self._help.draw(self._display)
-        pygame.display.update()
+            self._help.draw(self._screen)
+        self._window.flip()
 
     def watch_for_events(self):
         """Watches for game events and handles them."""
@@ -531,8 +533,7 @@ class Game:
 
 
 def main():
-    game = Game()
-    game.run()
+    Game().run()
 
 
 if __name__ == "__main__":

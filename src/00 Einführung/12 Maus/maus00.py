@@ -1,6 +1,6 @@
 import os
 from time import time
-from typing import Any, Dict, Tuple
+from typing import Any, Tuple
 
 import pygame
 from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
@@ -9,7 +9,9 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 class Ball(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
-        fullfilename = os.path.join(Game.PATH["image"], "blue2.png")
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(path, "images")
+        fullfilename = os.path.join(path, "blue2.png")
         self.image_orig = pygame.image.load(fullfilename).convert_alpha()
         self._scale = 10
         self.image = pygame.transform.scale(self.image_orig, (self._scale, self._scale))
@@ -43,9 +45,11 @@ class Ball(pygame.sprite.Sprite):
         self.image_orig = pygame.transform.rotate(self.image_orig, angle)
 
     def resize(self, delta: int) -> None:
-        if self.rect.width < Game.INNER_RECT.width:
-            if self._scale + delta > 0:
-                self._scale += delta
+        self._scale += delta
+        if self._scale > Game.INNER_RECT.width:
+            self._scale = Game.INNER_RECT.width
+        elif self._scale < 5:
+            self._scale = 5
 
     def set_center(self, center: Tuple[int, int]) -> None:
         self.rect.center = center
@@ -53,19 +57,16 @@ class Ball(pygame.sprite.Sprite):
 
 class Game:
     WINDOW = pygame.rect.Rect((0, 0), (600, 600))
-    PATH: Dict[str, str] = {}
-    PATH["file"] = os.path.dirname(os.path.abspath(__file__))
-    PATH["image"] = os.path.join(PATH["file"], "images")
     INNER_RECT = pygame.rect.Rect(100, 100, WINDOW.width - 200, WINDOW.height - 200)
     FPS = 60
     DELTATIME = 1.0 / FPS
 
     def __init__(self) -> None:
-        os.environ["SDL_VIDEO_WINDOW_POS"] = "650, 70"
         pygame.init()
+        self._window = pygame.Window(size=Game.WINDOW.size, title="Mausaktionen")
+        self._screen = self._window.get_surface()
         self._clock = pygame.time.Clock()
-        self._screen = pygame.display.set_mode(Game.WINDOW.size)
-        pygame.display.set_caption("Mausaktionen")
+
         self._ball = Ball()  # Ball-Objekt§\label{srcMaus0001}§
         self._running = True
 
@@ -101,17 +102,19 @@ class Game:
                     self._ball.update(scale=-2)
 
     def update(self):
-        self._ball.update(center=pygame.mouse.get_pos())
-        pygame.mouse.set_visible(
-            not Game.INNER_RECT.collidepoint(pygame.mouse.get_pos())
-        )  # Unsichtbar?§\label{srcMaus0003}§
+        newpos = pygame.mouse.get_pos()
+        self._ball.update(center=newpos)
+        if Game.INNER_RECT.collidepoint(pygame.mouse.get_pos()):  # Unsichtbar?§\label{srcMaus0003}§
+            pygame.mouse.set_visible(False)
+        else:
+            pygame.mouse.set_visible(True)
         self._ball.update(go=True)
 
     def draw(self) -> None:
         self._screen.fill((250, 250, 250))
         pygame.draw.rect(self._screen, "red", Game.INNER_RECT, 1)
         self._ball.draw(self._screen)
-        pygame.display.flip()
+        self._window.flip()
 
 
 def main():
