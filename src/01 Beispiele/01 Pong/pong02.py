@@ -16,9 +16,9 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.surface.Surface(Settings.WINDOW.size).convert()
         self.rect = self.image.get_rect()
         self.image.fill("darkred")
-        self._paint_net()
+        self.paint_net()
 
-    def _paint_net(self) -> None:
+    def paint_net(self) -> None:
         net_rect = pygame.rect.Rect(0, 0, 0, 0)
         net_rect.centerx = Settings.WINDOW.centerx
         net_rect.top = 50
@@ -36,85 +36,85 @@ class Paddle(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height // 10)  # Größe §\label{srcPong0201}§
         self.rect.centery = Settings.WINDOW.centery  # Position §\label{srcPong0202}§
-        self._player = player
-        if self._player == "left":
+        self.player = player
+        if self.player == "left":
             self.rect.left = Paddle.BORDERDISTANCE["horizontal"]
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
-        self._speed = Settings.WINDOW.height // 2  # Geschwindigkeit§\label{srcPong0206}§
-        self._direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
+        self.speed = Settings.WINDOW.height // 2  # Geschwindigkeit§\label{srcPong0206}§
+        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
         self.image = pygame.surface.Surface(self.rect.size)  # Surface §\label{srcPong0203}§
         self.image.fill("yellow")
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":  # Postionsänderung §\label{srcPong0204}§
-                self._move()
+                self.move()
             elif kwargs["action"] in Paddle.DIRECTION.keys():  # Bewegungsrichtung §\label{srcPong0205}§
-                self._direction = Paddle.DIRECTION[kwargs["action"]]
+                self.direction = Paddle.DIRECTION[kwargs["action"]]
         return super().update(*args, **kwargs)
 
-    def _move(self) -> None:
-        if self._direction != Paddle.DIRECTION["halt"]:
-            self.rect.move_ip(0, self._speed * self._direction * Settings.DELTATIME)  # §\label{srcPong0207}§
-            if self._direction == Paddle.DIRECTION["up"]:
+    def move(self) -> None:
+        if self.direction != Paddle.DIRECTION["halt"]:
+            self.rect.move_ip(0, self.speed * self.direction * Settings.DELTATIME)  # §\label{srcPong0207}§
+            if self.direction == Paddle.DIRECTION["up"]:
                 self.rect.top = max(self.rect.top, Paddle.BORDERDISTANCE["vertical"])
-            elif self._direction == Paddle.DIRECTION["down"]:
+            elif self.direction == Paddle.DIRECTION["down"]:
                 self.rect.bottom = min(self.rect.bottom, Settings.WINDOW.height - Paddle.BORDERDISTANCE["vertical"])
 
 
 class Game:
     def __init__(self):
-        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._all_sprites = pygame.sprite.Group()
-        self._paddle = {}  # Schläger §\label{srcPong0208}§
-        self._paddle["left"] = Paddle("left", self._all_sprites)
-        self._paddle["right"] = Paddle("right", self._all_sprites)
-        self._running = True
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
+        self.background = pygame.sprite.GroupSingle(Background())
+        self.all_sprites = pygame.sprite.Group()
+        self.paddle = {}  # Schläger §\label{srcPong0208}§
+        self.paddle["left"] = Paddle("left", self.all_sprites)
+        self.paddle["right"] = Paddle("right", self.all_sprites)
+        self.running = True
 
     def run(self):
         time_previous = time()
-        while self._running:
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
         pygame.quit()
 
     def update(self):
-        self._all_sprites.update(action="move")  # Bewegung §\label{srcPong0209}§
+        self.all_sprites.update(action="move")  # Bewegung §\label{srcPong0209}§
 
     def draw(self):
-        self._background.draw(self._screen)
-        self._all_sprites.draw(self._screen)  # Ausgabe §\label{srcPong0210}§
-        self._window.flip()
+        self.background.draw(self.screen)
+        self.all_sprites.draw(self.screen)  # Ausgabe §\label{srcPong0210}§
+        self.window.flip()
 
     def watch_for_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running = False
+                self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._running = False
+                    self.running = False
                 elif event.key == pygame.K_UP:  # Schlägerbewegung §\label{srcPong0211}§
-                    self._paddle["right"].update(action="up")
+                    self.paddle["right"].update(action="up")
                 elif event.key == pygame.K_DOWN:
-                    self._paddle["right"].update(action="down")
+                    self.paddle["right"].update(action="down")
                 elif event.key == pygame.K_w:
-                    self._paddle["left"].update(action="up")
+                    self.paddle["left"].update(action="up")
                 elif event.key == pygame.K_s:
-                    self._paddle["left"].update(action="down")
+                    self.paddle["left"].update(action="down")
             elif event.type == pygame.KEYUP:  # Schlägerstopp §\label{srcPong0212}§
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                    self._paddle["right"].update(action="halt")
+                    self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_w or event.key == pygame.K_s:
-                    self._paddle["left"].update(action="halt")
+                    self.paddle["left"].update(action="halt")
 
 
 def main():

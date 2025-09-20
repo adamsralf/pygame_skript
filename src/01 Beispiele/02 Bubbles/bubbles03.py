@@ -79,51 +79,51 @@ class Bubble(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._timer_bubble = Timer(500, False)
-        self._all_sprites = pygame.sprite.Group()
-        self._running = True
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
+        self.background = pygame.sprite.GroupSingle(Background())
+        self.timer_bubble = Timer(500, False)
+        self.all_sprites = pygame.sprite.Group()
+        self.running = True
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running = False
+                self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._running = False
+                    self.running = False
 
     def draw(self) -> None:
-        self._background.draw(self._screen)
-        self._all_sprites.draw(self._screen)
-        self._window.flip()
+        self.background.draw(self.screen)
+        self.all_sprites.draw(self.screen)
+        self.window.flip()
 
     def update(self) -> None:
         self.spawn_bubble()
 
     def spawn_bubble(self) -> None:
-        if self._timer_bubble.is_next_stop_reached():
-            if len(self._all_sprites) <= Settings.MAX_BUBBLES:  # Platz?§\label{srcBubble0306}§
+        if self.timer_bubble.is_next_stop_reached():
+            if len(self.all_sprites) <= Settings.MAX_BUBBLES:  # Platz?§\label{srcBubble0306}§
                 b = Bubble()
                 for _ in range(100):
                     b.randompos()
                     b.radius += Settings.DISTANCE
-                    collided = pygame.sprite.spritecollide(b, self._all_sprites, False, pygame.sprite.collide_circle)
+                    collided = pygame.sprite.spritecollide(b, self.all_sprites, False, pygame.sprite.collide_circle)
                     b.radius -= Settings.DISTANCE
                     if not collided:
-                        self._all_sprites.add(b)
+                        self.all_sprites.add(b)
                         break
 
     def run(self) -> None:
         time_previous = time()
-        self._running = True
-        while self._running:
+        self.running = True
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current

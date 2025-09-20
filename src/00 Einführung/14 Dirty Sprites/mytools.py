@@ -33,25 +33,25 @@ class Timer:
 
 class Animation(object):
     def __init__(self, spritelist: list[pygame.surface.Surface], endless: bool, animationtime: int, colorkey: None | str | list[int] = None) -> None:
-        self._images = spritelist
-        self._endless = endless
-        self._timer = Timer(animationtime)
-        self._imageindex = -1
+        self.images = spritelist
+        self.endless = endless
+        self.timer = Timer(animationtime)
+        self.imageindex = -1
 
     def next(self) -> pygame.surface.Surface:
-        if self._timer.is_next_stop_reached():
-            self._imageindex += 1
-            if self._imageindex >= len(self._images):
-                if self._endless:
-                    self._imageindex = 0
+        if self.timer.is_next_stop_reached():
+            self.imageindex += 1
+            if self.imageindex >= len(self.images):
+                if self.endless:
+                    self.imageindex = 0
                 else:
-                    self._imageindex = len(self._images) - 1
-        return self._images[self._imageindex]
+                    self.imageindex = len(self.images) - 1
+        return self.images[self.imageindex]
 
     def is_ended(self) -> bool:
-        if self._endless:
+        if self.endless:
             return False
-        elif self._imageindex >= len(self._images) - 1:
+        elif self.imageindex >= len(self.images) - 1:
             return True
         else:
             return False
@@ -59,29 +59,29 @@ class Animation(object):
 
 class SpriteContainer:
     def __init__(self, rectfile: str, spritesheetfile: str, colorkey: None | str | list[int] = None) -> None:
-        self._spritesheed = pygame.image.load(spritesheetfile).convert()
+        self.spritesheed = pygame.image.load(spritesheetfile).convert()
         if colorkey == None:
-            self._spritesheed = self._spritesheed.convert_alpha()
+            self.spritesheed = self.spritesheed.convert_alpha()
         else:
-            self._spritesheed = self._spritesheed.convert()
-            self._spritesheed.set_colorkey(colorkey)
-        self._rects: dict[str, dict[int, pygame.Rect]] = {}
-        self._sprites: dict[str, dict[int, pygame.surface.Surface]] = {}
-        self._load(rectfile)
+            self.spritesheed = self.spritesheed.convert()
+            self.spritesheed.set_colorkey(colorkey)
+        self.rects: dict[str, dict[int, pygame.Rect]] = {}
+        self.sprites: dict[str, dict[int, pygame.surface.Surface]] = {}
+        self.load(rectfile)
 
-    def _load(self, filename: str) -> None:
+    def load(self, filename: str) -> None:
         with open(filename) as infile:
             data = json.load(infile)
             for spritename in data.items():
-                self._rects[spritename[0]] = {}
-                self._sprites[spritename[0]] = {}
+                self.rects[spritename[0]] = {}
+                self.sprites[spritename[0]] = {}
                 for rectdata in spritename[1].items():
                     index = int(rectdata[0])
-                    self._rects[spritename[0]][index] = pygame.Rect(rectdata[1][0], rectdata[1][1], rectdata[1][2], rectdata[1][3])
-                    self._sprites[spritename[0]][index] = self._spritesheed.subsurface(self._rects[spritename[0]][index])
+                    self.rects[spritename[0]][index] = pygame.Rect(rectdata[1][0], rectdata[1][1], rectdata[1][2], rectdata[1][3])
+                    self.sprites[spritename[0]][index] = self.spritesheed.subsurface(self.rects[spritename[0]][index])
 
     def get_sprites(self, key: str) -> dict[int, pygame.surface.Surface]:
-        return self._sprites[key]
+        return self.sprites[key]
 
     def get_sprite(self, key: str, index: int = 0) -> pygame.surface.Surface:
-        return self._sprites[key][index]
+        return self.sprites[key][index]

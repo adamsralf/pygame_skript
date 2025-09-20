@@ -16,9 +16,9 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.surface.Surface(Settings.WINDOW.size).convert()
         self.rect = self.image.get_rect()
         self.image.fill("darkred")
-        self._paint_net()
+        self.paint_net()
 
-    def _paint_net(self) -> None:
+    def paint_net(self) -> None:
         net_rect = pygame.rect.Rect(0, 0, 0, 0)
         net_rect.centerx = Settings.WINDOW.centerx
         net_rect.top = 50
@@ -30,19 +30,19 @@ class Background(pygame.sprite.Sprite):
 
 class Game:
     def __init__(self):
-        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._running = True
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
+        self.background = pygame.sprite.GroupSingle(Background())
+        self.running = True
 
     def run(self):
         time_previous = time()
-        while self._running:
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
@@ -52,16 +52,16 @@ class Game:
         pass
 
     def draw(self):
-        self._background.draw(self._screen)
-        self._window.flip()
+        self.background.draw(self.screen)
+        self.window.flip()
 
     def watch_for_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running = False
+                self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._running = False
+                    self.running = False
 
 
 def main():

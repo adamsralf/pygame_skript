@@ -4,7 +4,8 @@
 \usepackage[german]{varioref}
 \usepackage[luatex,unicode=true,breaklinks,bookmarksnumbered,colorlinks,linkcolor=blue,linktocpage,pdfauthor={Ralf Adams},pdftitle={Einführung in Pygame}]{hyperref}
 \usepackage[german,nokeyprefix]{refstyle}
-\usepackage{keystroke}
+\usepackage{amsmath}
+\usepackage{units}
 \usepackage{enumerate}
 \usepackage{fontspec}
 \usepackage{verbatim}
@@ -26,6 +27,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{angles,quotes}
 \usepackage{chngcntr}
+\usepackage[os=win]{menukeys}
 
 \graphicspath{{./pics/}}
 \selectlanguage{ngerman}
@@ -54,8 +56,8 @@
 \begin{document}
 
   \title{Einführung in die\\2D-Spieleprogrammierung mit Pygame}
-  \author{Ralf Adams (TBS1, Bochum)}
-  \date{Version 0.11 vom \today}
+  \author{Ralf Adams (\href{https://www.tbs1.de/}{\nolinkurl{TBS 1}}, Bochum)}
+  \date{Version 0.12 vom \today}
   \maketitle
   \tableofcontents
 
@@ -86,7 +88,7 @@
 \chapter{Beispielprojekte}
 \input{0201_Pong.tex}
 \input{0202_Bubbles.tex}
-%%\input{0202_Kreiskollision.tex}
+\input{0203_Moonlander.tex}
 
 \listoffigures
 %\lstlistoflistings

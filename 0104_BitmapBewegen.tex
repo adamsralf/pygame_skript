@@ -201,7 +201,7 @@ Die nachfolgenden Kollisionsprüfungen werden dann mit dem \texttt{newpos}-Recht
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Geschwindigkeiten normalisieren (\emph{deltatime})}\index{deltatime}
+\subsection{Geschwindigkeiten normalisieren (\emph{deltatime})}\index{deltatime}\label{secDeltatime}
 Die Bewegung ist derzeit nicht nur von \texttt{defender\_speed} abhängig, sondern auch von der Framerate \texttt{Settings.FPS}. Um diese Abhängigkeit zu verdeutlichen, habe ich den vorherigen Quelltext für ein kleines Experiment umgebaut (siehe \srcref[vref]{srcInvader05e}).
 
 In \zeiref{srcInvader05e01} sehen Sie die unterschiedlichen Frameraten, mit denen das Experiment durchgeführt wurde. In der Zeile davor werden die Fenstermaße so eingestellt, dass das Fenster hoch und schmal ist, und in der Zeile darunter wird die absolute Anzahl der Millisekunden angegeben, die das Raumschiff nach oben steigt.

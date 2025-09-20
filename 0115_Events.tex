@@ -22,7 +22,7 @@ Wandert man nun mit der Maus hin und her, drückt ein paar Tasten oder beendet d
 
 \lstsource{console00.txt}{1}{999}{python}{Events -- Konsolenausgabe}{srcConsole00a} 
 
-Zunächst fällt auf, dass die Eventinformationen in Form eines Dictionarys zur Verfügung gestellt werden. Den ersten Eintrag (die Nummer mit dem Bindestrich und anschließendem Namen) kann über \texttt{event.type}\index{Event!\texttt{type}} abgefragt werden. Damit man sich diese Nummern nicht auswendig merken muss, werden von Pygame entsprechende Konstanten angeboten; für die Tastatur finden Sie in \tabref[vref]{tabKey} und für die Maus in \tabref[vref]{tabMousebutton} eine Übersicht.
+Zunächst fällt auf, dass die Eventinformationen in Form eines Dictionarys zur Verfügung gestellt werden. Den ersten Eintrag (die Nummer mit dem Bindestrich und anschließendem Namen) kann über \texttt{event.type}\myindex{pyg}{\texttt{Event}!\texttt{type}} abgefragt werden. Damit man sich diese Nummern nicht auswendig merken muss, werden von Pygame entsprechende Konstanten angeboten; für die Tastatur finden Sie in \tabref[vref]{tabKey} und für die Maus in \tabref[vref]{tabMousebutton} eine Übersicht.
 
 In den geschweiften Klammern stehen nun die Key/Value-Paare -- also die dem Event mitgegebenen Informationen. Bei Tastaturereignissen sind dies beispielsweise die Darstellung als Unicode-Zeichen oder seine Unicodenummer. Mausereignissen wird sinnvollerweise die Position und die Tastennummer mitgegeben. Das Klicken auf dem \emph{Fenster schließen}-Button oben rechts löst mehrere Ereignisse aus, hier die letzten vier der Liste.
 
@@ -40,39 +40,39 @@ Hat die ganz rechte Box den Wert 10 erreicht, erzeugt er einen Überlauf auf die
 
 Das Ganze nun im Detail. In der Konsolenausgabe oben (siehe Seite~\pageref{srcConsole00a}) ist für jedes Event so eine eindeutige Nummer zu sehen, über die man das Event identifizieren kann. Pygame reserviert mir einen Nummernbereich für eigene Events zwischen den Konstanten \texttt{pygame.USEREVENT}\randnotiz{USEREVENT}\myindex{pyg}{\texttt{USEREVENT}|underline} und \texttt{pygame.NUMEVENTS~-~1}\randnotiz{NUMEVENTS}\myindex{pyg}{\texttt{NUMEVENTS}|underline}. Für jedes selbst erstellte Event muss man nun eine solche eindeutige Nummer vergeben. Am einfachsten ist es, zentral diese durch \texttt{USEREVENT~+~}$n$ zu definieren. In \zeiref{srcEvent0101} und \zeiref{srcEvent0102} finden Sie entsprechende Beispiele. Ich kapsle diese Definitionen in eine statische Klasse aus keinem anderen Grund, als dass ich dann die Autovervollständigung des Editors gut nutzen kann (\zeiref{srcEvent0100}). Die Klasse \texttt{Settings} sollte selbsterklärend sein.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{1}{20}{python}{Events (2) -- Präambel}{srcEvent01a}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{1}{21}{python}{Events (2) -- Präambel}{srcEvent01a}
 
 Die Klasse \texttt{Button} sollte auch über weite Strecken verstanden werden. Die erste spannende Stelle finden Sie in \zeiref{srcEvent0103}. Hier wird ein neues \texttt{pygame.event.Event}\randnotiz{Event}-Objekt\myindex{pyg}{\texttt{event}!\texttt{Event}|underline} erzeugt. Als ersten Parameter muss diese eben erwähnte ID angegeben werden. Danach können Sie beliebig viele Angaben als Eventinfo mitgeben. In unserem Beispiel wird der Buttontext mitgegeben, damit man später feststellen kann, welcher Button gedrückt wurde. 
 
 Danach wird in \zeiref{srcEvent0104} über \texttt{pygame.event.post()}\randnotiz{post()}\myindex{pyg}{\texttt{event}!\texttt{post()}|underline} das Event abgefeuert.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{23}{38}{python}{Events (2) -- Klasse \texttt{Button}}{srcEvent01b}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{24}{39}{python}{Events (2) -- Klasse \texttt{Button}}{srcEvent01b}
 
 Die Klasse \texttt{Particle} ist viel Quelltext mit wenig Neuem. Partikel zufälliger Größe, Farbe, Richtung und Geschwindigkeit sausen durch den Bildschirm und prallen ggf. von den Rändern ab. Sie enthalten keine event-spezifischen Funktionalitäten. Das Attribut \texttt{\_halted} wird verwendet, um nach Drücken der Buttons den Partikel anzuhalten bzw. wieder loslaufen zu lassen.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{41}{79}{python}{Events (2) -- Klasse \texttt{Particle}}{srcEvent01c}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{42}{80}{python}{Events (2) -- Klasse \texttt{Particle}}{srcEvent01c}
 
 Mit \texttt{Box} wird so eine Ziffernbox implementiert. Dem Konstruktor wird dabei eine Position und ein Index mitgegeben. Die Bedeutung des Paramters \texttt{position} sollte klar sein. Mit Hilfe von \texttt{index} kann später ermittelt werden, welche Box einen Überlauf zur nächst höheren Zehnerpotenz hatte.
 
 In \texttt{update()} wird der internen Zähler \texttt{\_count} immer um~1 erhöht. Erreiche ich dabei die~10 (\zeiref{srcEvent0105}), wird das Event erzeugt und der Index als Eventinfo übergeben. Damit kann das Hauptprogramm ermitteln, welcher Box er nun ein \texttt{update()} verpassen muss.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{82}{107}{python}{Events (2) -- Klasse \texttt{Box}}{srcEvent01d}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{83}{108}{python}{Events (2) -- Klasse \texttt{Box}}{srcEvent01d}
 
 Und jetzt das Hauptprogramm: Im Konstruktor werden die Buttons, Boxen und Partikel angelegt und Spritegroups zugeordnet.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{110}{126}{python}{Events (2) --  Konstruktor von \texttt{Game}}{srcEvent01e}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{111}{127}{python}{Events (2) --  Konstruktor von \texttt{Game}}{srcEvent01e}
 
 Die Methode \texttt{run()} ist nahezu langweilig.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{128}{138}{python}{Events (2) --  \texttt{Game.run()}}{srcEvent01f}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{129}{139}{python}{Events (2) --  \texttt{Game.run()}}{srcEvent01f}
 
 Benutzerdefiniert Events werden genauso behandelt wie vordefinierte. Zuerst erfragt man den \texttt{type} und dann verarbeitet man die Eventinfos. In \zeiref{srcEvent0106} wird nachgeschaut, ob einer der beiden Buttons gedrückt wird. Anschließend wird über die Eventinfo \texttt{text} an die Partikel die Nachricht weitergeleitet, ob sie stehenbleiben oder weiterlaufen sollen. Analoges ab \zeiref{srcEvent0107}. Zuerst wird überprüft, ob eine Box einen Überlauf hatte und dann wird mit Hilfe des Eventinfo \texttt{index} die nächste Box darüber informiert, dass sie sich um~1 erhöhen muss.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{140}{154}{python}{Events (2) --  \texttt{Game.watch\_for\_events()}}{srcEvent01g}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{141}{155}{python}{Events (2) --  \texttt{Game.watch\_for\_events()}}{srcEvent01g}
 
 Der Rest wird hier der Vollständigkeit abgedruckt.
 
-\lstsource{SRC/00 Einführung/15 Events/events01.py}{156}{184}{python}{Events (2) --  Der Rest von \texttt{Game}}{srcEvent01h}
+\lstsource{SRC/00 Einführung/15 Events/events01.py}{157}{185}{python}{Events (2) --  Der Rest von \texttt{Game}}{srcEvent01h}
 
 \subsection{Wie kann ich periodisch Ereignisse erzeugen lassen?}\label{eventtime}
 
@@ -80,15 +80,15 @@ Dies ist sogar recht einfach. Das vorherige Beispiel wird so erweitert, dass im 
 
 Dazu wird zunächst die neue ID \texttt{NEWPARTICLES} für das Benutzerevent definiert.
 
-\lstsource{SRC/00 Einführung/15 Events/events02.py}{9}{12}{python}{Events (3) --  Präambel}{srcEvent02a}
+\lstsource{SRC/00 Einführung/15 Events/events02.py}{10}{13}{python}{Events (3) --  Präambel}{srcEvent02a}
 
 Im Konstruktor von \texttt{Game} wird in \zeiref{srcEvent0201} mit Hilfe von \texttt{pygame.time.set\_timer()} ein periodischer Timer\randnotiz{set\_timer()}\myindex{pyg}{\texttt{time}!\texttt{set\_timer()}|underline} dazu gesetzt. Dieser schießt alle~$500~ms$ die entsprechende EventID ab.
 
-\lstsource{SRC/00 Einführung/15 Events/events02.py}{139}{141}{python}{Events (3) -- Timer}{srcEvent02b}
+\lstsource{SRC/00 Einführung/15 Events/events02.py}{140}{142}{python}{Events (3) -- Timer}{srcEvent02b}
 
-Wie die anderen Events wird dieses nun in \texttt{watch\_for\_event()} abgefangen (\zeiref{srcEvent0202}) und verarbeitet. Hier indem die Methode \texttt{\_generate\_particles()} aufgerufen wird.
+Wie die anderen Events wird dieses nun in \texttt{watch\_for\_event()} abgefangen (\zeiref{srcEvent0202}) und verarbeitet. Hier indem die Methode \texttt{generate\_particles()} aufgerufen wird.
 
-\lstsource{SRC/00 Einführung/15 Events/events02.py}{170}{171}{python}{Events (3) -- Event}{srcEvent02c}
+\lstsource{SRC/00 Einführung/15 Events/events02.py}{171}{172}{python}{Events (3) -- Event}{srcEvent02c}
 
 \subsection*{Was war neu?}
 

@@ -14,18 +14,18 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self._window = pygame.Window(size=Settings.WINDOW.size, title="Event (0)", position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
-        self._running = True
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="Event (0)", position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
+        self.running = True
 
     def run(self) -> None:
         time_previous = time()
-        while self._running:
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
@@ -35,17 +35,17 @@ class Game:
         for event in pygame.event.get():
             print(event)  # Eventinfo ausgeben§\label{srcEvents0001}§
             if event.type == QUIT:
-                self._running = False
+                self.running = False
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    self._running = False
+                    self.running = False
 
     def update(self):
         pass
 
     def draw(self) -> None:
-        self._screen.fill((250, 250, 250))
-        self._window.flip()
+        self.screen.fill((250, 250, 250))
+        self.window.flip()
 
 
 def main():

@@ -73,9 +73,9 @@ class BubbleContainer:
 class Bubble(pygame.sprite.Sprite):
     def __init__(self, bubble_container: BubbleContainer) -> None:
         super().__init__()
-        self._bubble_container = bubble_container
+        self.bubble_container = bubble_container
         self.radius = Settings.RADIUS["min"]
-        self.image = self._bubble_container.get(self.radius)
+        self.image = self.bubble_container.get(self.radius)
         self.rect: pygame.rect.Rect = self.image.get_rect()
         self.fradius = float(self.radius)
         self.speed = 100
@@ -87,7 +87,7 @@ class Bubble(pygame.sprite.Sprite):
                 self.fradius = min(self.fradius, Settings.RADIUS["max"])
                 self.radius = round(self.fradius)
                 center = self.rect.center
-                self.image = self._bubble_container.get(self.radius)
+                self.image = self.bubble_container.get(self.radius)
                 self.rect = self.image.get_rect()
                 self.rect.center = center
 
@@ -101,47 +101,47 @@ class Bubble(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._bubble_container = BubbleContainer()
-        self._timer_bubble = Timer(500, False)
-        self._all_sprites = pygame.sprite.Group()
-        self._running = True
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
+        self.background = pygame.sprite.GroupSingle(Background())
+        self.bubble_container = BubbleContainer()
+        self.timer_bubble = Timer(500, False)
+        self.all_sprites = pygame.sprite.Group()
+        self.running = True
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running = False
+                self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._running = False
+                    self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:  # Mausklick? §\label{srcBubble0601}§
                 if event.button == 1:  # left
                     self.sting(pygame.mouse.get_pos())  # Aufruf §\label{srcBubble0602}§
 
     def draw(self) -> None:
-        self._background.draw(self._screen)
-        self._all_sprites.draw(self._screen)
-        self._window.flip()
+        self.background.draw(self.screen)
+        self.all_sprites.draw(self.screen)
+        self.window.flip()
 
     def update(self) -> None:
-        self._all_sprites.update(action="grow")
+        self.all_sprites.update(action="grow")
         self.spawn_bubble()
         self.set_mousecursor()
 
     def spawn_bubble(self) -> None:
-        if self._timer_bubble.is_next_stop_reached():
-            if len(self._all_sprites) <= Settings.MAX_BUBBLES:
-                b = Bubble(self._bubble_container)
+        if self.timer_bubble.is_next_stop_reached():
+            if len(self.all_sprites) <= Settings.MAX_BUBBLES:
+                b = Bubble(self.bubble_container)
                 for _ in range(100):
                     b.randompos()
                     b.radius += Settings.DISTANCE
-                    collided = pygame.sprite.spritecollide(b, self._all_sprites, False, pygame.sprite.collide_circle)
+                    collided = pygame.sprite.spritecollide(b, self.all_sprites, False, pygame.sprite.collide_circle)
                     b.radius -= Settings.DISTANCE
                     if not collided:
-                        self._all_sprites.add(b)
+                        self.all_sprites.add(b)
                         break
 
     def collidepoint(self, point: Tuple[int, int], sprite: pygame.sprite.Sprite) -> bool:
@@ -154,7 +154,7 @@ class Game:
     def set_mousecursor(self) -> None:
         is_over = False
         pos = pygame.mouse.get_pos()
-        for b in self._all_sprites:
+        for b in self.all_sprites:
             if self.collidepoint(pos, b):
                 is_over = True
                 break
@@ -164,18 +164,18 @@ class Game:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
 
     def sting(self, mousepos: Tuple[int, int]) -> None:
-        for bubble in self._all_sprites:
+        for bubble in self.all_sprites:
             if self.collidepoint(mousepos, bubble):  # Innerhalb? §\label{srcBubble0603}§
                 bubble.kill()
 
     def run(self) -> None:
         time_previous = time()
-        self._running = True
-        while self._running:
+        self.running = True
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current

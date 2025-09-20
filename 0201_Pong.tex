@@ -14,7 +14,7 @@ Hinweis: Ich habe mir mal zu Beginn per \glslink{chatgpt}{ChatGPT} ein Pong-Spie
 \begin{enumerate}
     \item Fenster hat eine angemessene Größe.\label{req0201StandardGröße}
     \item Hintergrund ist eine dunkelrote Spielfläche mit einer gestrichelten Mittellinie.\label{req0201StandardHintergrund}
-    \item Beendet wird mit der ESC-Taste oder per Mausklick auf rotes~„X“.\label{req0201StandardBeenden}
+    \item Beendet wird mit der Taste \keys{\esc} oder per Mausklick auf rotes~„X“.\label{req0201StandardBeenden}
     \item Das Spiel hat eine von der \emph{FPS} unabhängige Ablaufgeschwindigkeit.\label{req0201StandardFps}
 \end{enumerate}
 \er
@@ -32,7 +32,7 @@ Und los geht's. Hier jetzt einmalig die Präambel. Ich gehe davon aus, dass Sie 
 		\myfigure{pong00.png}{0.2}{Pong: der Hintergrund}{picPong00}%
 	\end{center}%
 \end{wrapfigure}%
-Der Background wird hier nicht als Bitmap geladen, sondern erzeugt. Es gibt dafür keinen besonderen Grund, außer zu demonstrieren, dass Bitmaps auch dynamisch erstellt werden können. Dafür wird als erstes ein \texttt{Surface}-Objekt\myindex{pyg}{\texttt{Surface}} in der Größe des Bildschirms erstellt. Dann wird es dunkelrot ausgefüllt, was einen Sandplatz simulieren soll. In \texttt{\_paint\_net()} ab \zeiref{srcPong0101} wird das Netz als eine Folge von weißen Rechtecken gemalt.
+Der Background wird hier nicht als Bitmap geladen, sondern erzeugt. Es gibt dafür keinen besonderen Grund, außer zu demonstrieren, dass Bitmaps auch dynamisch erstellt werden können. Dafür wird als erstes ein \texttt{Surface}-Objekt\myindex{pyg}{\texttt{Surface}} in der Größe des Bildschirms erstellt. Dann wird es dunkelrot ausgefüllt, was einen Sandplatz simulieren soll. In \texttt{paint\_net()} ab \zeiref{srcPong0101} wird das Netz als eine Folge von weißen Rechtecken gemalt.
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong01.py}{13}{28}{python}{Pong (\reqref{req0201Standard}) -- die Klasse \texttt{Background}
 }{srcPong01b}
@@ -58,8 +58,8 @@ Die Anwendung ist derzeit noch funktionslos, stellt mir aber schon den Hintergru
 	\item Die Schläger haben eine Breite von $15~px$ und eine Höhe von einem Zehntel der Bildschirmhöhe.\label{req0201SchlägerGröße}
 	\item Die Schläger haben eine Geschwindigkeit von $\frac{Bildschirmh"ohe}{2}~px/s$.\label{req0201SchlägerGeschwindigkeit}
 	\item Die Schläger haben jeweils vom Mittelpunkt einen Abstand von $50~px$ zum linken bzw. rechten Rand.\label{req0201SchlägerOrt}
-	\item Der linke Schläger wird über die Taste \keystroke{w} nach oben und mit der Taste \keystroke{s} nach unten bewegt.\label{req0201SchlägerTastenLinks}
-	\item Der rechte Schläger wird über die Taste \UArrow\ nach oben und mit der Taste \DArrow\ nach unten bewegt.\label{req0201SchlägerTastenRechts}
+	\item Der linke Schläger wird über die Taste \keys{w} nach oben und mit der Taste \keys{s} nach unten bewegt.\label{req0201SchlägerTastenLinks}
+	\item Der rechte Schläger wird über die Taste \keys{\arrowkeyup} nach oben und mit der Taste \keys{\arrowkeydown} nach unten bewegt.\label{req0201SchlägerTastenRechts}
 	\item Die Schläger können das Spielfeld nicht verlassen.\label{req0201SchlägerGefangen}
 \end{enumerate}
 \er
@@ -71,14 +71,14 @@ Die Geschwindigkeit wird entsprechend Requirement~\ref{req0201Schläger}.\ref{re
 \lstsource{SRC/01 Beispiele/01 Pong/pong02.py}{31}{47}{python}{Pong (\reqref{req0201Schläger}) -- Der Konstruktor von \texttt{Paddle}
 }{srcPong02a}
 
-Die Methode \texttt{update()} verteilt die Aufgaben. Dabei wird bzgl. der Bewegung das Attribut \texttt{self.\_direction} entsprechend manipuliert (ab \zeiref{srcPong0205}). Soll der Schläger seine Position verändern, wird in \zeiref{srcPong0204} die Methode \texttt{\_move()} aufgerufen.
+Die Methode \texttt{update()} verteilt die Aufgaben. Dabei wird bzgl. der Bewegung das Attribut \texttt{self.direction} entsprechend manipuliert (ab \zeiref{srcPong0205}). Soll der Schläger seine Position verändern, wird in \zeiref{srcPong0204} die Methode \texttt{move()} aufgerufen.
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong02.py}{49}{55}{python}{Pong (\reqref{req0201Schläger}) -- \texttt{Paddle.update()}
 }{srcPong02b}
 
-Verbleibt noch die Methode \texttt{\_move()}. Sie sieht komplizierter aus, als sie ist. Nachdem überprüft wurde, ob überhaupt irgendwas getan werden muss, wird in \zeiref{srcPong0207} die neue vertikale Position berechnet (die horizontale bleibt ja unverändert). Anschließend wird überprüft, ob der Schläger das Spielfeld verlassen hat. Falls \emph{Ja}, wird der Schläger an den oberen bzw. unteren Rand zurückversetzt.
+Verbleibt noch die Methode \texttt{move()}. Sie sieht komplizierter aus, als sie ist. Nachdem überprüft wurde, ob überhaupt irgendwas getan werden muss, wird in \zeiref{srcPong0207} die neue vertikale Position berechnet (die horizontale bleibt ja unverändert). Anschließend wird überprüft, ob der Schläger das Spielfeld verlassen hat. Falls \emph{Ja}, wird der Schläger an den oberen bzw. unteren Rand zurückversetzt.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong02.py}{57}{63}{python}{Pong (\reqref{req0201Schläger}) -- \texttt{Paddle.\_move()}
+\lstsource{SRC/01 Beispiele/01 Pong/pong02.py}{57}{63}{python}{Pong (\reqref{req0201Schläger}) -- \texttt{Paddle.move()}
 }{srcPong02c}
 
 Nun müssen die Schläger in \texttt{Game} eingepflegt werden. In \zeiref{srcPong0208} wird zunächst eine Spritegroup\myindex{pyg}{\texttt{sprite}!\texttt{Group}} erstellt, welche alle Sprites außer dem Hintergrund aufnehmen wird. Danach werden die beiden Schläger erzeugt und per Übergabeparameter gleich der Spritegroup hinzugefügt.
@@ -119,7 +119,7 @@ Da wir laut Requirement~\ref{req0201Ball}.\ref{req0201BallPunkt} den Punktestand
 }{srcPong03A}
 
 
-Passend zu Requirement~\ref{req0201Ball}.\ref{req0201BallGröße} und~\ref{req0201Ball}.\ref{req0201BallGeschwindigkeit} werden in \zeiref{srcPong0301} und \zeiref{srcPong0302} die Größe und die Geschwindigkeit festgelegt. Der Start des Balls erfolgt häufiger und wird daher in die Methode \texttt{\_service()} (\zeiref{srcPong0303}) ausgelagert.
+Passend zu Requirement~\ref{req0201Ball}.\ref{req0201BallGröße} und~\ref{req0201Ball}.\ref{req0201BallGeschwindigkeit} werden in \zeiref{srcPong0301} und \zeiref{srcPong0302} die Größe und die Geschwindigkeit festgelegt. Der Start des Balls erfolgt häufiger und wird daher in die Methode \texttt{service()} (\zeiref{srcPong0303}) ausgelagert.
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{68}{77}{python}{Pong (\reqref{req0201Ball}) -- Konstruktor von \texttt{Ball}
 }{srcPong03a}
@@ -129,20 +129,20 @@ In \texttt{update()} werden die Aufgaben verteilt.
 \lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{79}{85}{python}{Pong (\reqref{req0201Ball}) -- \texttt{Ball.update()}
 }{srcPong03b}
 
-Schauen wir uns jetzt die Hilfsfunktionen im einzelnen an. Beginnen wir mit \texttt{\_move()}. Wie zu erwarten, werden die Positionsangabe mit Hilfe der Geschwindigkeiten aktualisiert. Danach wird ab \zeiref{srcPong0304} überprüft, ob der Ball eine der vier Ränder erreicht hat.
+Schauen wir uns jetzt die Hilfsfunktionen im einzelnen an. Beginnen wir mit \texttt{move()}. Wie zu erwarten, werden die Positionsangabe mit Hilfe der Geschwindigkeiten aktualisiert. Danach wird ab \zeiref{srcPong0304} überprüft, ob der Ball eine der vier Ränder erreicht hat.
 
-Wird der obere oder untere Rand erreicht (Requirement~\ref{req0201Ball}.\ref{req0201BallObenUnten}), wechselt das Vorzeichen der vertikalen Geschwindigkeit durch den Aufruf von \texttt{\_vertical\_flip()} (\srcref[vref]{srcPong03e}). Nach dem Flip wird der obere bzw. der untere Rand gesetzt, da es ja sein kann, dass der Ball die Randgrenze schon überschritten hat. 
+Wird der obere oder untere Rand erreicht (Requirement~\ref{req0201Ball}.\ref{req0201BallObenUnten}), wechselt das Vorzeichen der vertikalen Geschwindigkeit durch den Aufruf von \texttt{vertical\_flip()} (\srcref[vref]{srcPong03e}). Nach dem Flip wird der obere bzw. der untere Rand gesetzt, da es ja sein kann, dass der Ball die Randgrenze schon überschritten hat. 
 
 Anders, wenn der Ball den rechten oder linken Rand erreicht. Dann soll nach Requirement~\ref{req0201Ball}.\ref{req0201BallRechtsLinks} der Ball neu aufgeschlagen werden (siehe \srcref[vref]{srcPong03d}) und wie in Requirement~\ref{req0201Ball}.\ref{req0201BallPunkt} gefordert wird der entsprechende Punktestand angepasst. 
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{87}{100}{python}{Pong (\reqref{req0201Ball}) -- \texttt{Ball.\_move()}
+\lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{87}{100}{python}{Pong (\reqref{req0201Ball}) -- \texttt{Ball.move()}
 }{srcPong03c}
 
 Beim Aufschlag wird das Zentrum des Balls auf das Zentrum des Bildschirms gesetzt (Requirement~\ref{req0201Ball}.\ref{req0201BallStart}). Danach werden für die beiden Richtungsgeschwindigkeiten per Zufall die Vorzeichen und damit die Bewegungsrichtung (nach links oder rechts bzw. nach oben oder unten) bestimmt. Da wir noch keine Punkteausgabe haben, ist in \zeiref{srcPong0305} eine provisorische Ausgabe auf der Konsole programmiert.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{102}{105}{python}{Pong (\reqref{req0201Ball}) -- \texttt{Ball.\_service()}}{srcPong03d}
+\lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{102}{105}{python}{Pong (\reqref{req0201Ball}) -- \texttt{Ball.service()}}{srcPong03d}
 
-Der Richtungswechsel ist hier nur ein Vorzeichenwechsel. Die Methode \texttt{\_flip\_hori\-zon\-tal()} wird noch nicht verwendet, wird aber gebraucht, wenn wir den Ball vom Schläger abprallen lassen wollen. 
+Der Richtungswechsel ist hier nur ein Vorzeichenwechsel. Die Methode \texttt{flip\_hori\-zon\-tal()} wird noch nicht verwendet, wird aber gebraucht, wenn wir den Ball vom Schläger abprallen lassen wollen. 
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong03.py}{107}{111}{python}{Pong (\reqref{req0201Ball}) -- Die Flip-Methoden von \texttt{Ball}}{srcPong03e}
 
@@ -161,9 +161,9 @@ Zur Darstellung verwende ich die Klasse \texttt{Score}. Letztlich ist sie auch n
 
 In dieser Methode wird der aktuelle Punktestand mit Hilfe des Font-Objektes gerendert und positioniert.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{139}{141}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{Score.\_render()}}{srcPong04b}
+\lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{139}{141}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{Score.render()}}{srcPong04b}
 
-In \texttt{update()} wird der passende Punktestand aktualisiert und \texttt{\_render()} aufgerufen. 
+In \texttt{update()} wird der passende Punktestand aktualisiert und \texttt{render()} aufgerufen. 
 
 \newpage
 \lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{133}{137}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{Score.update()}}{srcPong04c}
@@ -172,9 +172,9 @@ Was jetzt noch fehlt, ist das Anstoßen einer Punktestandausgabe. Dies ist eine 
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{14}{16}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{MyEvent}}{srcPong04d}
 
-Nun muss \texttt{Ball} nur noch das passende Event auslösen und \texttt{Game} das Event verwalten. Hier die Anpassungen in \texttt{Ball}. In der Methode \texttt{\_move()} werden die entsprechenden Stellen ersetzt. So wird beispielsweise in \zeiref{srcPong0402} die Nummer des Spielers in das Event gestopft, der den Punkt bekommt, und in \zeiref{srcPong0403} wird das Event abgeschickt.
+Nun muss \texttt{Ball} nur noch das passende Event auslösen und \texttt{Game} das Event verwalten. Hier die Anpassungen in \texttt{Ball}. In der Methode \texttt{move()} werden die entsprechenden Stellen ersetzt. So wird beispielsweise in \zeiref{srcPong0402} die Nummer des Spielers in das Event gestopft, der den Punkt bekommt, und in \zeiref{srcPong0403} wird das Event abgeschickt.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{95}{110}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{Ball.\_move()}}{srcPong04g}
+\lstsource{SRC/01 Beispiele/01 Pong/pong04.py}{95}{110}{python}{Pong (\reqref{req0201Punkte}) -- \texttt{Ball.move()}}{srcPong04g}
 
 Jetzt muss nur noch in \texttt{watch\_for\_events()} das Userevent abgegriffen werden (ab \zeiref{srcPong0404}).
 
@@ -196,13 +196,13 @@ Das Ergebnis sieht eigentlich fertig aus und kann aber so noch nicht gespielt we
 \end{enumerate}
 \er
 
-In \texttt{Game} bauen wir dazu die Methode \texttt{\_check\_collision()}, welche überprüft, ob der Ball einen Schläger getroffen hat. Es bietet sich an, dazu die Methode \texttt{ pygame\-.sprite\-.coll\-ide\_rect()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}} zu verwenden. Wenn eine Kollision vorliegt, wird die bisher noch nicht verwendete Methode \texttt{\_horizontal\_flip()} (siehe \srcref[vref]{srcPong03e}) über \texttt{update()} ausgeführt. Danach werden die Ränder wieder so verschoben, dass Ball und Schläger sich nicht überlappen. Ebenso wird über \texttt{update()} die Methode \texttt{\_respeed()} aufgerufen, so dass Requirement~\ref{req0201Schlag}.\ref{req0201SchlagGeschwindigkeit} erfüllt wird.
+In \texttt{Game} bauen wir dazu die Methode \texttt{check\_collision()}, welche überprüft, ob der Ball einen Schläger getroffen hat. Es bietet sich an, dazu die Methode \texttt{ pygame\-.sprite\-.coll\-ide\_rect()}\myindex{pyg}{\texttt{sprite}!\texttt{collide\_rect()}} zu verwenden. Wenn eine Kollision vorliegt, wird die bisher noch nicht verwendete Methode \texttt{horizontal\_flip()} (siehe \srcref[vref]{srcPong03e}) über \texttt{update()} ausgeführt. Danach werden die Ränder wieder so verschoben, dass Ball und Schläger sich nicht überlappen. Ebenso wird über \texttt{update()} die Methode \texttt{respeed()} aufgerufen, so dass Requirement~\ref{req0201Schlag}.\ref{req0201SchlagGeschwindigkeit} erfüllt wird.
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong05.py}{207}{213}{python}{Pong (\reqref{req0201Schlag}) -- \texttt{Game.\_check\_collision()}}{srcPong05a}
 
-In \texttt{\_respeed()} werden den Geschwindigkeitsvektoren jeweils um Zufallswerte erhöht. Über \texttt{\_speed} ist diese Schwankung indirekt von der Bildschirmgröße abhängig. 
+In \texttt{respeed()} werden den Geschwindigkeitsvektoren jeweils um Zufallswerte erhöht. Über \texttt{speed} ist diese Schwankung indirekt von der Bildschirmgröße abhängig. 
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong05.py}{123}{125}{python}{Pong (\reqref{req0201Schlag}) -- \texttt{Ball.\_respeed()}}{srcPong05b}
+\lstsource{SRC/01 Beispiele/01 Pong/pong05.py}{123}{125}{python}{Pong (\reqref{req0201Schlag}) -- \texttt{Ball.respeed()}}{srcPong05b}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -212,9 +212,9 @@ Eigentlich wären wir jetzt fertig, aber ich möchte noch einen Computerspieler 
 
 \br{Punkte}{req0201Computer}
 \begin{enumerate}
-	\item Über die Taste~\keystroke{1} wechselt die Steuerung vom linken Schläger zwischen Mensch und Computer.\label{req0201Computer1}
+	\item Über die Taste~\keys{1} wechselt die Steuerung vom linken Schläger zwischen Mensch und Computer.\label{req0201Computer1}
 
-	\item Über die Taste~\keystroke{2} wechselt die Steuerung vom rechten Schläger zwischen Mensch und Computer.\label{req0201Computer2}
+	\item Über die Taste~\keys{2} wechselt die Steuerung vom rechten Schläger zwischen Mensch und Computer.\label{req0201Computer2}
 	
 	\item Wird die Steuerung wieder auf manuell gestellt, soll der Schläger erstmal stehen bleiben.\label{req0201ComputerHalt}
 \end{enumerate}
@@ -230,7 +230,7 @@ In der Methode \texttt{update()} wird ab \zeiref{srcPong0603} mit Hilfe der Flag
 
 Schauen wir uns nun die Controller-Methode an. Die Grundidee ist, dass der Schläger solange nach oben wandert, wie die Ballmitte oberhalb der Schlägermitte liegt, bzw. nach unten, solange die Ballmitte unterhalb der Schlägermitte. Dabei muss nicht bis nach ganz oben oder unten gewandert werden, die letzten Pixel kann man sich sparen, da dann ggf. schon eine Kollision ausgelöst wird.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong06.py}{251}{257}{python}{Pong (\reqref{req0201Computer}) -- \texttt{Game.\_paddlecontroler()}}{srcPong06c}
+\lstsource{SRC/01 Beispiele/01 Pong/pong06.py}{251}{257}{python}{Pong (\reqref{req0201Computer}) -- \texttt{Game.paddlecontroler()}}{srcPong06c}
 
 In \texttt{watch\_for\_events()} sind umfangreiche Umbauten notwendig. Zunächst muss die manuelle Steuerung für die Schläger unterbunden werden, wenn die auf Computerspieler stehen. Dazu wird vor Aufruf der entsprechenden \texttt{update()}-Methode zuerst gefragt, ob nicht der Computerspieler die Kontrolle hat. Ein Beispiel finden Sie in \zeiref{srcPong0604}.
 
@@ -254,7 +254,7 @@ Ein wenig Sound könnte das Spiel noch aufpeppen.
 	
 	\item Das Abprallen vom oberen und unterem Rand soll mit einem passendem Sound untermalt werden.\label{req0201Sound2}
 	
-	\item Der Sound soll über \keystroke{F2} ein- bzw. ausgeschaltet werden können.\label{req0201Sound3}
+	\item Der Sound soll über \keys{F2} ein- bzw. ausgeschaltet werden können.\label{req0201Sound3}
 	
 \end{enumerate}
 \er
@@ -269,15 +269,15 @@ Die eigentliche Soundausgabe wird in \texttt{Ball} implementiert. Im Konstruktor
 \lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{100}{114}{python}{Pong (\reqref{req0201Sound}) -- Konstruktor von \texttt{Ball}}{srcPong07b}
 
 
-Den ersten Sound programmieren wir für das Abprallen am Schläger in \texttt{\_hori\-zontal\-\_flip()}. Nachdem abgefragt wurde, ob überhaupt eine Soundausgabe erfolgen soll, wird ermittelt, ob der Ball vom rechten oder vom linken Schläger abprallt. Dies geschieht indirekt durch die Abfrage, in welche Richtung der Ball aktuell fliegt (\zeiref{srcPong0703}). Passend dazu wird die Lautstärke so angepasst, dass der Eindruck entsteht, dass der Abprall links bzw. rechts vom Zuschauer erfolgt.
+Den ersten Sound programmieren wir für das Abprallen am Schläger in \texttt{hori\-zontal\-\_flip()}. Nachdem abgefragt wurde, ob überhaupt eine Soundausgabe erfolgen soll, wird ermittelt, ob der Ball vom rechten oder vom linken Schläger abprallt. Dies geschieht indirekt durch die Abfrage, in welche Richtung der Ball aktuell fliegt (\zeiref{srcPong0703}). Passend dazu wird die Lautstärke so angepasst, dass der Eindruck entsteht, dass der Abprall links bzw. rechts vom Zuschauer erfolgt.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{149}{158}{python}{Pong (\reqref{req0201Sound}) -- \texttt{Ball.\_horizontal\_flip()}}{srcPong07d}
+\lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{149}{158}{python}{Pong (\reqref{req0201Sound}) -- \texttt{Ball.horizontal\_flip()}}{srcPong07d}
 
-Etwas dynamischer wird dieser Soundeffekt in \texttt{\_vertical\_flip()} erzeugt. In \zeiref{srcPong0704} wird die relative horizontale Position ermittelt. Ist das Zentrum des Balls links, hat \texttt{rel\_pos} einen Wert nahe der~0; steht der Ball weit recht, hat er einen Wert nahe~1. Diese Werte können dann als rechte und linke Lautstärke in die Methode \texttt{set\_volume()} eingesetzt werden.
+Etwas dynamischer wird dieser Soundeffekt in \texttt{vertical\_flip()} erzeugt. In \zeiref{srcPong0704} wird die relative horizontale Position ermittelt. Ist das Zentrum des Balls links, hat \texttt{rel\_pos} einen Wert nahe der~0; steht der Ball weit recht, hat er einen Wert nahe~1. Diese Werte können dann als rechte und linke Lautstärke in die Methode \texttt{set\_volume()} eingesetzt werden.
 
-\lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{160}{165}{python}{Pong (\reqref{req0201Sound}) -- \texttt{Ball.\_vertical\_flip()}}{srcPong07e}
+\lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{160}{165}{python}{Pong (\reqref{req0201Sound}) -- \texttt{Ball.vertical\_flip()}}{srcPong07e}
 
-Verbleibt noch das Ein- bzw. Ausschalten der Soundausgabe in \texttt{watch\_for\_events()} in \zeiref{srcPong0705} mit Hilfe der Funktionstaste \keystroke{F2}.
+Verbleibt noch das Ein- bzw. Ausschalten der Soundausgabe in \texttt{watch\_for\_events()} in \zeiref{srcPong0705} mit Hilfe der Funktionstaste \keys{F2}.
 
 \lstsource{SRC/01 Beispiele/01 Pong/pong07.py}{232}{246}{python}{Pong (\reqref{req0201Sound}) -- \texttt{Ball.watch\_for\_events()}}{srcPong07f}
 
@@ -286,9 +286,9 @@ Verbleibt noch das Ein- bzw. Ausschalten der Soundausgabe in \texttt{watch\_for\
 
 \br{Punkte}{req0201PauseHelp}
 \begin{enumerate}
-	\item Purch \keystroke{P} werden alle Aktivitäten gestoppt und das Spiel pausiert. Wird nochmal \keystroke{P} gedrückt, wird das Spiel fortgesetzt.\label{req0201PauseHelp1}
+	\item Durch \keys{P} werden alle Aktivitäten gestoppt und das Spiel pausiert. Wird nochmal \keys{P} gedrückt, wird das Spiel fortgesetzt.\label{req0201PauseHelp1}
 	
-	\item Purch \keystroke{H} wird das Spiel pausiert und ein Hilfetext angezeigt. Wird nochmal \keystroke{H} gedrückt, wird das Spiel fortgesetzt.\label{req0201PauseHelp2}
+	\item Durch \keys{H} wird das Spiel pausiert und ein Hilfetext angezeigt. Wird nochmal \keys{H} gedrückt, wird das Spiel fortgesetzt.\label{req0201PauseHelp2}
 \end{enumerate}
 \er
 

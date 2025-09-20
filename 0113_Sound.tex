@@ -102,7 +102,7 @@ In \texttt{turn()} und \texttt{update\_imageindex()} passiert nichts bzgl. der S
 
 Die Soundausgabe des \texttt{Bullet} hätte man auch in der Klasse \texttt{Tank} programmieren können. Ich finde es aber organischer, diese in \texttt{Bullet} zu verorten. Vielleicht wollte man ja später auch noch einen Aufprall oder ein Explosion implementieren.
 
-Vor dem Konstruktor wird in \zeiref{srcSound0106} die statische Variable \texttt{\_sound\_fire} definiert. Wir haben zwar viele Geschosse, aber alle nutzen den gleichen Abschusssound. Somit wäre es eine Speicherplatz- und Performanceverschwendung diesen Sound immer wieder neu zu lesen und ein entsprechendes Objekt zu erzeugen. Vielmehr erfolgt ab \zeiref{srcSound0107} eine Art \gls{singleton}-Prüfung. Dabei wird sicher gestellt, dass nur ein einiges mal die Sounddatei gelesen und das entsprechende Objekt erzeugt wird.
+Vor dem Konstruktor wird in \zeiref{srcSound0106} die statische Variable \texttt{sound\_fire} definiert. Wir haben zwar viele Geschosse, aber alle nutzen den gleichen Abschusssound. Somit wäre es eine Speicherplatz- und Performanceverschwendung diesen Sound immer wieder neu zu lesen und ein entsprechendes Objekt zu erzeugen. Vielmehr erfolgt ab \zeiref{srcSound0107} eine Art \gls{singleton}-Prüfung. Dabei wird sicher gestellt, dass nur ein einiges mal die Sounddatei gelesen und das entsprechende Objekt erzeugt wird.
 
 Anschließend wird wie beim Panzer ein freier Kanal gesucht und die Lautstärke des rechten und linken Lautsprechers abhängig von der Position bestimmt. Zum Schluss wird der Sound abgespielt.
 

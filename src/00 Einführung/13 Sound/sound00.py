@@ -2,7 +2,8 @@ import os
 from typing import Any
 
 import pygame
-from pygame.constants import K_ESCAPE, K_MINUS, K_PLUS, KEYDOWN, KEYUP, QUIT, K_f, K_j, K_p
+from pygame.constants import (K_ESCAPE, K_MINUS, K_PLUS, KEYDOWN, KEYUP, QUIT,
+                              K_f, K_j, K_p)
 
 
 class Settings:
@@ -30,30 +31,30 @@ class Settings:
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self._window = pygame.Window(size=Settings.WINDOW.size, title='Fingerübung "Sound"')  # Auch mixer §\label{srcSound0002}§
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
+        self.window = pygame.Window(size=Settings.WINDOW.size, title='Fingerübung "Sound"')  # Auch mixer §\label{srcSound0002}§
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
 
-        self._font_bigsize = pygame.font.Font(pygame.font.get_default_font(), 40)
-        self._running = True
-        self._pause = False
-        self._volume: float = 0.1  # Lautstärke §\label{srcSound0003}§
+        self.font_bigsize = pygame.font.Font(pygame.font.get_default_font(), 40)
+        self.running = True
+        self.pause = False
+        self.volume: float = 0.1  # Lautstärke §\label{srcSound0003}§
         self.sounds()
 
     def sounds(self) -> None:
         pygame.mixer.music.load(Settings.get_sound("Lucifer.mid"))
-        pygame.mixer.music.set_volume(self._volume)  # Lautstärke §\label{srcSound0004}§
+        pygame.mixer.music.set_volume(self.volume)  # Lautstärke §\label{srcSound0004}§
         pygame.mixer.music.play(-1, 0.0)  # Endlos abspielen §\label{srcSound0005}§
-        self._bubble: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))  # §\label{srcSound0006}§
-        self._clash: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("glas.wav"))
+        self.bubble: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))  # §\label{srcSound0006}§
+        self.clash: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("glas.wav"))
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
             if event.type == QUIT:
-                self._running = False
+                self.running = False
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    self._running = False
+                    self.running = False
             elif event.type == KEYUP:
                 if event.key == K_f:
                     self.music_start_stop(fadeout=5000)
@@ -77,9 +78,9 @@ class Game:
 
     def sound_play(self, **kwargs: Any) -> None:
         if "bubble" in kwargs.keys():
-            self._bubble.play()
+            self.bubble.play()
         if "clash" in kwargs.keys():
-            self._clash.play()
+            self.clash.play()
 
     def music_start_stop(self, **kwargs: Any) -> None:
         if "fadeout" in kwargs.keys():
@@ -88,40 +89,40 @@ class Game:
             pygame.mixer.music.play(kwargs["loop"], 0.0)
 
     def pause_alter(self) -> None:
-        if self._pause:
+        if self.pause:
             pygame.mixer.music.unpause()
         else:
             pygame.mixer.music.pause()
-        self._pause = not self._pause  # §\label{srcSound0007}§
+        self.pause = not self.pause  # §\label{srcSound0007}§
 
     def volume_alter(self, delta: float) -> None:
-        self._volume += delta
-        if self._volume > 1.0:
-            self._volume = 1.0
-        elif self._volume < 0.0:
-            self._volume = 0.0
-        pygame.mixer.music.set_volume(self._volume)
+        self.volume += delta
+        if self.volume > 1.0:
+            self.volume = 1.0
+        elif self.volume < 0.0:
+            self.volume = 0.0
+        pygame.mixer.music.set_volume(self.volume)
 
     def draw(self) -> None:
-        self._screen.fill("black")
+        self.screen.fill("black")
 
-        volume = self._font_bigsize.render(f"Lautstärke: {self._volume:3.2f}", True, "red")
+        volume = self.font_bigsize.render(f"Lautstärke: {self.volume:3.2f}", True, "red")
         rect = volume.get_rect()
         rect.center = Settings.WINDOW.center
-        self._screen.blit(volume, rect)
+        self.screen.blit(volume, rect)
 
-        self._window.flip()
+        self.window.flip()
 
     def update(self):
         pass
 
     def run(self):
-        self._running = True
-        while self._running:
+        self.running = True
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
         pygame.quit()
 
 

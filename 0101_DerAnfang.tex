@@ -27,7 +27,7 @@ Hinweis: Sie können auch mehrere Fenster für das Spiel erstellen (siehe \url{h
 
 Das Spiel selbst -- so wie auch alle zukünftigen Spiele -- laufen innerhalb einer \Gls{mainloop}\index{Hauptprogrammschleife}\index{main loop}. Hier startet die Schleife in \zeiref{srcStart0006} und endet in \zeiref{srcStart0011}. Innerhalb dieser Schleife werden zukünftig immer drei Dinge passieren: 
 \begin{enumerate}
-	\item Ereignisse auslesen und verarbeiten: Wie in \zeiref{srcStart0007}f. werden Maus-, Tastatur- oder Konsolenereignisse festgestellt und an die Spielelemente weitergegeben. In unserem Fall wird lediglich das Anklicken des X im Fenster oben rechts registriert.  
+	\item Ereignisse auslesen und verarbeiten: Wie in \zeiref{srcStart0007}f. werden Maus-, Tastatur- oder Spielereignisse festgestellt und an die Spielelemente weitergegeben. In unserem Fall wird lediglich das Anklicken des X im Fenster oben rechts registriert.  
 	\item Zustand der Spielelemente aktualisieren: Basierend auf den oben festgestellten Ereignissen und den Zuständen der Spielelemente, werden die neuen Zustände ermittelt (Spieler bewegt sich, Geschoss prallt auf, Punkte erhöhen sich etc.). In unserem Fall wird nur das Flag \texttt{running}\index{Flag} der Hauptprogrammschleife auf \false\ gesetzt.
 	\item Bitmaps der Spielelemente malen: Die Spielelemente haben eine neue Position oder ein neues Aussehen und müssen deshalb neu gemalt werden. In diesem Minimalbeispiel wird lediglich \zeiref{srcStart0009} der Hintergrund der Spielfläche eingefärbt und anschließend in \zeiref{srcStart0010} der \Gls{doublebuffer}\index{Doublebuffer}\randnotiz{Doublebuffer} mit \texttt{Window.flip()}\myindex{pyg}{\texttt{Window}!\texttt{flip()}}\randnotiz{flip()} ausgetauscht.
 \end{enumerate}

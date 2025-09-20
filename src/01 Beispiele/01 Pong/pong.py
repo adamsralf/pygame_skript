@@ -83,9 +83,9 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.surface.Surface(Settings.WINDOW.size).convert()
         self.rect = self.image.get_rect()
         self.image.fill("darkred")
-        self._paint_net()
+        self.paint_net()
 
-    def _paint_net(self) -> None:
+    def paint_net(self) -> None:
         """A helping method to draw the net."""
         net_rect = pygame.rect.Rect(0, 0, 0, 0)
         net_rect.centerx = Settings.WINDOW.centerx
@@ -161,20 +161,20 @@ class Paddle(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height // 10)
         self.rect.centery = Settings.WINDOW.centery
-        self._images = {
+        self.images = {
             "byhand": pygame.surface.Surface(self.rect.size).convert(),
             "byki": pygame.surface.Surface(self.rect.size).convert(),
         }
-        self._images["byhand"].fill("yellow")
-        self._images["byki"].fill("deepskyblue2")
-        self._player = player
-        if self._player == "left":
+        self.images["byhand"].fill("yellow")
+        self.images["byki"].fill("deepskyblue2")
+        self.player = player
+        if self.player == "left":
             self.rect.left = Paddle.BORDERDISTANCE["horizontal"]
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
-        self._speed = Settings.WINDOW.height // 2
-        self._direction = Paddle.DIRECTION["halt"]
-        self._select_image()
+        self.speed = Settings.WINDOW.height // 2
+        self.direction = Paddle.DIRECTION["halt"]
+        self.select_image()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         """Computes the new status of the paddle.
@@ -192,8 +192,8 @@ class Paddle(pygame.sprite.Sprite):
             if kwargs["action"] == "move":
                 self._move()
             elif kwargs["action"] in Paddle.DIRECTION.keys():
-                self._direction = Paddle.DIRECTION[kwargs["action"]]
-        self._select_image()
+                self.direction = Paddle.DIRECTION[kwargs["action"]]
+        self.select_image()
         return super().update(*args, **kwargs)
 
     def _move(self) -> None:
@@ -202,29 +202,29 @@ class Paddle(pygame.sprite.Sprite):
         Returns:
             None
         """
-        if self._direction != Paddle.DIRECTION["halt"]:
-            self.rect.move_ip(0, self._speed * self._direction * Settings.DELTATIME)
-            if self._direction == Paddle.DIRECTION["up"]:
+        if self.direction != Paddle.DIRECTION["halt"]:
+            self.rect.move_ip(0, self.speed * self.direction * Settings.DELTATIME)
+            if self.direction == Paddle.DIRECTION["up"]:
                 self.rect.top = max(self.rect.top, Paddle.BORDERDISTANCE["vertical"])
-            elif self._direction == Paddle.DIRECTION["down"]:
+            elif self.direction == Paddle.DIRECTION["down"]:
                 self.rect.bottom = min(self.rect.bottom, Settings.WINDOW.height - Paddle.BORDERDISTANCE["vertical"])
 
-    def _select_image(self) -> None:
+    def select_image(self) -> None:
         """Selects the image for the paddle based on the player and KI mode.
 
         Returns:
             None
         """
-        if self._player == "left":
+        if self.player == "left":
             if Settings.KI["left"]:
-                self.image = self._images["byki"]
+                self.image = self.images["byki"]
             else:
-                self.image = self._images["byhand"]
+                self.image = self.images["byhand"]
         else:
             if Settings.KI["right"]:
-                self.image = self._images["byki"]
+                self.image = self.images["byki"]
             else:
-                self.image = self._images["byhand"]
+                self.image = self.images["byhand"]
 
 
 class Ball(pygame.sprite.Sprite):
@@ -258,19 +258,19 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         """Constructor."""
         super().__init__(*groups)
-        self._sounds: dict[str, pygame.mixer.Sound] = {}
-        self._sounds["left"] = pygame.mixer.Sound(Settings.get_sound("playerl.mp3"))
-        self._sounds["right"] = pygame.mixer.Sound(Settings.get_sound("playerr.mp3"))
-        self._sounds["bounce"] = pygame.mixer.Sound(Settings.get_sound("bounce.mp3"))
-        self._channel = pygame.mixer.find_channel()
+        self.sounds: dict[str, pygame.mixer.Sound] = {}
+        self.sounds["left"] = pygame.mixer.Sound(Settings.get_sound("playerl.mp3"))
+        self.sounds["right"] = pygame.mixer.Sound(Settings.get_sound("playerr.mp3"))
+        self.sounds["bounce"] = pygame.mixer.Sound(Settings.get_sound("bounce.mp3"))
+        self.channel = pygame.mixer.find_channel()
         self.rect = pygame.rect.FRect(0, 0, 20, 20)
 
         self.image = pygame.surface.Surface(self.rect.size).convert()
         self.image.set_colorkey("black")
         pygame.draw.circle(self.image, "green", self.rect.center, self.rect.width // 2)
-        self._speed = Settings.WINDOW.width // 3
-        self._speedxy = pygame.Vector2()
-        self._service()
+        self.speed = Settings.WINDOW.width // 3
+        self.speedxy = pygame.Vector2()
+        self.service()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         """Computes the new status.
@@ -283,62 +283,62 @@ class Ball(pygame.sprite.Sprite):
         """
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
-                self._move()
+                self.move()
             elif kwargs["action"] == "hflip":
-                self._horizontal_flip()
+                self.horizontal_flip()
             elif kwargs["action"] == "vflip":
-                self._vertical_flip()
+                self.vertical_flip()
             elif kwargs["action"] == "reset":
-                self._service()
+                self.service()
         return super().update(*args, **kwargs)
 
-    def _move(self) -> None:
+    def move(self) -> None:
         """Computes the new position or triggers a new service."""
-        self.rect.move_ip(self._speedxy * Settings.DELTATIME)
+        self.rect.move_ip(self.speedxy * Settings.DELTATIME)
         if self.rect.top <= 0:
-            self._vertical_flip()
+            self.vertical_flip()
             self.rect.top = 0
         elif self.rect.bottom >= Settings.WINDOW.bottom:
-            self._vertical_flip()
+            self.vertical_flip()
             self.rect.bottom = Settings.WINDOW.bottom
         elif self.rect.right < 0:
             MyEvents.MYEVENT.player = 2
             pygame.event.post(MyEvents.MYEVENT)
-            self._service()
+            self.service()
         elif self.rect.left > Settings.WINDOW.right:
             MyEvents.MYEVENT.player = 1
             pygame.event.post(MyEvents.MYEVENT)
-            self._service()
+            self.service()
 
-    def _service(self) -> None:
+    def service(self) -> None:
         """Sets the position to the center of the window and throws the ball in a random direction."""
         self.rect.center = Settings.WINDOW.center
-        self._speedxy = pygame.Vector2(choice([-1, 1]), choice([-1, 1])) * self._speed
+        self.speedxy = pygame.Vector2(choice([-1, 1]), choice([-1, 1])) * self.speed
 
-    def _horizontal_flip(self) -> None:
+    def horizontal_flip(self) -> None:
         """Toggles the direction from left to right vice versa."""
         if Settings.SOUNDFLAG:
-            if self._speedxy.x < 0:
-                self._channel.set_volume(0.9, 0.1)
-                self._channel.play(self._sounds["left"])
+            if self.speedxy.x < 0:
+                self.channel.set_volume(0.9, 0.1)
+                self.channel.play(self.sounds["left"])
             else:
-                self._channel.set_volume(0.1, 0.9)
-                self._channel.play(self._sounds["right"])
-        self._speedxy.x *= -1
-        self._respeed()
+                self.channel.set_volume(0.1, 0.9)
+                self.channel.play(self.sounds["right"])
+        self.speedxy.x *= -1
+        self.respeed()
 
-    def _vertical_flip(self) -> None:
+    def vertical_flip(self) -> None:
         """Toggles the direction from up to down vice versa."""
         if Settings.SOUNDFLAG:
             rel_pos = self.rect.centerx / Settings.WINDOW.width
-            self._channel.set_volume(1.0 - rel_pos, rel_pos)
-            self._channel.play(self._sounds["bounce"])
-        self._speedxy.y *= -1
+            self.channel.set_volume(1.0 - rel_pos, rel_pos)
+            self.channel.play(self.sounds["bounce"])
+        self.speedxy.y *= -1
 
-    def _respeed(self) -> None:
+    def respeed(self) -> None:
         """Computes a new and faster speed."""
-        self._speedxy.x += randint(0, self._speed // 4)
-        self._speedxy.y += randint(0, self._speed // 4)
+        self.speedxy.x += randint(0, self.speed // 4)
+        self.speedxy.y += randint(0, self.speed // 4)
 
 
 class Score(pygame.sprite.Sprite):
@@ -358,11 +358,11 @@ class Score(pygame.sprite.Sprite):
             *groups (Tuple[pygame.sprite.Group]): The groups to which the Score sprite should be added.
         """
         super().__init__(*groups)
-        self._font = pygame.font.SysFont(None, 30)
-        self._score = {1: 0, 2: 0}
+        self.font = pygame.font.SysFont(None, 30)
+        self.score = {1: 0, 2: 0}
         self.image: pygame.surface.Surface = None
         self.rect: pygame.rect.Rect = None
-        self._render()
+        self.render()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         """Increases the score of the player and rerenders the sprite.
@@ -371,13 +371,13 @@ class Score(pygame.sprite.Sprite):
             player(str) : "left" or "right".
         """
         if "player" in kwargs.keys():
-            self._score[kwargs["player"]] += 1
-            self._render()
+            self.score[kwargs["player"]] += 1
+            self.render()
         return super().update(*args, **kwargs)
 
-    def _render(self):
+    def render(self):
         """Renders the score."""
-        self.image = self._font.render(f"{self._score[1]} : {self._score[2]}", True, "white")
+        self.image = self.font.render(f"{self.score[1]} : {self.score[2]}", True, "white")
         self.rect = self.image.get_rect(centerx=Settings.WINDOW.centerx, top=15)
 
 
@@ -414,31 +414,31 @@ class Game:
             None
         """
         pygame.init()
-        self._window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
-        self._screen = self._window.get_surface()
-        self._clock = pygame.time.Clock()
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="My Kind of Pong", position=pygame.WINDOWPOS_CENTERED)
+        self.screen = self.window.get_surface()
+        self.clock = pygame.time.Clock()
 
-        self._background = pygame.sprite.GroupSingle(Background())
-        self._all_sprites = pygame.sprite.Group()
-        self._paddle = {}
-        self._paddle["left"] = Paddle("left", self._all_sprites)
-        self._paddle["right"] = Paddle("right", self._all_sprites)
-        self._ball = Ball(self._all_sprites)
-        self._score = Score(self._all_sprites)
-        self._running = True
-        self._pausing = False
-        self._helping = False
-        self._pause = pygame.sprite.GroupSingle(Pause())
-        self._help = pygame.sprite.GroupSingle(Help())
+        self.background = pygame.sprite.GroupSingle(Background())
+        self.all_sprites = pygame.sprite.Group()
+        self.paddle = {}
+        self.paddle["left"] = Paddle("left", self.all_sprites)
+        self.paddle["right"] = Paddle("right", self.all_sprites)
+        self.ball = Ball(self.all_sprites)
+        self.score = Score(self.all_sprites)
+        self.running = True
+        self.pausing = False
+        self.helping = False
+        self.pause = pygame.sprite.GroupSingle(Pause())
+        self.help = pygame.sprite.GroupSingle(Help())
 
     def run(self):
         """Starts the game loop and runs the game."""
         time_previous = time()
-        while self._running:
+        while self.running:
             self.watch_for_events()
             self.update()
             self.draw()
-            self._clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
@@ -446,87 +446,87 @@ class Game:
 
     def update(self):
         """Updates the game state."""
-        if not (self._pausing or self._helping):
-            self._check_collision()
+        if not (self.pausing or self.helping):
+            self.check_collision()
             for i in Settings.KI.keys():
                 if Settings.KI[i]:
-                    self._paddlecontroler(self._paddle[i])
-            self._all_sprites.update(action="move")
+                    self.paddlecontroler(self.paddle[i])
+            self.all_sprites.update(action="move")
 
     def draw(self):
         """Draws the game on the screen."""
-        self._background.draw(self._screen)
-        self._all_sprites.draw(self._screen)
-        if self._pausing:
-            self._pause.draw(self._screen)
-        elif self._helping:
-            self._help.draw(self._screen)
-        self._window.flip()
+        self.background.draw(self.screen)
+        self.all_sprites.draw(self.screen)
+        if self.pausing:
+            self.pause.draw(self.screen)
+        elif self.helping:
+            self.help.draw(self.screen)
+        self.window.flip()
 
     def watch_for_events(self):
         """Watches for game events and handles them."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running = False
+                self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._running = False
+                    self.running = False
                 elif event.key == pygame.K_UP:
                     if not Settings.KI["right"]:
-                        self._paddle["right"].update(action="up")
+                        self.paddle["right"].update(action="up")
                 elif event.key == pygame.K_DOWN:
                     if not Settings.KI["right"]:
-                        self._paddle["right"].update(action="down")
+                        self.paddle["right"].update(action="down")
                 elif event.key == pygame.K_F2:
                     Settings.SOUNDFLAG = not Settings.SOUNDFLAG
                 elif event.key == pygame.K_w:
                     if not Settings.KI["left"]:
-                        self._paddle["left"].update(action="up")
+                        self.paddle["left"].update(action="up")
                 elif event.key == pygame.K_s:
                     if not Settings.KI["left"]:
-                        self._paddle["left"].update(action="down")
+                        self.paddle["left"].update(action="down")
                 elif event.key == pygame.K_1:
                     Settings.KI["left"] = not Settings.KI["left"]
                     if not Settings.KI["left"]:
-                        self._paddle["left"].update(action="halt")
+                        self.paddle["left"].update(action="halt")
                 elif event.key == pygame.K_2:
                     Settings.KI["right"] = not Settings.KI["right"]
                     if not Settings.KI["right"]:
-                        self._paddle["right"].update(action="halt")
+                        self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_p:
-                    if not self._helping:
-                        self._pausing = not self._pausing
+                    if not self.helping:
+                        self.pausing = not self.pausing
                 elif event.key == pygame.K_h:
-                    if not self._pausing:
-                        self._helping = not self._helping
+                    if not self.pausing:
+                        self.helping = not self.helping
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     if not Settings.KI["right"]:
-                        self._paddle["right"].update(action="halt")
+                        self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_w or event.key == pygame.K_s:
                     if not Settings.KI["left"]:
-                        self._paddle["left"].update(action="halt")
+                        self.paddle["left"].update(action="halt")
             elif event.type == MyEvents.POINT_FOR:
-                self._score.update(player=event.player)
+                self.score.update(player=event.player)
 
-    def _check_collision(self):
+    def check_collision(self):
         """Checks for collision between the ball and paddles."""
-        if pygame.sprite.collide_rect(self._ball, self._paddle["left"]):
-            self._ball.update(action="hflip")
-            self._ball.rect.left = self._paddle["left"].rect.right + 1
-        elif pygame.sprite.collide_rect(self._ball, self._paddle["right"]):
-            self._ball.update(action="hflip")
-            self._ball.rect.right = self._paddle["right"].rect.left - 1
+        if pygame.sprite.collide_rect(self.ball, self.paddle["left"]):
+            self.ball.update(action="hflip")
+            self.ball.rect.left = self.paddle["left"].rect.right + 1
+        elif pygame.sprite.collide_rect(self.ball, self.paddle["right"]):
+            self.ball.update(action="hflip")
+            self.ball.rect.right = self.paddle["right"].rect.left - 1
 
-    def _paddlecontroler(self, paddle: pygame.sprite.Sprite) -> None:
+    def paddlecontroler(self, paddle: pygame.sprite.Sprite) -> None:
         """Controls the movement of a paddle based on the ball's position.
 
         Args:
             paddle (pygame.sprite.Sprite): The paddle to control.
         """
-        if paddle.rect.centery > self._ball.rect.centery and paddle.rect.top > 10:
+        if paddle.rect.centery > self.ball.rect.centery and paddle.rect.top > 10:
             paddle.update(action="up")
-        elif paddle.rect.centery < self._ball.rect.centery and paddle.rect.bottom < Settings.WINDOW.bottom - 10:
+        elif paddle.rect.centery < self.ball.rect.centery and paddle.rect.bottom < Settings.WINDOW.bottom - 10:
             paddle.update(action="down")
         else:
             paddle.update(action="halt")

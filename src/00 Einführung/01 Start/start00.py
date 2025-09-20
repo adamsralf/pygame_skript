@@ -1,12 +1,12 @@
-import pygame                                       # Pygame-Modul (auch bei Pygame-ce!)§\label{srcStart0001}§
+import pygame  # Pygame-Modul (auch bei Pygame-ce!)§\label{srcStart0001}§
 
 
 def main():
     pygame.init()                                   # Subsystem starten§\label{srcStart0003}§
-    window = pygame.Window(size=(600, 400))         # Fenster erzeugen §\label{srcStart0005}§                   
+    window = pygame.Window(size=(600, 400))         # Fenster erzeugen §\label{srcStart0005}§
     window.title = "Mein erstes Pygame-Programm"    # Fenstertitel §\label{srcStart0004}§
     window.position = (10, 50)                      # Fensterposition §\label{srcStart0002}§
-    screen = window.get_surface()                   # Das Bitmap des Fensers holen §\label{srcStart0012}§
+    screen = window.get_surface()                   # Das Bitmap des Fensters holen §\label{srcStart0012}§
 
     running = True
     while running:                                  # Hauptprogammschleife: start §\label{srcStart0006}§

@@ -16,10 +16,10 @@ Das Spiel lässt sich beliebig erweitern: Animation des Zerplatzens, Highscoresl
 \begin{enumerate}
     \item Fenster hat eine angemessene Größe.\label{reqStandardGröße}
     \item Hintergrund ist eine passende Bitmap oder einfarbig.\label{reqStandardHintergrund}
-    \item Beendet wird mit der ESC-Taste oder per Mausklick auf rote~„X“.\label{reqStandardBeenden}
+    \item Beendet wird mit der Taste \keys{\esc} oder per Mausklick auf rote~„X“.\label{reqStandardBeenden}
     \item Alle Bitmaps werden nach dem Laden konvertiert und passend skaliert.\label{reqStandardSprite}\myindex{pyg}{\texttt{sprite}!{\texttt{DirtySprite}}}
     \item Alle Bitmaps -- außer dem Hintergrund -- sind transparent.\label{reqStandardTransparenz}
-    \item Alle Bitmaps werden in \texttt{pygame.sprite.Group}- oder \texttt{pygame.sprite.GroupSingle}-Objekten abgelegt.\label{reqStandardGruppe}\myindex{pyg}{\texttt{sprite}!{\texttt{LayeredGroup}}}
+    \item Alle Bitmaps werden in \texttt{pygame.sprite.Group}- oder \texttt{py\-game\-.sprite\-.Group\-Single}-Objekten abgelegt.\label{reqStandardGruppe}\myindex{pyg}{\texttt{sprite}!{\texttt{LayeredGroup}}}
     \item Das Spiel hat eine von der \emph{fps} unabhängige Ablaufgeschwindigkeit.\label{reqStandardFps}
 \end{enumerate}
 \er
@@ -44,7 +44,7 @@ Die Klasse \texttt{Background} ist eine Kindklasse von \texttt{Sprite}, welches 
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{31}{37}{python}{Bubbles (\reqref{reqStandard}.\ref{reqStandardHintergrund}) -- \texttt{Background
 }}{srcBubbles01c}
 
-In der Klasse \texttt{Game} werden in \texttt{\_\_init\_\_()} die Pygame üblichen Verdächtigen \texttt{init()}\myindex{pyg}{\texttt{init()}}, \texttt{Window()}\myindex{pyg}{\texttt{Window}} und \texttt{clock()}\myindex{pyg}{\texttt{time}!\texttt{Clock}} und aufgerufen bzw. erzeugt. Auch wird das Flag der Hauptprogrammschleife \texttt{\_running} initialisiert. Die Methoden \texttt{run()}, \texttt{watch\_for\_events()}, \texttt{update()} und \texttt{draw()} enthalten nur Basisfunktionalitäten, die hier nicht weiter erläutert werden müssen. 
+In der Klasse \texttt{Game} werden in \texttt{\_\_init\_\_()} die Pygame üblichen Verdächtigen \texttt{init()}\myindex{pyg}{\texttt{init()}}, \texttt{Window()}\myindex{pyg}{\texttt{Window}} und \texttt{clock()}\myindex{pyg}{\texttt{time}!\texttt{Clock}} und aufgerufen bzw. erzeugt. Auch wird das Flag der Hauptprogrammschleife \texttt{running} initialisiert. Die Methoden \texttt{run()}, \texttt{watch\_for\_events()}, \texttt{update()} und \texttt{draw()} enthalten nur Basisfunktionalitäten, die hier nicht weiter erläutert werden müssen. 
 
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles01.py}{40}{76}{python}{Bubbles (\reqref{reqStandard}) -- Methoden von \texttt{Game}}{srcBubbles01d}  
 
@@ -120,7 +120,7 @@ Das Ergebnis können Sie in \abbref[vref]{picAquarium02} sehen. Gleichmäßig si
 
 Die maximale Anzahl will ich in \texttt{Game} festlegen. Ausgehend von der Fläche wird eine Obergrenze festgelegt:
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{20}{20}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Settings}}{srcBubbles03a}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles03.py}{20}{21}{python}{Bubbles (\reqref{reqBlasenanzahl}) -- Ergänzung von \texttt{Settings}}{srcBubbles03a}  
 
 Diese Obergrenze aus \zeiref{srcBubble0301} wird in \zeiref{srcBubble0306} abgefragt. Nur wenn die maximale Anzahl noch nicht erreicht wurde, wird eine neue Blase erzeugt.
 
@@ -280,9 +280,9 @@ Der Aufruf von \texttt{stung()} erfolgt durch ein angepasstes \texttt{update()}.
 
 Die Methoden \texttt{sting()} und \texttt{update()} in \texttt{Game} müssen dazu passend verändert werden (\zeiref{srcBubble0704} und \zeiref{srcBubble0705}).
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{188}{191}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles07c}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{189}{192}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{sting()} in \texttt{Game}}{srcbubbles07c}  
 
-\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{151}{154}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Game}}{srcbubbles07d}  
+\lstsource{SRC/01 Beispiele/02 Bubbles/bubbles07.py}{152}{155}{python}{Bubbles (\reqref{reqPunktestand}.\ref{reqPunktestandRadius}) -- \texttt{update()} in \texttt{Game}}{srcbubbles07d}  
 
 Verbleibt \reqref{reqPunktestand}.\ref{reqPunktestandAnzeige}. Ähnlich wie für die Spielfläche möchte ich die Maße für den unteren Teil als Ausgabebox in \texttt{Settings} festlegen.\randnotiz{Rect}\myindex{pyg}{\texttt{Rect}}
 
@@ -412,7 +412,7 @@ Damit mir Zeit bleibt, die Kollision zu sehen, will ich am Ende $2~s$ warten. Di
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\reqref{reqPause}: Pause}
 \br{Pause}{reqPause}
- Mit der rechten Maustaste oder der Taste „P“ springt das Spiel in den Pausenmodus oder beendet diesen. Der aktuelle Spielstand friert ein und wird „eingegraut“. 
+ Mit der rechten Maustaste oder der Taste \keys{P} springt das Spiel in den Pausenmodus oder beendet diesen. Der aktuelle Spielstand friert ein und wird „eingegraut“. 
 \er
 
 Die Idee hinter dieser Anforderung ist, dass eine notwendige Unterbrechung nicht zwangsläufig bedeutet, dass man verliert. In \abbref[vref]{picAquarium08} können Sie sehen, wie der Pausenbildschirm aussehen sollte.
@@ -449,9 +449,9 @@ Mehr ist nicht nötig, da der Rest von den üblichen \texttt{update()}- und \tex
  Am Ende des Spiels soll erfragt werden, ob der Spieler das Spiel neu starten möchte oder nicht.
 \er
 
-Die Grundidee der Implementierung ist dabei, dass mit Hilfe von zwei Flags\index{Flag}\randnotiz{Flag} der Status des Spiels festgelegt wird. Wie bei der Pause brauchen wir ein Flag, welches steuert, ob der halbtransparente Vordergrund über das Spiel gelegt wird (\texttt{\_restarting}). Dies ist immer dann der Fall, wenn die Kollisionsprüfung der Blasen eine Kollision feststellt. 
+Die Grundidee der Implementierung ist dabei, dass mit Hilfe von zwei Flags\index{Flag}\randnotiz{Flag} der Status des Spiels festgelegt wird. Wie bei der Pause brauchen wir ein Flag, welches steuert, ob der halbtransparente Vordergrund über das Spiel gelegt wird (\texttt{restarting}). Dies ist immer dann der Fall, wenn die Kollisionsprüfung der Blasen eine Kollision feststellt. 
 
-Das andere Flag -- \texttt{\_do\_start} -- markiert, ob der Spieler einen Neustart möchte. An den entscheidenden Stellen in \texttt{update()} und \texttt{draw()} werden dann diese Flags abgefragt.
+Das andere Flag -- \texttt{do\_start} -- markiert, ob der Spieler einen Neustart möchte. An den entscheidenden Stellen in \texttt{update()} und \texttt{draw()} werden dann diese Flags abgefragt.
 
 Die Aufgabe, eine Rückfrage in den Vordergrund zu schieben, ist eigentlich schon mit der Klasse \texttt{Pause} gelöst; ich kann daher die Klasse verallgemeinern, indem ich sie in \texttt{Message} umbenenne und den Dateinamen dem Konstruktor als String-Parameter übergebe (\zeiref{srcBubble1202}).
 
@@ -468,7 +468,7 @@ Der Punktestand wird zurückgesetzt, die Spritegroup von den Blasen geleert, die
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{195}{203}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{restart()} in \texttt{Game}}{srcbubbles12d}  
 
 
-Aufgerufen wird die Methode in \texttt{update()}, wenn das entsprechende Flag \texttt{do\_start} gesetzt ist. Auch wird in \texttt{update()} der Neustart-Bildschirm in die Spritegroup eingefügt und das Flag \texttt{\_restarting} auf \true\ gesetzt, wenn eine Kollision erkannt wurde. 
+Aufgerufen wird die Methode in \texttt{update()}, wenn das entsprechende Flag \texttt{do\_start} gesetzt ist. Auch wird in \texttt{update()} der Neustart-Bildschirm in die Spritegroup eingefügt und das Flag \texttt{restarting} auf \true\ gesetzt, wenn eine Kollision erkannt wurde. 
 
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{182}{193}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{update()} in \texttt{Game}}{srcbubbles12e}  
 
@@ -477,7 +477,7 @@ Die Antwort auf den Neustart-Bildschirm wird in \texttt{watch\_for\_events()} ab
 
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{163}{169}{python}{Bubbles (\reqref{reqNeustart}) -- Erweiterung von \texttt{watch\_for\_events()}}{srcbubbles12f}  
 
-Da wir nun am Spielende eine halbtransparente Vordergrundausgabe haben, brauchen wir keine zweisekündige Pause, um die kollidierenden Blasen anzusehen (siehe \abbref[vref]{picAquarium09}). Daher kann \zeiref{srcBubble1209} auskommentiert werden.
+Da wir nun am Spielende eine halbtransparente Vordergrundausgabe haben, brauchen wir keine zweisekündige Pause, um die kollidierenden Blasen anzusehen (siehe \abbref[vref]{picAquarium09}). %Daher kann \zeiref{srcBubble1209} auskommentiert werden.
 
 \lstsource{SRC/01 Beispiele/02 Bubbles/bubbles12.py}{281}{281}{python}{Bubbles (\reqref{reqNeustart}) -- \texttt{run()} in \texttt{Game}}{srcbubbles12g}  
 

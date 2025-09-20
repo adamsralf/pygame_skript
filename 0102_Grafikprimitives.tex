@@ -1,6 +1,6 @@
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Grafikprimitive}\index{Grafikprimitive}
+\section{Grafikprimitive}\index{Grafikprimitive}\label{secGrafikprimitive}
 \subsection{Grundlagen}
 Unter Grafikprimitiven versteht man gezeichnete einfache grafische Figuren wie Linien\index{Linie}\index{Grafikprimitive!Linie}, Punkte\index{Punkt}\index{Grafikprimitive!Punkt}, Kreise\index{Kreis}\index{Grafikprimitive!Kreis} etc. Sie spielen in der Spieleprogrammierung nicht so eine große Rolle, können aber ganz nützlich sein. Ich will hier deshalb nur einige vorstellen. 
 
@@ -46,7 +46,7 @@ Bauen wir zuerst ein kleines Programm, dass an der Mausposition einen Kreis zeic
 
 \texttt{main()} enthält nun sehr viel bekanntes, aber auch ein paar Neuigkeiten. In \zeiref{srcCircles0101} wird die Bildschirmgröße in einer Liste vorgehalten, da wir die Info noch an anderer Stelle als in \zeiref{srcCircles0103} brauchen. Darunter wird in \zeiref{srcCircles0104} eine Liste für die Aufnahme der Kreise definiert. 
 
-In der Hauptprogrammschleife wird in \zeiref{srcCircles0105} abgefragt, ob die linke Maustaste\randnotiz{\texttt{get\_pressed(})}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pressed()}|underline} gedrückt wurde. Wenn ja, wird ein Kreis an der Mausposition\randnotiz{\texttt{get\_pos(})}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}} erzeugt. Anschließend wird der Bildschirm mit weißer Farbe aufgefüllt und die Kreise des Kontainers werden gemalt.
+In der Hauptprogrammschleife wird in \zeiref{srcCircles0105} abgefragt, ob die linke Maustaste\randnotiz{\texttt{get\_pressed(})}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pressed()}|underline} gedrückt wurde. Wenn ja, wird ein Kreis an der Mausposition\randnotiz{\texttt{get\_pos(})}\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}} gezeichnet. Anschließend wird der Bildschirm mit weißer Farbe aufgefüllt und die Kreise des Kontainers werden gemalt.
 
 Das Ergebnis ist noch wenig berauschend (siehe \abbref[vref]{picCircles01}) und erinnert mehr an ein Malprogramm wie Paint.
 
@@ -60,7 +60,7 @@ Das Ergebnis ist noch wenig berauschend (siehe \abbref[vref]{picCircles01}) und 
 \end{wrapfigure}%
 Im nächsten Schritt wollen wir aus den klobigen Kreisen bunte Partikel machen. Auch sollen diese nicht genau auf der Mausposition landen, sondern darum verstreut. Dazu müssen nur minimal Änderungen in der Klasse \texttt{Circle} vorgenommen werden.
 
-Die beiden Positionsangaben werden nun durch eine Zufallszahl zwischen~$-2$ und~$+2$ ergänzt. Auch wird der Radius auf~$2~px$ reduziert. Die Farbe wird ebenfalls durch zufällige Werte gestreut. Hier habe ich einige Kombinationen ausprobiert und mit gefällt diese Farbvariation ganz gut. Spielen Sie ruhig selber mal mit den Farbkanälen und den Zufallswerten rum. Das Ergebnis in \abbref[vref]{picCircles02} sieht schon besser aus. 
+Die beiden Positionsangaben werden nun durch eine Zufallszahl zwischen~$-2$ und~$+2$ ergänzt. Auch wird der Radius auf~$2~px$ reduziert. Die Farbe wird ebenfalls durch zufällige Werte gestreut. Hier habe ich einige Kombinationen ausprobiert und mir gefällt diese Farbvariation ganz gut. Spielen Sie ruhig selber mal mit den Farbkanälen und den Zufallswerten rum. Das Ergebnis in \abbref[vref]{picCircles02} sieht schon besser aus. 
 
 \lstsource{SRC/00 Einführung/02 Primitive/circles02.py}{7}{12}{python}{Partikelfontaine, Version 2.0}{srcCircles02}
 
@@ -90,7 +90,7 @@ Die Liste \texttt{circles} enthält nach einiger Zeit viele Partikel, die überh
 
 In \texttt{update()} wird dann nach der Berechnung der neuen Position überprüft, ob der Partikel zu löschen ist. Unser Kriterium soll sein, dass der Partikel den Bildschirm verlassen hat.
 
-In \zeiref{srcCircles0501} wird überprüft, ob der rechte Rand des Partikels (Mittelpunkt plus Radius), links außerhalb des Bildschirm liegt. Falls ja, muss das Löschflag auf \true\ gesetzt werden. Analog werden in \zeiref{srcCircles0502} und \zeiref{srcCircles0503} der rechte und der untere Rand des Bildschirm überprüft. 
+In \zeiref{srcCircles0501} wird überprüft, ob der rechte Rand des Partikels (Mittelpunkt plus Radius), links außerhalb des Bildschirms liegt. Falls ja, muss das Löschflag auf \true\ gesetzt werden. Analog werden in \zeiref{srcCircles0502} und \zeiref{srcCircles0503} der rechte und der untere Rand des Bildschirm überprüft. 
 
 Dabei wird mit Hilfe des Attributs \texttt{pygame.Window.size}\randnotiz{size}\myindex{pyg}{\texttt{Window}!\texttt{size}} jeweils die Breite bzw. Höhe des Bildschirms ermittelt. Dieses Attribut liefert mir die Bildschirmgröße als 2-Tupel wieder. Der nullte Wert ist dabei die Breite und der erste die Höhe. Ein Test, ob der Partikel nach oben verschwunden ist, wird nicht benötigt, da er ja irgendwann wieder runterfällt und damit wieder sichtbar wird.
 
@@ -108,17 +108,17 @@ In \abbref[vref]{picCircles05} können Sie eine Fontaine sehen. So richtig cool 
 Warum rufe ich nicht den \texttt{remove()} schon innerhalb der Update-Schleife auf? Deshalb: \emph{Verlängern oder verkürzen Sie nie eine Liste, die Sie gerade durchwandern.} Es können höchst seltsame Effekte entstehen. Schätzen Sie mal die Anzahl der Schleifendurchgänge des folgendes Programmes.
 
 \begin{lstlisting}[firstnumber=1]
-klein = [1, 2, 3]
-for a in klein:
-    klein.append(a*10)
-    print(klein)	
+	klein = [1, 2, 3]
+	for a in klein:
+	klein.append(a*10)
+	print(klein)	
 \end{lstlisting}
 
 %\begin{wrapfigure}[17]{r}{6.0cm}%
 %	\begin{center}%
-%		\vspace{-1cm}%
-%		\myfigure{circles06.png}{0.6}{Partikelfontaine, \\Version 6: fertig}{picCircles06}%
-%	\end{center}%
+	%		\vspace{-1cm}%
+	%		\myfigure{circles06.png}{0.6}{Partikelfontaine, \\Version 6: fertig}{picCircles06}%
+	%	\end{center}%
 %\end{wrapfigure}%
 Kleine Änderungen der Parameter können schon interessante visuelle Effekte haben. Leider können die hier nicht so gut durch Abbildungen gezeigt werden, daher: Selbst programmieren und ausprobieren.
 
@@ -135,7 +135,7 @@ Es wurden folgende Pygame-Elemente eingeführt:
 \begin{itemize}
 	\item Vordefinierte Farbnamen:\index{Farbnamen|underline}\\ 
 	\url{https://pyga.me/docs/ref/color_list.html}
-
+	
 	\item \texttt{import pygame.gfxdraw}:\\ \url{https://pyga.me/docs/ref/gfxdraw.html}
 	
 	\item \texttt{pygame.Color}:
@@ -165,21 +165,21 @@ Es wurden folgende Pygame-Elemente eingeführt:
 	%\item \texttt{pygame.display.get\_window\_size()}:
 	%\myindex{pyg}{\texttt{display}!\texttt{get\_window\_size()}}\\
 	%\url{https://pyga.me/docs/ref/display.html#pygame.display.get_window_size}
-
+	
 	\item \texttt{pygame.gfxdraw.pixel()}:
-    \myindex{pyg}{\texttt{gfxdraw}!\texttt{pixel()}}\\ \url{https://pyga.me/docs/ref/gfxdraw.html#pygame.gfxdraw.pixel}
-
+	\myindex{pyg}{\texttt{gfxdraw}!\texttt{pixel()}}\\ \url{https://pyga.me/docs/ref/gfxdraw.html#pygame.gfxdraw.pixel}
+	
 	\item \texttt{pygame.mouse.get\_pos()}:
 	\myindex{pyg}{\texttt{mouse}!\texttt{get\_pos()}}\\
 	\url{https://pyga.me/docs/ref/mouse.html#pygame.mouse.get_pos}
-
+	
 	\item \texttt{pygame.mouse.get\_pressed()}:
 	\myindex{pyg}{\texttt{mouse}!\texttt{get\_pressed()}}\\
 	\url{https://pyga.me/docs/ref/mouse.html#pygame.mouse.get_pressed}
-
+	
 	\item \texttt{pygame.rect.Rect}:
-    \myindex{pyg}{\texttt{rect}!\texttt{Rect}}\\
-    \url{https://pyga.me/docs/ref/rect.html}
+	\myindex{pyg}{\texttt{rect}!\texttt{Rect}}\\
+	\url{https://pyga.me/docs/ref/rect.html}
 	
 	\item \texttt{pygame.Surface.set\_at()}:
 	\myindex{pyg}{\texttt{Surface}!\texttt{set\_at()}}\\
@@ -188,6 +188,6 @@ Es wurden folgende Pygame-Elemente eingeführt:
 	\item \texttt{pygame.Window.size}:
 	\myindex{pyg}{\texttt{Window}!\texttt{size}}\\
 	\url{https://pyga.me/docs/ref/window.html#pygame.Window.size}
-
+	
 \end{itemize}
 

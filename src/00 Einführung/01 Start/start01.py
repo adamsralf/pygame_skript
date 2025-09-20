@@ -3,10 +3,10 @@ import pygame
 
 def main():
     pygame.init()
-    window = pygame.Window( size=(600, 400),        
-                            title = "Mein erstes Pygame-Programm", # per Übergabeparameter
-                            position = (10, 50))         
-    screen = window.get_surface()                   
+    window = pygame.Window(size=(600, 400), 
+        title="Mein erstes Pygame-Programm",        # per Übergabeparameter
+        position=(10, 50))  
+    screen = window.get_surface()
 
     clock = pygame.time.Clock()                     # Clock-Objekt§\label{srcStart0101}§
 
@@ -22,5 +22,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
