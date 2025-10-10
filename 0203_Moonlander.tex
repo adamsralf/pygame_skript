@@ -20,14 +20,13 @@ Wir werden dieses Spiel systematisch Schritt für Schritt entwickeln, wobei ich 
 \er
 
 
-\reqref[vref]{reqMoonStandardGröße} wird in der Präambel schon festgelegt. Auch wird in \texttt{Settings} die \texttt{FPS} und die damit verbundene \texttt{DELTATIME} definiert. In \texttt{HORIZONT} lege ich fest, wo die Mondoberfläche aufhört un der schwarze Nachthimmel beginnt.
+\reqref[vref]{reqMoonStandardGröße} wird in der Präambel schon festgelegt. Auch wird in \texttt{Settings} die \texttt{FPS} und die damit verbundene \texttt{DELTATIME} definiert. In \texttt{HORIZONT} lege ich fest, wo die Mondoberfläche aufhört und der schwarze Nachthimmel beginnt.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{1}{10}{python}{Moonlander (\reqref{reqMoonStandard}.\ref{reqMoonStandardGröße}) -- Präambel
 }{srcMoon01a}
 
 
-Requirement~\ref{reqMoonStandard}.\ref{reqMoonStandardHintergrund} löse ich durch drei Klassen: \texttt{
-Sky}, \texttt{Moon} und \texttt{Earth}. Zunächst die Klasse \texttt{Sky}. Sie besteht aus einem recht einfachen Grundaufbau. Im Konstruktor wird ein Verweis auf das Fenster übergeben und die Größe des Himmels in Form eines \texttt{Rect}-Objektes abgespeichert. Dabei wird unten Platz für die Mondoberfläche gelassen. Die Methode \texttt{draw()} zeichnet mir ein schwarzes Rechteck an die richtige Stelle. 
+Requirement~\ref{reqMoonStandard}.\ref{reqMoonStandardHintergrund} löse ich durch drei Klassen: \texttt{Sky}, \texttt{Moon} und \texttt{Earth}. Zunächst die Klasse \texttt{Sky}. Sie besteht aus einem recht einfachen Grundaufbau. Im Konstruktor wird ein Verweis auf das Fenster übergeben und die Größe des Himmels in Form eines \texttt{Rect}-Objektes abgespeichert. Dabei wird unten Platz für die Mondoberfläche gelassen. Die Methode \texttt{draw()} zeichnet mir ein schwarzes Rechteck an die richtige Stelle. 
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{12}{22}{python}{Moonlander (\reqref{reqMoonStandard}.\ref{reqMoonStandardHintergrund}) -- Sky
 }{srcMoon01b}
@@ -41,10 +40,10 @@ Völlig analog arbeitet die Klasse \texttt{Moon} (siehe \srcref[vref]{srcMoon01c
 
 Die Klasse \texttt{Earth} zeichnet mir eine blaue Kugel in das rechte obere Eck (siehe \srcref[vref]{srcMoon01d}). 
 
-\lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{38}{50}{python}{Moonlander (\reqref{reqMoonStandard}.\ref{reqMoonStandardHintergrund}) -- Earth
+\lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{37}{49}{python}{Moonlander (\reqref{reqMoonStandard}.\ref{reqMoonStandardHintergrund}) -- Earth
 }{srcMoon01d}
 
-Wie üblich wird das Spiel in einer eigenen Klasse gekapselt: \texttt{Game}. Die drei Objekte müssen nur noch in den üblichen Aufbau von \texttt{Game} eingefügt werden. Dabei wird auch das Beenden un des Neustart des Spiels implementiert. 
+Wie üblich wird das Spiel in einer eigenen Klasse gekapselt: \texttt{Game}. Die drei Objekte müssen nur noch in den üblichen Aufbau von \texttt{Game} eingefügt werden. Dabei wird auch das Beenden und der Neustart des Spiels implementiert. 
 
 In \srcref[vref]{srcMoon01d} wird im Konstruktor von \texttt{Game} Pygame initialisiert, ein Fenster erstellt, der Bildschirm des Fensters ermittelt und ein \texttt{Clock}-Objekt für die Deltatime-Logik (siehe \abschnittref[vref]{secDeltatime}) erzeugt. 
 
@@ -68,6 +67,7 @@ Die Methode \texttt{update()} ist derzeit nur ein Platzhalter für zukünftige A
 
 In \texttt{draw()} werden die entsprechenden Methoden der Spielobjekte aufgerufen und das Fenster geflipt.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{85}{89}{python}{Moonlander (\reqref{reqMoonStandard}) -- \texttt{Game.draw()}
 }{srcMoon01i}
 
@@ -76,10 +76,11 @@ Der Neustart setzt nicht die einzelnen Spielobjekte zurück, sondern erzeugt ein
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{91}{95}{python}{Moonlander (\reqref{reqMoonStandard}) -- \texttt{Game.restart()}
 }{srcMoon01j}
 
-Verbleibt der Spielaufruf selbst. Nach einem Start des Programms sollte ein Szenario wie in \abbref[vref]{picMoonlander01} zu sehen sein.
-
+Verbleibt der Spielaufruf selbst.
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander01.py}{97}{999}{python}{Moonlander (\reqref{reqMoonStandard}) -- Start des Spiels
 }{srcMoon01k}
+
+Nach einem Start des Programms erscheint ein Szenario wie in \abbref[vref]{picMoonlander01}.
 
 \myebild{moonlander01}{0.15}{Moonlander -- Der Hintergrund}{picMoonlander01}
 
@@ -105,7 +106,7 @@ Ab \zeiref{moonlander02a02} werden die Gebirgszüge (default ist~5) erstellt. Da
 		\myfigure{moonlander02.png}{0.3}{Gebirge (1)}{picGebirge1}%
 	\end{center}%
 \end{wrapfigure}%
-Die Höhe des Gebirges (\texttt{y}) wird errechnet, in dem von der Oberkante der Landefläche mindestens~$10~px$ nach oben gegangen wird; dieser Wert wird noch um eine Zufallszahl zwischen~5 und~30 ergänzt, so dass die Höhen der Gebirgszüge nicht immer gleich sind. Damit die hinteren Gebirgszüge dabei immer schön herausragen, wird der Wert noch mit dem Layerindex multipliziert. Nun wird noch \texttt{draw()} angepasst (\srcref[vref]{srcMoon02ab}), indem die Gebirgszüge als Rechtecke gezeichnet werden. Die Mondoberfläche sollte ungefähr wie in \abbref[vref]{picGebirge1} aussehen. 
+Die Höhe des Gebirges~(\texttt{y}) wird errechnet, in dem von der Oberkante der Landefläche mindestens~$\unit[10]{px}$ nach oben gegangen wird; dieser Wert wird noch um eine Zufallszahl zwischen~5 und~30 ergänzt, so dass die Höhen der Gebirgszüge nicht immer gleich sind. Damit die hinteren Gebirgszüge dabei immer schön herausragen, wird der Wert noch mit dem Layerindex multipliziert. Nun wird noch \texttt{draw()} angepasst (\srcref[vref]{srcMoon02ab}), indem die Gebirgszüge als Rechtecke gezeichnet werden. Die Mondoberfläche sollte ungefähr wie in \abbref[vref]{picGebirge1} aussehen. 
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02a.py}{25}{36}{python}{Moonlander (\reqref{reqMondoberfläche}) -- Konstruktor von \texttt{Moon}
 }{srcMoon02aa}
@@ -124,13 +125,14 @@ Dazu wird im ersten Schritt der Konstruktor von \texttt{Moon} um den Übergabepa
 		\myfigure{moonlander03.png}{0.3}{Gebirge (2)}{picGebirge2}%
 	\end{center}%
 \end{wrapfigure}%
-Jetzt wird innerhalb der Schleife für jeden Gebirgszug eine Spitze oder ein Tal generiert. Die Ermittlung der Farbe (des Grautons) bleibt unverändert. In \texttt{lofPeaks} werden die Peaks als Liste von Punkten gespeichert. Der erste Punkt ist immer ganz links auf der Oberkante der Landefläche (\zeiref{moonlander02b04}). Dies ist dann der Startpunkt unseres geschlossenen Polygons. Anschließend wird mit Hilfe einer Schleife die Liste der Peaks um weitere zufällige Punkte erweitert. In \zeiref{moonlander02b06} wird dazu ein Höhenunterschied zwischen $-5~px$ und $10~px$ geraten und von der Oberkante subtrahiert. In der Zeile danach wird durch die Addition von \texttt{dist} der nächste Peak nach rechts verschoben. Ist diese innere for-Schleife abgearbeitet, steht die Liste der Höhenpunkte und kann dem entsprechendem Layer in \zeiref{moonlander02b08} hinzugefügt werden. Vorher muss aber noch der letzte Punkt des Polygonzuges erzeugt und hinzugefügt werden.
+Jetzt wird innerhalb der Schleife für jeden Gebirgszug eine Spitze oder ein Tal generiert. Die Ermittlung der Farbe (des Grautons) bleibt unverändert. In \texttt{lofPeaks} werden die Peaks als Liste von Punkten gespeichert. Der erste Punkt ist immer ganz links auf der Oberkante der Landefläche (\zeiref{moonlander02b04}). Dies ist dann der Startpunkt unseres geschlossenen Polygons. Anschließend wird mit Hilfe einer Schleife die Liste der Peaks um weitere zufällige Punkte erweitert. In \zeiref{moonlander02b06} wird dazu ein Höhenunterschied zwischen $\unit[-5]{px}$ und $\unit[10]{px}$ geraten und von der Oberkante subtrahiert. In der Zeile danach wird durch die Addition von \texttt{dist} der nächste Peak nach rechts verschoben. Ist diese innere for-Schleife abgearbeitet, steht die Liste der Höhenpunkte und kann dem ent\-sprech\-endem Layer in \zeiref{moonlander02b08} hinzugefügt werden. Vorher muss aber noch der letzte Punkt des Polygonzuges erzeugt und hinzugefügt werden.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02b.py}{25}{45}{python}{Moonlander (\reqref{reqMondoberfläche}) -- Konstruktor von \texttt{Moon} mit Peaks
 }{srcMoon02ba}
 
-Die Methode \texttt{draw()} ist nun schön einfach geworden. Für jede Gebirgskette wird \texttt{draw.polygon} aufgerufen, die eigentliche Arbeit ist im Konstruktor erfolgt. Das Ergebnis kann man in \abbref[vref]{picGebirge2} bewundern.
+Die Methode \texttt{draw()} ist nun schön einfach geworden. Für jede Gebirgskette wird \texttt{draw.\-poly\-gon()} aufgerufen, die eigentliche Arbeit ist im Konstruktor erfolgt. Das Ergebnis kann man in \abbref[vref]{picGebirge2} bewundern.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02b.py}{47}{57}{python}{Moonlander (\reqref{reqMondoberfläche}) -- \texttt{Moon.draw() mit Bergspitzen}
 }{srcMoon02bb}
 
@@ -142,7 +144,7 @@ Die Methode \texttt{draw()} ist nun schön einfach geworden. Für jede Gebirgske
 \end{wrapfigure}%
 Zum Abschluss möchte ich noch den Bergen eine gewisse Kontur geben. Dazu wird das eine Polygon in viele aufgeteilt, wobei ein Polygon immer von einem Peak zum nächsten reicht. Zunächst fällt auf, dass die Anzahl der Peaks nun pro Gebirgszug variiert (\zeiref{moonlander02c01}); dies lässt die Züge nicht so schachbrettartig erscheinen. Natürlich muss dann auch der Abstand der Peaks neu berechnet werden (\zeiref{moonlander02c02}). 
 
-Um den Quelltext besser zu verstehen, habe ich das Erzeugen der Peaks und das Berechnen der entsprechenden Polygone getrennt programmiert. Etwas Neues passiert erst ab \zeiref{moonlander02c03}. Für jeden Peak werden nun vier Punkt ermittelt. Der Startpeak, der rechts davon liegende Peak, der Punkt darunter bis zur Oberfläche und auf der Oberfläche wieder nach links unter dem Startpeak. Auch wird eine dezente Grauschattierung erraten. Die vier Punkte werden als Polygonzug gemeinsam mit der passenden Farbe in die Liste \texttt{layers}. abgelegt.
+Um den Quelltext besser zu verstehen, habe ich das Erzeugen der Peaks und das Berechnen der entsprechenden Polygone getrennt programmiert. Etwas Neues passiert erst ab \zeiref{moonlander02c03}. Für jeden Peak werden nun vier Punkt ermittelt. Der Startpeak, der rechts davon liegende Peak, der Punkt darunter bis zur Oberfläche und auf der Oberfläche wieder nach links unter dem Startpeak. Auch wird eine dezente Grauschattierung erraten. Die vier Punkte werden als Polygonzug gemeinsam mit der passenden Farbe in die Liste \texttt{layers} abgelegt.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02c.py}{25}{55}{python}{Moonlander (\reqref{reqMondoberfläche}) -- Konstruktor von \texttt{Moon} mit Kontur}{srcMoon02ca}
 
@@ -150,7 +152,7 @@ Noch ein paar leicht nachzuvollziehende Änderungen in \texttt{draw()} und der M
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02c.py}{57}{67}{python}{Moonlander (\reqref{reqMondoberfläche}) -- \texttt{Moon.draw()} mit Kontur}{srcMoon02cb}
 
-Den Gebirgszug jedes Mal neu zeichnen zu lassen, ist sicherlich eine enorme Rechenzeitverschwendung. Eine gängige Technik ist nun, das Bild einmal in ein Bitmap (Surface) zeichnen zu lassen und dann immer das Bitmap zu blitten. Hinweis: \texttt{rect} wird nun für das gesamte Bitmap gebraucht und wurde deshalb zuerst in \texttt{landeplatz} umbenannt. Auch kann darauf verzichtet werden \texttt{layer} und \texttt{landeplatz} als Attribute der Klasse zu definieren, da diese Informationen nach der Erstellung des Bitmaps nicht mehr gebraucht werden.
+Den Gebirgszug jedes Mal neu zeichnen zu lassen, ist sicherlich eine enorme Rechenzeitverschwendung. Eine gängige Technik ist nun, das Bild einmal in ein Bitmap (\texttt{py\-game.sur\-face.Sur\-face}) zeichnen zu lassen und dann immer das Bitmap zu blitten. Hinweis: \texttt{rect} wird nun für das gesamte Bitmap gebraucht und wurde deshalb zuerst in \texttt{landeplatz} umbenannt. Auch kann darauf verzichtet werden \texttt{layer} und \texttt{landeplatz} als Attribute der Klasse zu definieren, da diese Informationen nach der Erstellung des Bitmaps nicht mehr gebraucht werden.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02d.py}{25}{74}{python}{Moonlander (\reqref{reqMondoberfläche}) -- \texttt{Moon} als Bitmap}{srcMoon02d}
 
@@ -228,9 +230,9 @@ In \texttt{draw()} werden die Listeneinträge für das Zeichnen der Sterne verwe
 %	\end{center}%
 %\end{wrapfigure}%
 
-Etwas interessanter wird es, das Funkeln zu erzeugen. Vorbereitend wird den Sterndaten in \zeiref{moonlander02i01} ein Zufallswert mitgegeben, die angibt, nach wie vielen Frames eine Helligkeitsänderung erfolgen soll. Bei $60~fps$ sind die $3.3 - 10~sek$.
+Etwas interessanter wird es, das Funkeln zu erzeugen. Vorbereitend wird den Sterndaten in \zeiref{moonlander02i01} ein Zufallswert mitgegeben, der angibt, nach wie vielen Frames eine Helligkeitsänderung erfolgen soll. Bei $\unit[60]{fps}$ sind die $3.3 - \unit[10]{sek}$.
 
-\lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02i.py}{23}{29}{python}{Moonlander (\reqref{reqStars}.\ref{reqStarsFunkeln}) -- Funkelsterne (1)}{srcMoon02ia}
+\lstsource{SRC/01 Beispiele/03 Moonlander/moonlander02i.py}{24}{31}{python}{Moonlander (\reqref{reqStars}.\ref{reqStarsFunkeln}) -- Funkelsterne (1)}{srcMoon02ia}
 
 \begin{wrapfigure}[14]{r}{6.0cm}%
 	\begin{center}%
@@ -284,7 +286,7 @@ In \texttt{Lander.draw()} wird nun abhängig vom \emph{thrust}-Modus mal das ein
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander03.py}{208}{212}{python}{Moonlander (\reqref{reqLander}.\ref{reqLanderAusstoß}) -- \texttt{Lander.draw()}}{srcMoon03e}
 
-Verbleib noch den Startpunkt festzulegen, was recht simpel ist. Im Konstruktor von \texttt{Lander} wird die entsprechende Position bestimmt (siehe \zeiref{moonlander0304} und \zeiref{moonlander0305}). Das Ergebnis sollte wie in \abbref[vref]{picMoonlander08} aussehen.
+Verbleibt noch den Startpunkt festzulegen, was recht simpel ist. Im Konstruktor von \texttt{Lander} wird die entsprechende Position bestimmt (siehe \zeiref{moonlander0304} und \zeiref{moonlander0305}). Das Ergebnis sollte wie in \abbref[vref]{picMoonlander08} aussehen.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander03.py}{132}{133}{python}{Moonlander (\reqref{reqLander}.\ref{reqLanderStart}) -- Startposition des \texttt{Lander}}{srcMoon03f}
 
@@ -292,7 +294,7 @@ Verbleib noch den Startpunkt festzulegen, was recht simpel ist. Im Konstruktor v
 
 \subsection{\reqref{reqGraviation}: Gravitation und Aufsetzten}
 
-\br{Lander}{reqGraviation}
+\br{Gravitation und Aufsetzen}{reqGraviation}
 \begin{enumerate}
 	\item Der Lander wird durch die Gravitation des Mondes mit $1.62~m/s^2$ beschleunigt.\label{reqLanderGravitation}
 	\item Berühren die Teller der Landestützen die Mondoberfläche, bleibt der Lander stehen. \label{reqLanderAufsetzen}
@@ -322,11 +324,11 @@ Zum Schluss muss noch \texttt{Game.update()} angepasst werden.
 
 \subsection{\reqref{reqGegenschub}: Gegenschub}
 
-\br{Lander}{reqGegenschub}
-	Wird mit Hilfe von \keys{\SPACE} Gegenschub ausgelöst, soll dieser Schub sich auf die Sinkgeschwindigkeit des Landers auswirken. Der Gegenschub soll $-3~m/s^2$ betragen.
+\br{Gegenschub}{reqGegenschub}
+	Wird mit Hilfe von \keys{\SPACE} Gegenschub ausgelöst, soll dieser Schub sich auf die Sinkgeschwindigkeit des Landers auswirken. Der Gegenschub soll $\unit[-3]{m/s^2}$ betragen.
 \er
 
-Der Gegenschub ist recht willkürlich mit $-3~m/s^2$ festgelegt. Das negative Vorzeichen kommt daher, da dieser Schub ja der Mondgravitation genau entgegengesetzt wirken soll.
+Der Gegenschub ist recht willkürlich mit $\unit[-3]{m/s^2}$ festgelegt. Das negative Vorzeichen kommt daher, da dieser Schub ja der Mondgravitation genau entgegengesetzt wirken soll.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander05.py}{20}{20}{python}{Moonlander (\reqref{reqGegenschub}) -- Größe des Gegenschubs}{srcMoon05a}
 
@@ -338,7 +340,7 @@ Und schon kann durch den Gegenschub die Sinkgeschwindigkeit vom Spieler manipuli
 
 \subsection{\reqref{reqTreibstoff}: Treibstoff}
 
-\br{Lander}{reqTreibstoff}
+\br{Treibstoff}{reqTreibstoff}
 \begin{enumerate}
 	\item Der Lander hat einen begrenzten Treibstoffvorrat.\label{reqTreibstoffvorrat}
 	\item Je nach Schwierigkeitsgrad gibt es unterschiedliche Vorräte.\label{reqTreibstofflevel}
@@ -347,7 +349,7 @@ Und schon kann durch den Gegenschub die Sinkgeschwindigkeit vom Spieler manipuli
 \end{enumerate}
 \er
 
-Zunächst werden in \texttt{Settings} die Spielkonstanten definiert. \texttt{THRUST} ist der Gegenschub, aber nicht in der Maßeinheit~$m/s^2$, sondern $px/s^2$. Die möglichen Treibstoffvorräte für \reqref{reqTreibstoff}.\ref{reqTreibstofflevel} werden in \zeiref{moonlander0602} in dem Dictionary \texttt{LEVEL} abgelegt.
+Zunächst werden in \texttt{Settings} die Spielkonstanten definiert. \texttt{THRUST} ist der Gegenschub, aber nicht in der Maßeinheit~$\unit{m/s^2}$, sondern $\unit{px/s^2}$. Die möglichen Treibstoffvorräte für \reqref{reqTreibstoff}.\ref{reqTreibstofflevel} werden in \zeiref{moonlander0602} in dem Dictionary \texttt{LEVEL} abgelegt.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander06.py}{21}{22}{python}{Moonlander (\reqref{reqTreibstoff}) -- Vorbereitungen in \texttt{Settings}}{srcMoon06a}
 
@@ -369,7 +371,7 @@ Probieren Sie es aus, es müsste klappen!
 
 \subsection{\reqref{reqStatus}: Statusanzeige}
 
-\br{Lander}{reqStatus}
+\br{Statusanzeige}{reqStatus}
 \begin{enumerate}
 	\item Für den Lander wird eine separate Statusanzeige benötigt.\label{reqStatusWindow}
 	\item Geschwindigkeit und Höhe werden mit Maßeinheiten in Textform ausgegeben.\label{reqStatusGH}
@@ -378,15 +380,15 @@ Probieren Sie es aus, es müsste klappen!
 \end{enumerate}
 \er
 
-Alle wesentliche Änderungen dazu finden in der Klasse \texttt{Lander} statt. Da ich die Position der separaten Statusanzeige von der Position des Hauptfensters abhängig machen möchte, muss die Signatur der Methode des Konstruktor geändert werden. Anstelle eines \texttt{Surface}-Objektes wird nun in \zeiref{moonlander0701} ein \texttt{Window}-Objekt übergeben. 
+Alle wesentliche Änderungen dazu finden in der Klasse \texttt{Lander} statt. Da ich die Position der separaten Statusanzeige von der Position des Hauptfensters abhängig machen möchte, muss die Signatur des Konstruktor geändert werden. Anstelle eines \texttt{Surface}-Objektes wird nun in \zeiref{moonlander0701} ein \texttt{Window}-Objekt übergeben. 
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander07.py}{134}{148}{python}{Moonlander (\reqref{reqStatus}) -- \texttt{Lander.draw()}}{srcMoon07a}
 
-Das separate Fenster wird in \texttt{create\_status\_window()} erzeugt. Dort wird zunächst ein passend großes Fenster erzeugt und das \texttt{Surface}-Objekt dazu ermittelt. Ich möchte das Statusfenster links neben dem Hauptfenster an der Oberkante ausgerichtet positionieren. Dazu nehme ich die obere Kante des Hauptfensters und weise diesen Wert der oberen Kante des Statusfenster zu. Danach nehme ich die linke Kante des Hauptfensters, addiere die Breite des Hauptfenster dazu, um die rechte Kante zu haben und verschaffe mir noch~$10~px$ Abstand.
+Das separate Fenster wird in \texttt{create\_status\_window()} erzeugt. Dort wird zunächst ein passend großes Fenster erstellt und das \texttt{Surface}-Objekt dazu ermittelt. Ich möchte das Statusfenster rechts neben dem Hauptfenster an der Oberkante ausgerichtet positionieren. Dazu nehme ich die obere Kante des Hauptfensters und weise diesen Wert der oberen Kante des Statusfenster zu. Danach nehme ich die linke Kante des Hauptfensters, addiere die Breite des Hauptfenster dazu, um die rechte Kante zu haben und verschaffe mir noch~$\unit[10]{px}$ Abstand.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander07.py}{214}{219}{python}{Moonlander (\reqref{reqStatus}) -- \texttt{Lander.create\_status\_window()}}{srcMoon07b}
 
-Die Methode \texttt{draw()} wird in der letzten Zeile um den Aufruf von \texttt{draw\_status()} erweitert. Dadurch wird bei jedem Aufruf von \texttt{draw()} auch der nicht nur der Lander im Hauptfenster, sondern auch das Statusfenster neu gezeichnet.
+Die Methode \texttt{draw()} wird in der letzten Zeile um den Aufruf von \texttt{draw\_status()} erweitert. Dadurch wird bei jedem Aufruf von \texttt{draw()} nicht nur der Lander im Hauptfenster, sondern auch das Statusfenster neu gezeichnet.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander07.py}{236}{241}{python}{Moonlander (\reqref{reqStatus}) -- \texttt{Lander.draw()}}{srcMoon07c} 
 
@@ -402,7 +404,7 @@ In \texttt{restart()} wird noch in \zeiref {moonlander0704} der Aufruf des Konst
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander07.py}{333}{333}{python}{Moonlander (\reqref{reqStatus}) -- \texttt{Game.restart()}}{srcMoon07f} 
 
-Das ganze sieht dann wie in \abbref[vref]{picMoonlander09} aus.
+Das Ganze sieht dann wie in \abbref[vref]{picMoonlander09} aus.
 
 \myebild{moonlander09}{0.6}{Moonlander -- Jetzt mit Statusfenster}{picMoonlander09}
 
@@ -410,7 +412,7 @@ Das ganze sieht dann wie in \abbref[vref]{picMoonlander09} aus.
 
 \br{Spielende und Neustart}{reqEnde}
 	\begin{enumerate}
-		\item Landet die Mondfähre mit einer Geschwindigkeit $< 5px/s$, ist die Fähre sicher gelandet.\label{reqEndeGewonnen}
+		\item Landet die Mondfähre mit einer Geschwindigkeit $<\unit[5]{px/s}$, ist die Fähre sicher gelandet.\label{reqEndeGewonnen}
 		\item Landet sie mit einer schnelleren Geschwindigkeit, gilt sie als zerstört.\label{reqEndeVerloren}
 		\item Der Anwender wird gefragt, ob er das Spiel beenden (\keys{B}) oder neu starten (\keys{N}) möchte.\label{reqEndeNeustart}
 \end{enumerate}
@@ -419,18 +421,19 @@ Das ganze sieht dann wie in \abbref[vref]{picMoonlander09} aus.
 
 Bereiten wir \reqref{reqEnde}.\ref{reqEndeNeustart} dadurch vor, dass wir die Darstellung der Nachfrage in die simple Klasse \texttt{Question} kapseln. Es wird einfach ein \texttt{Surface}-Objekt mit dem passenden Text erstellt und passend positioniert. In \texttt{draw()} wird dieses \texttt{Surface}-Objekt dann einfach über die Mondoberfläche unten gelegt.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{316}{326}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Question}}{srcMoon08a} 
 
-Und wie erfolgt das Auslösen des Beenden oder Neustart? Dazu gibt es viele Möglichkeiten. Ich habe mich hier für \emph{Ereignisse} (\texttt{pygame.event.Event()})\myindex{pyg}{\texttt{event}!\texttt{Event}} entschieden. Die Grundidee ist, dass das Berühren des Mondbodens ein Ereignis auslöst: \texttt{LANDED}, wenn die Sinkgeschwindigkeit klein genug ist, ansonsten \texttt{CRASHED}. 
+Und wie erfolgt das Auslösen des Beendens oder des Neustarts? Dazu gibt es viele Möglichkeiten. Ich habe mich hier für \emph{Ereignisse} mit Hilfe von  \texttt{pygame.event.Event()}\myindex{pyg}{\texttt{event}!\texttt{Event}} entschieden. Die Grundidee ist, dass das Berühren des Mondbodens ein Ereignis auslöst: \texttt{LANDED}, wenn die Sinkgeschwindigkeit klein genug ist, ansonsten \texttt{CRASHED}. 
 
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{11}{13}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{MyEvents}}{srcMoon08b} 
 
-Dazu muss \texttt{watch\_for\_events()} umgeschrieben werden. In der \zeiref{moonlander0802} und~\zeiref{moonlander0803} werden die beiden Ereignisse abgefangen. In beiden Fällen wird das neue Flag \texttt{landing} auf \false{} gesetzt. Dadurch kann ich feststellen, ob ich beispielsweise überhaupt noch Schub auslösen darf oder die Rückfrage nach Beenden oder Neustart angezeigt werden soll. Auch wird an den \texttt{Lander} ein \texttt{update()} abgesetzt, so dass er ebenfalls von seinem neuen Zustand erfährt; z.B. um im Statusfenster eine passende Ausgabe zu machen.
+Dazu muss \texttt{watch\_for\_events()} umgeschrieben werden. In der \zeiref{moonlander0802} und~\zeiref{moonlander0803} werden die beiden Ereignisse abgefangen. In beiden Fällen wird das neue Flag \texttt{landing} auf \false{} gesetzt. Dadurch kann ich feststellen, ob ich beispielsweise überhaupt noch Schub auslösen darf oder die Rückfrage nach Beenden oder Neustart angezeigt werden soll. Auch wird an den \texttt{Lander} ein \texttt{update()} abgesetzt, so dass er ebenfalls von seinem neuen Zustand erfährt; z.B., um im Statusfenster eine passende Ausgabe zu machen.
 
 In \zeiref{moonlander0804} wird deshalb zuerst abgefragt, ob ich überhaupt noch im Landeanflug bin, bevor der Schub ausgelöst wird. 
 
-Die Antworten auf die Rückfragen werden ab der \zeiref{moonlander0805} und ab der \zeiref{moonlander0806} verarbeitet. Wurde \keys{B} gedrückt wird einfach das Flag der Hauptprogrammschleife auf \false{} gesetzt; wurde \keys{N} gedrückt, wird der Neustart durch Aufruf von \texttt{restart()} ausgelöst.
+Die Antworten auf die Rückfragen werden ab der \zeiref{moonlander0805} und ab der \zeiref{moonlander0806} verarbeitet. Wurde \keys{B} gedrückt, wird einfach das Flag der Hauptprogrammschleife auf \false{} gesetzt; wurde \keys{N} gedrückt, wird der Neustart durch Aufruf von \texttt{restart()} ausgelöst.
 
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{350}{376}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Game.watch\_for\_events()}}{srcMoon08c} 
@@ -444,19 +447,20 @@ Und \texttt{restart()} wird in \zeiref{moonlander0807} um das Zurücksetzten des
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{392}{399}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Game.restart()}}{srcMoon08e} 
 
 
-\reqref{reqEnde}.\ref{reqEndeGewonnen} und \reqref{reqEnde}.\ref{reqEndeVerloren} werden in der neuen Methode \texttt{check\_landing()} in \texttt{Lander} umgesetzt. Erreicht der Lander den Mondboden wird die Geschwindigkeit überprüft. Ist sie zu schnell, wird das Event \texttt{CRASHED} ausgelöst, ansonsten \texttt{LANDED}. Die Verarbeitung der Ereignisse selbst fand ja oben in \texttt{watch\_for\_events()} (\srcref[vref]{srcMoon08c}) statt.
+\reqref{reqEnde}.\ref{reqEndeGewonnen} und \reqref{reqEnde}.\ref{reqEndeVerloren} werden in der neuen Methode \texttt{check\_landing()} in \texttt{Lander} umgesetzt. Erreicht der Lander den Mondboden, wird die Geschwindigkeit überprüft. Ist sie zu schnell, wird das Event \texttt{CRASHED} ausgelöst, ansonsten \texttt{LANDED}. Die Verarbeitung der Ereignisse selbst fand ja oben in \texttt{watch\_for\_events()} (\srcref[vref]{srcMoon08c}) statt.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{307}{314}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Lander.check\_landing()}}{srcMoon08f} 
 
 Der Aufruf von \texttt{check\_landing()} muss nun noch der Methode \texttt{update()} von \texttt{Game} hinzugefügt werden.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{378}{381}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Game.update()}}{srcMoon08g} 
 
 Verbleiben noch einige Anpassungen im \texttt{Lander}. Zunächst wird in \zeiref{moonlander0807} das Attribut \texttt{mode} eingefügt, welches sich merkt, in welchem der drei Status sich die Mondfähre gerade befindet: \texttt{landing}, \texttt{landed} oder \texttt{crashed}.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{138}{154}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Lander.mode}}{srcMoon08h} 
 
-Gesetzt bzw. verändert wird dieses Attribut in \texttt{update()} ab \zeiref{moonlander0808}. Ist dabei der Boden berührt worden -- also \texttt{landed} oder \texttt{crashed} -- wird der Schub abgestellt.
+Gesetzt bzw. verändert wird dieses Attribut in \texttt{update()} ab \zeiref{moonlander0808}. Ist dabei der Boden berührt worden -- also \texttt{landed} oder \texttt{crashed} --, wird der Schub abgestellt.
 
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander08.py}{234}{246}{python}{Moonlander (\reqref{reqEnde}) -- \texttt{Lander.update()}}{srcMoon08i} 
 
@@ -479,6 +483,7 @@ Zunächst etwas, was überhaupt nichts mit \reqref{reqAutopilot} zu tun hat. Ich
 
 So, jetzt zu \reqref{reqAutopilot}: In \texttt{watch\_for\_events()} wird der Tastendruck \keys{H} abgefangen und an den \texttt{Lander} weitergeleitet.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander09.py}{383}{388}{python}{Moonlander (\reqref{reqAutopilot}) -- Erweiterung von \texttt{watch\_for\_events()}}{srcMoon09b} 
 
 Im Konstruktor von \texttt{Lander} wird das Flag \texttt{ai} definiert und mit \false{} initialisiert -- wobei \emph{ai} hier ein etwas übertriebener Anspruch ist ;-) 
@@ -521,12 +526,13 @@ Man beachte dabei, dass das Vorzeichen von $acc_{Lander}$ dem des Mondes $g_{Mon
 
 Und \gleiref{h_zwei} kann auch schon als Basis für unserer Programmierung dienen. Zuerst wird ab \zeiref{moonlander0903} überprüft, ob ich überhaupt noch im Landeanflug bin. Falls nicht, wird jeder Schub abgestellt und ich bin fertig, da nichts mehr zu tun ist.
 
-In \zeiref{moonlander0904} wird die Nettobeschleunigung aus \gleiref[vref]{a_eins} berechnet und anschließend die Zielgeschwindigkeit festgelegt. Diese ist mit $\unit[50]{\%}$ weit genug weg, von der Maximalbelastung. In \zeiref{moonlander0905} wird nun überprüft, ob die aktuelle Geschwindigkeit schon kleiner als diese sichere Geschwindigkeit ist. Wenn ja, ist nicht zu tun, außer, dass der Schub abgestellt werden muss.
+In \zeiref{moonlander0904} wird die Nettobeschleunigung aus \gleiref[vref]{a_eins} berechnet und anschließend die Zielgeschwindigkeit festgelegt. Diese ist mit $\unit[50]{\%}$ weit genug  von der Maximalbelastung entfernt. In \zeiref{moonlander0905} wird nun überprüft, ob die aktuelle Geschwindigkeit schon kleiner als diese sichere Geschwindigkeit ist. Wenn ja, ist nicht zu tun, außer, dass der Schub abgestellt werden muss.
 
 Jetzt wird passend zu \gleiref[vref]{h_zwei} die Distanz zum Boden ausgerechnet, bei welcher der Gegenschub beginnen muss. In \zeiref{moonlander0906} wird dann der Gegenschub ausgelöst oder abgeschaltet. Alles klar?
 
 Der Lander ist damit hier für dieses Skript zu Ende programmiert und sollte bei sicherer Landung mit dem Autopiloten wie in \abbref[vref]{picMoonlander11} aussehen.
 
+\newpage
 \lstsource{SRC/01 Beispiele/03 Moonlander/moonlander09.py}{255}{269}{python}{Moonlander (\reqref{reqAutopilot}) -- \texttt{Lander.controler()}}{srcMoon09e} 
 
 \myebild{moonlander11}{0.6}{Moonlander -- Autopilot}{picMoonlander11}

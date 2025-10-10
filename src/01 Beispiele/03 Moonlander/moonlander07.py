@@ -138,12 +138,12 @@ class Lander:
         self.surface_thrusting = pygame.surface.Surface((90,81), pygame.SRCALPHA)
         self.rect = self.surface.get_frect()
         self.rect.centerx = Settings.WINDOW.centerx # horizontale Startposition
-        self.rect.top = self.rect.height           # vertikale Startposition
+        self.rect.top = self.rect.height            # vertikale Startposition
         self.create_lander()                        # Zeichnen wird ausgelagert
         self.thrusting = False                      # Flag, ob beschleunigt wird
         self.velocity = 0                           # Horizontale Geschwindigkeit
         self.fuel_initial = Settings.LEVEL["fair"]  # Starttreibstoff 
-        self.fuel = self.fuel_initial              # Aktueller Treibstoff
+        self.fuel = self.fuel_initial               # Aktueller Treibstoff
         self.fuel_consumption = 20                  # Treibstoffverbrauch pro Sekunde
         self.create_status_window(window)
 

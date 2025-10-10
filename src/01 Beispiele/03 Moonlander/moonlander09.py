@@ -238,7 +238,7 @@ class Lander:
                 self.thrust(True)
             elif kwargs["action"] == "unthrust":
                 self.thrust(False)
-            elif kwargs["action"] == "toggle_ai":   # KI an/aus§\label{moonlander0901}§
+            elif kwargs["action"] == "toggle_ai":          # KI an/aus§\label{moonlander0901}§
                 self.ai = not self.ai
                 if not self.ai:
                     self.thrust(False)

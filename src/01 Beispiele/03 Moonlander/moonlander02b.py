@@ -30,15 +30,15 @@ class Moon:
                                      Settings.WINDOW.width, Settings.HORIZONT) # Landeplatz
 
         self._layers = []
-        dist = self.rect.width // peaks       # Abstand zwischen Höhenunterschieden§\label{moonlander02b01}§ 
+        dist = self.rect.width // peaks        # Abstand zwischen Höhenunterschieden§\label{moonlander02b01}§ 
         for layer_index in range(layer_count): # Aufbau Gebirge
             mycolor = 180 - layer_index * 20   # Vordergrund dunkler, Hintergrund heller
             y = self.rect.top - 10 - randint(5, 30)*layer_index # Zufällige Starthöhe§\label{moonlander02b02}§ 
-            x = self.rect.left          # Erster Peak startet ganz links§\label{moonlander02b03}§ 
-            lofPeaks = [(x, top)]        # Der erste Peak als Punkt§\label{moonlander02b04}§ 
-            for i in range(peaks):       # Die anderen Peaks des layers werden erzeugt.§\label{moonlander02b05}§ 
+            x = self.rect.left                 # Erster Peak startet ganz links§\label{moonlander02b03}§ 
+            lofPeaks = [(x, top)]              # Der erste Peak als Punkt§\label{moonlander02b04}§ 
+            for i in range(peaks):             # Die anderen Peaks des layers werden erzeugt.§\label{moonlander02b05}§ 
                 lofPeaks.append((x, y + randint(-5, 10))) # Zufälliger Höheunterschied§\label{moonlander02b06}§ 
-                x += dist                # Der nächste Peak ist weiter rechts§\label{moonlander02b07}§ 
+                x += dist                      # Der nächste Peak ist weiter rechts§\label{moonlander02b07}§ 
             lofPeaks.append((self.rect.right, y))   # Letzter Peak ist ganz rechts
             lofPeaks.append((self.rect.right, top)) # Basis des Gebirgszuges §\label{moonlander02b08}§ 
             self._layers.append({"color":(mycolor, mycolor, mycolor),

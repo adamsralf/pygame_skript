@@ -35,20 +35,20 @@ class Moon:
                                      Settings.WINDOW.width, Settings.HORIZONT) # Landeplatz
 
         layers = []
-        for layer_index in range(layer_count): # Aufbau Gebirge
-            mypeaks = randint(peaks//2, peaks) # Anzahl variiert
-            dist = landingarea.width // mypeaks # Abstand zwischen Höhenunterschieden
-            mycolor = 180 - layer_index * 20   # Vordergrund dunkler, Hintergrund heller
+        for layer_index in range(layer_count):      # Aufbau Gebirge
+            mypeaks = randint(peaks//2, peaks)      # Anzahl variiert
+            dist = landingarea.width // mypeaks     # Abstand zwischen Höhenunterschieden
+            mycolor = 180 - layer_index * 20        # Vordergrund dunkler, Hintergrund heller
             y = landingarea.top - 10 - randint(5, 30)*layer_index # Zufällige Starthöhe
-            x = landingarea.left                # Erster Peak startet ganz links
-            lofPeaks = [(x, landingarea.top)]   # Der erste Peak als Punkt
-            for i in range(mypeaks):           # Die anderen Peaks werden erzeugt.
+            x = landingarea.left                    # Erster Peak startet ganz links
+            lofPeaks = [(x, landingarea.top)]       # Der erste Peak als Punkt
+            for i in range(mypeaks):                # Die anderen Peaks werden erzeugt.
                 lofPeaks.append((x, y + randint(-5, 20))) # Zufälliger Höheunterschied
-                x += dist                      # Der nächste Peak ist weiter rechts
-            lofPeaks.append((landingarea.right, y))   # Letzter Peak ist ganz rechts
+                x += dist                           # Der nächste Peak ist weiter rechts
+            lofPeaks.append((landingarea.right, y)) # Letzter Peak ist ganz rechts
             lofPeaks.append((landingarea.right, landingarea.top)) # Basis des Gebirgszuges 
 
-            poly = []                          # Ein Polygonzug
+            poly = []                               # Ein Polygonzug
             for index in range(len(lofPeaks)-1):
                 p1 = lofPeaks[index]
                 p2 = lofPeaks[index+1]
