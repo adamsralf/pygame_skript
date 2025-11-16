@@ -22,6 +22,7 @@
 \usepackage[acronym]{glossaries}
 \usepackage{xparse}
 \usepackage{tikz}
+\usepackage{pgf-umlcd}
 \usepackage{multirow}
 \usepackage{colortbl}
 \usetikzlibrary{calc}
@@ -57,7 +58,7 @@
 
   \title{Einführung in die\\2D-Spieleprogrammierung mit Pygame}
   \author{Ralf Adams (\href{https://www.tbs1.de/}{\nolinkurl{TBS 1}}, Bochum)}
-  \date{Version 0.12 vom \today}
+  \date{Version 0.13 vom \today}
   \maketitle
   \tableofcontents
 
@@ -85,10 +86,17 @@
 \input{0113_Sound}
 \input{0114_DirtySprite}
 \input{0115_Events}
+\chapter{Techniken und Tipps}
+%\input{Tiles}
+\input{0202_MapScrolling}
+%\input{Partikel(-schauer)}
+%\input{3D-Hintergründe}
+%\input{Pfadsuche}
+%\input{Client/Server Anwendungen}
 \chapter{Beispielprojekte}
-\input{0201_Pong.tex}
-\input{0202_Bubbles.tex}
-\input{0203_Moonlander.tex}
+\input{0301_Pong.tex}
+\input{0302_Bubbles.tex}
+\input{0303_Moonlander.tex}
 
 \listoffigures
 %\lstlistoflistings

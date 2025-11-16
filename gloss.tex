@@ -1,14 +1,75 @@
-\newglossaryentry{pygame}
+\newglossaryentry{Clamp}
 {
-  name={Pygame},
-  description={Pygame ist ein Verbund von Modulen, der die Entwicklung von Computerspielen in Python unterstützt}
+	name={Clamp},
+	description={%
+		In der Programmierung bezeichnet Clamp (engl. \emph{klemmen}, \emph{begrenzen}) eine Funktion, die einen numerischen Wert innerhalb eines festgelegten Bereichs hält. Liegt der Wert unter dem Minimum, wird das Minimum zurückgegeben; liegt er über dem Maximum, wird das Maximum zurückgegeben. In Spielen wird Clamp häufig verwendet, um Kamerapositionen, Bewegungen oder physikalische Werte (z.B. Geschwindigkeit, Zoomfaktor) auf sinnvolle Grenzen zu beschränken — etwa damit die Kamera nicht außerhalb der Spielwelt scrollt}
+}
+
+\newglossaryentry{margin}
+{
+	name={Margin},
+	description={%
+		ezeichnet den äußeren Abstand eines Elements zu anderen Objekten oder zum Rand eines 
+		umgebenden Containers. In der \textit{Grafik-} und \textit{UI-Programmierung} wird \emph{Margin} verwendet, um festzulegen, wie viel Freiraum außerhalb eines Rahmens oder einer Oberfläche bestehen soll. Im Gegensatz dazu beschreibt \gls{padding} den inneren Abstand zwischen Inhalt und Rahmen. In Anwendungen wie \texttt{CameraView} kann \emph{Margin} genutzt werden, um einen 
+		äußeren Sicherheitsbereich im Spielausschnitt zu definieren, der festlegt, wann Objekte 
+		oder die Kamera nicht näher an den Rand heranrücken dürfen}
+}
+
+\newglossaryentry{padding}
+{
+	name={Padding},
+	description={%
+		Bezeichnet einen zusätzlichen Abstand zwischen einem inneren und einem äußeren Bereich. 
+		In der \textit{Grafikprogrammierung} und beim \textit{UI-Layout} gibt \emph{Padding} an, 
+		wie viel Freiraum innerhalb eines Rahmens (z.\,B.\ eines Rechtecks oder einer Oberfläche) 
+		zwischen dem eigentlichen Inhalt und dessen Begrenzung liegt. Im Gegensatz dazu bezeichnet \gls{margin} den äußeren Abstand zwischen einem Element und anderen Objekten. 
+		In Spielen oder bei Kameraimplementierungen (z.\,B.\ in \texttt{CameraView}) kann 
+		\emph{Padding} genutzt werden, um einen Sicherheitsbereich um die Spielfigur oder den 
+		sichtbaren Ausschnitt zu definieren, bevor eine Kamerabewegung ausgelöst wird}
+}
+
+\newglossaryentry{strategypattern}{
+	name={Strategy Pattern},
+	description={
+		Ein \textbf{Entwurfsmuster} (\textit{Design Pattern}) aus der Kategorie der \textbf{Verhaltensmuster} (\textit{Behavioral Patterns}). Es dient dazu, ein bestimmtes Verhalten eines Objekts \textbf{austauschbar} zu machen, ohne dessen Klasse zu verändern.
+		Das Strategy Pattern kapselt eine Familie von Algorithmen in separaten Klassen, 
+		die alle eine gemeinsame Schnittstelle implementieren. Das Kontextobjekt delegiert die Ausführung einer bestimmten Aufgabe an die aktuell gesetzte Strategie. Dadurch kann das Verhalten zur Laufzeit dynamisch gewechselt werden}
+}
+
+
+
+
+\newglossaryentry{alphablending}{
+	name={Alpha-Blending},
+	description={
+		Ein Verfahren zur Transparenz- und Farbmischung in der Computergrafik. Dabei werden die Farbwerte eines Vordergrundpixels mit denen des Hintergrundpixels auf Grundlage eines Alpha-Werts ($\alpha$) kombiniert. Der Alpha-Wert gibt an, wie deckend ein Pixel ist: 
+		$\alpha = 1$ bedeutet vollständig sichtbar (opak), 
+		$\alpha = 0$ vollständig transparent.
+		\textbf{Formel:}
+		\[
+		C_\text{neu} = \alpha \cdot C_\text{vordergrund} + (1 - \alpha) \cdot C_\text{hintergrund}
+		\]
+		Pygame unterstützt Alpha-Blending über Oberflächen mit einem Alpha-Kanal (RGBA).
+		Dies ermöglicht halbtransparente Effekte, wie Schatten, Glühen oder Lichtschein.
+		Die Qualität und Geschwindigkeit des Alpha-Blending hängt von der Hardware und der SDL-Version ab.
+		In der \textbf{pygame-ce}-Version sind erweiterte Alpha-Operationen und schnellere Blit-Methoden verfügbar}
 }
 
 \newglossaryentry{python}
 {
-  name={Python},
-  description={Python ist eine höhere Interpretersprache mit prozeduralen und objektorientierten Paradigmen. Sie wurde 1991 von Guido van Rossum entwickelt und erfreut sich derzeit größter Beliebtheit}
+	name={Python},
+	description={Python ist eine höhere Interpretersprache mit prozeduralen und objektorientierten Paradigmen. Sie wurde 1991 von Guido van Rossum entwickelt und erfreut sich derzeit größter Beliebtheit}
 }
+
+\newglossaryentry{pygame}
+{
+  name={Pygame},
+  description={
+  	Eine frei verfügbare, in Python geschriebene Bibliothek zur Entwicklung von 2D-Spielen und Multimedia-Anwendungen.	Pygame basiert auf der C-Bibliothek SDL und bietet Funktionen für Grafikdarstellung, Ereignisverwaltung, Audio-Wiedergabe sowie Eingabesteuerung über Tastatur, Maus und Gamecontroller.
+  	Pygame wurde ursprünglich von Pete Shinners im Jahr 2000 entwickelt und war über viele Jahre hinweg das Standard-Framework für Python-basierte Spieleentwicklung. Da das ursprüngliche Projekt jedoch längere Zeit keine Updates mehr erhielt, entstand 2020 eine Abspaltung namens \textbf{Pygame Community Edition (pygame-ce)}.
+  	Diese wird von einer aktiven Community weiterentwickelt, um moderne Python-Versionen, erweiterte Grafikfunktionen (z.B. Alpha-Blending, bessere Transformationen) und höhere Performance zu unterstützen}
+}
+
 
 \newglossaryentry{konstante}
 {
@@ -344,7 +405,17 @@
 \newdualentry{jpg} % label
   {jpeg}            % abbreviation
   {Joint Photographic Experts Group}  % long form
-  {Verlustbehaftete komprimierte Bildinformationen} % description
+  {Ein weit verbreitetes Rastergrafikformat zur komprimierten Speicherung von digitalen Bildern. JPEG verwendet eine verlustbehaftete Kompression, bei der feine Details und Farbunterschiede teilweise entfernt oder geglättet werden, um die Dateigröße stark zu reduzieren. Der Kompressionsgrad kann eingestellt werden: Höhere Kompression führt zu kleineren Dateien, aber auch zu sichtbaren Artefakten.
+  	\begin{itemize}
+  		\item Unterstützt bis zu 24-Bit-Farbtiefe (True Color)
+  		\item Kein Transparenzkanal (Alpha-Kanal) wie bei \gls{png}
+  		\item Ideal für Fotos, Texturen und realistische Grafiken
+  		\item Weniger geeignet für Pixel-Art oder UI-Elemente mit scharfen Kanten
+  	\end{itemize}
+  	JPG-Dateien werden häufig in Spielen, Webanwendungen und DTP-Projekten 
+  	verwendet, wenn Speicherplatz oder Ladezeit wichtiger sind als perfekte Bildtreue.
+  	In Grafikbibliotheken wie \gls{pygame} können JPG-Dateien direkt geladen 
+  	und als \textit{Surfaces} verwendet werden.} % description
 
 \newdualentry{png} % label
   {png}            % abbreviation
@@ -390,7 +461,10 @@
 \newdualentry{pt} % label
   {pt}            % abbreviation
   {DTP-Punkt}  % long form
-  {Maßeinheit für Schriftgrößen} % description
+  {
+  	Maßeinheit im Bereich des Desktop Publishings (DTP) und der digitalen Typografie. Ein DTP-Punkt (auch PostScript-Punkt) ist definiert als der 72.~Teil eines Inches (Zoll) und entspricht somit genau \textbf{\unit[1]{pt} = \unit[1/72]{inch} ≈ \unit[0{,}3528]{mm}}. Diese Definition wurde ursprünglich von Adobe im PostScript-Standard eingeführt und hat sich als Industriestandard für Layout-, Druck- und Grafiksoftware etabliert. Im Gegensatz dazu verwendet die traditionelle Typografie oft leicht abweichende Punktgrößen (z.B.~1~Pica-Punkt = 0{,}3515~mm).
+	Der DTP-Punkt dient zur Angabe von Schriftgrößen, Abständen und Seitenrändern in Layout-Programmen wie InDesign, Scribus oder LaTeX. Auch viele Grafikbibliotheken (z.B. \gls{pygame}) oder GUI-Frameworks nutzen DTP-Punkte indirekt über Pixel-Umrechnungen für exakte Bildschirmdarstellungen
+  	} % description
 
 \newdualentry{ttf} % label
   {ttf}            % abbreviation
