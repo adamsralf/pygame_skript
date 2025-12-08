@@ -1,0 +1,140 @@
+\section{Kacheln sind schön}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sehr oft bestehen Spiele in ihrer Oberfläche aus ganz vielen kleinen und großen Kacheln, die passend zusammengesetzt werden. Diese Kacheln werden in der Regel in größere Bitmaps (\Gls{spritelib}\index{Spritelib}\randnotiz{Spritelib}) zusammengefasst und müssen dann vom Spielentwickler passend ausgeschnitten werden. In den \abbref[vref]{picTileMap01} können Sie eine solche simple Spritelib finden.
+
+Ich werde Ihnen nun zeigen, wie Sie aus einer Spritelib die Kacheln wieder ausschneiden und für den Zusammenbau eigener Welten verwenden können. Dabei werden die Informationen in \Glspl{csvdatei} abgelegt. Auch werde ich exemplarisch verschiedene Level (nicht zu verwechseln mit Schwierigkeitsgraden oder Etagen in der Spielwelt) verwenden, um unterschiedliche Arten von Sprites auch unterschiedlich ansprechen zu können.
+
+Hinweis: Es gibt ein ganz ausgezeichnetes Tool, welches Ihnen hilft, solche Level zusammen zusetzten und in ein Spiel einzubauen. Es heißt \Gls{tiled}\randnotiz{Tiled} und kann hier \hyperlink{https://www.mapeditor.org/}{MapEditor} heruntergeladen werden. Da es zu dieser Software ausreichend umfangreiche und gute Einführungen gibt, werde ich hier auf eine Beschreibung verzichten.
+
+
+\subsection{Unser Beispiel}
+
+\myezweihbild{TileMap01.png}{0.40}{Spritelib (original)}{picTileMap01}{TileMap02.png}{0.40}{Spritelib (aufbereitet)}{picTileMap02}
+
+In \abbref{picTileMap01} sehen wir eine solche Spritelib. Sie enthält Kacheln zum Aufbau einer Seen-, Wiesen- und Waldlandschaft mit einigen \Gls{gadget}\randnotiz{Gadget}. In der \abbref{picTileMap02} habe ich durch ein Gitternetz und eine Durchnummerierung die einzelnen Kacheln sichtbar gemacht. Die Nummern werden später nochmal wichtig. Unsere Kacheln haben eine Breite und eine Höhe von jeweils \unit[32]{px}; diese sind in \unit[16]{Spalten} und \unit[12]{Reihen} angeordnet. 
+
+Das Ziel ist eine Spieloberfläche, wie sie in \abbref[vref]{picTileMap03} zu sehen ist. Die Spielfläche hat -- zufällig -- ebenfalls \unit[16]{Spalten} und \unit[12]{Reihen}.
+
+\myebild{TileMap03.png}{0.50}{Spieloberfläche}{picTileMap03}
+
+\subsection{Eine grüne Wiese}
+
+Im ersten Schritt zeige ich, wie eine einzelne Kachel dazu verwendet wird, die ganze Spielfläche auszufüllen. Fangen wir also an. In \srcref{srcForest01} finden wir erstmal die üblichen Verdächtigen. Die Angaben \texttt{TILESIZE}, \texttt{TILEMAP\_NOF\_COLS}, \texttt{TILEMAP\_NOF\_ROWS} und \texttt{TILEMAP\_WINDOW} sollten aber auch selbsterklärend sein.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest01.py}{1}{14}{python}{Forest -- Präambel}{srcForest01}
+
+\newpage
+Auch die Klasse \texttt{Game} ist sehr übersichtlich.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest01.py}{36}{99}{python}{Forest -- \texttt{Game} und Aufruf von \texttt{main()}}{srcForest02}
+
+Bisher passiert alles in der Klasse \texttt{WindowGame}, was sich natürlich ändern wird. Im Konstruktor wird das Fenster mit all' seinen Parametern erzeugt und die Spritelib geladen. In \texttt{draw()} wird nun eine Kachel aus der Spritelib ausgeschnitten und in die Variable \texttt{image} abgelegt. Entscheidend sind hier die Parameter in \texttt{subsurface()}\myindex{pyg}{\texttt{surface}!\texttt{Surface}!\texttt{subsurface()}}\randnotiz{subsurface()}. Beginnend an der Position $(0,0)$ in der Spritelib -- also ganz linksoben -- wird ein Rechteck mit $\unit[32]{px} \times \unit[32]{px}$ ausgeschnitten. Dies entspricht dem gelb umrandeten Rechteck~0 in \abbref[vref]{picTileMap02}.
+
+Mit Hilfe der beiden \texttt{for}-Schleifen, wird dieses Image nun auf die ganze Oberfläche verteilt. Die Variable \texttt{position} wird dabei bei jedem Schleifendurchlauf aus der Zeilennummer \texttt{row} ($[0 - 12]$) und der Spaltennummer \texttt{col} ($[0 - 16]$) berechnet. Multipliziert man die Spaltennummer mit der Zeilenhöhe erhält man die x-Position und die Zeilennummer mit der Spaltenbreite die y-Position, an welcher die Kachel gemalt werden soll.
+
+Das Ergebnis sieht dann wie in \abbref[vref]{picTileMap04} aus.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest01.py}{16}{33}{python}{Forest -- \texttt{WindowGame}}{srcForest03}
+
+Ich möchte aber jede beliebige Kachel auswählen und ausgeben können. So könnten wir beispielsweise nicht eine monotone Wiese haben wollen, sondern sie soll sich aus den Kacheln mit den Nummern $0, 1, 2, 3, 4, 16, 17, 18, 19, 20, 32, 33, 34, 35, 36$ zusammensetzen. Das schreit förmlich nach einer eigenen Klasse. 
+
+Im Konstruktor (siehe \srcref[vref]{srcForest04}) wird lediglich die Bitmap der Spritelib geladen. Die Methode \texttt{sub\-sur\-face()} erwartet die Kachelnummer. Die Kacheln sollten dabei von links beginnend nach unten nummeriert sein. So kann man aus der Kachelnummer recht leicht die Spalten- und die Zeilennummer berechnen: 
+
+Die Spaltennummer ist dabei die Zahl, die übrig bleibt, wenn man alle vollständigen Zeilen rausrechnet. Beispiel: Die Kachelnummer ist~34. Ich will die Spaltennummer wissen, dabei sind alle vollständigen Zeilen oberhalb der~34 irrelevant. Daher wird bei 16~Spalten aus 
+
+\[34 \rightarrow 18 \rightarrow 2\].
+
+Mathematisch ist das der Rest (\Gls{modulo}) einer ganzzahligen Division. Erinnern Sich noch? Grundschule? \emph{15 durch 6 ist 2 Rest 3}. Oder in unserem Fall 
+
+\[34 \bmod 16 = 2\].
+
+Das genau passiert in \zeiref{srcforest0201}; nur das dort noch die Anzahl der Pixel pro Spalte multipliziert wird, damit man die linke Position der Kachel erhält.
+
+So ähnlich, aber anders, ermittelt man die Zeilennummer, also in welcher Zeile die Kachel~34 ist. Mit anderen Worten. Wie oft ist eine vollständige Zeile -- also 16 Kacheln -- in der Kachelnummer enthalten? Dazu nutzen wir die ganzzahlige Division:
+
+\[34 \div 16 = 2\]
+
+Und da wir in der Informatik immer mit~0 anfangen zu zählen, ist die Kachelnummer tatsächlich in der Zeile~2. Schauen Sie in \abbref[vref]{picTileMap02} nach! In \zeiref{srcforest0201} wird die Zeilennummer anschließend mit der Zeilenhöhe multipliziert, um die obere Position der Kachel zu bekommen. Der Rest ist selbsterklärend.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest02.py}{18}{26}{python}{Forest -- \texttt{Spritelib}}{srcForest04}
+
+Nun bauen wir die neue Klasse in \texttt{Game} ein. Der Konstruktor wird um die Ermittlung der zufälligen Kachelnummern erweitert:
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest02.py}{37}{41}{python}{Forest -- Erweiterung des Konstruktors von \texttt{Game}}{srcForest05}
+
+In \texttt{Game.draw()} muss jetzt nur noch der Zugriff auf die Kachelnummer programmiert werden. Das Ergebnis sieht dann wie in \abbref[vref]{picTileMap05} aus.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest02.py}{47}{48}{python}{Forest -- Gezielte Kachelnummern in  \texttt{Game.draw()}}{srcForest06}
+
+\myezweihbild{TileMap04.png}{0.50}{Spieloberfläche (1)}{picTileMap04}{TileMap05.png}{0.50}{Spieloberfläche (2)}{picTileMap05}
+
+
+Also, was können wir jetzt schon?
+\begin{enumerate}
+	\item Wir können eine Spritelib in einer eigenen Klasse allen Komponenten des Spiels zur Verfügung stellen.
+	\item Wir können aus der Kachelnummer die Zeile und damit die vertikale Pixelposition in der Spritelib ermitteln.
+	\item Wir können aus der Kachelnummer die Spalte und damit die horizontale Pixelposition in der Spritelib ermitteln.
+	\item Wir können aus einer Zeilen- und Spaltennummer die obere, linke Pixelposition im Zielfenster -- also der Spieloberfläche -- berechnen.
+\end{enumerate}
+
+Das ist schonmal eine ganze Menge. 
+
+\subsection{Kachelnummern und zweidimensionale Arrays}
+
+In den seltensten Fällen sollen die Kacheln durch einen Zufallsgenerator ermittelt werden. Vielmehr möchte man die Kachelnummer irgendwie vorgeben. Dazu bieten sich zweidimensionale Arrays an, da man hier schön mit Zeilen- und Spaltennummern arbeiten kann.
+
+Nichts einfacher als das, mögen Sie denken. Und Recht hat er, der Leser ;-)
+
+Ändern wir zuerst die zufällige Auswahl in eine sinnvolle Belegung in ein zweidimensionales Array. Die Kachelnummern sind natürlich jetzt nicht mehr zufällig, sondern entsprechen schon denen, die wir spräter sehen wollen. 
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest03.py}{37}{49}{python}{Forest -- Kachelnummern in einem 2D-Array }{srcForest09}
+
+Die Ausgabe ist nun vereinfacht, wie ab \zeiref{srcforest0301} zu sehen.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest03.py}{51}{59}{python}{Forest -- \texttt{Game.draw()} mit einem 2D-Array}{srcForest10}
+
+Das Ergebnis in \abbref[vref]{picTileMap06} ist ein wenig befriedigend. 
+\begin{enumerate}
+	\item Da für eine Kachelposition immer nur Platz für eine Kachelnummer ist, fehlen die Hintergründe mit der Folge, dass bei diesen Kacheln ein hässlicher schwarzer Rand zu sehen ist.
+	\item Die Bedeutung der Kacheln geht völlig verloren. Für reine Hintergründe ist dies ja in Ordnung, aber was ist, wenn einige Kacheln Untergrund darstellen, andere Hindernisse und wieder andere Gadgets mit besonderer Bedeutung.
+\end{enumerate}
+
+Ich komme in der Regel mit diesen drei Bedeutungsebenen aus und kapsele das Ganze in eine \texttt{Map}-Klasse. 
+
+Im Konstruktor werden nur für diese drei Ebenen die Kachelnummern angegeben. Für Kollisionsprüfungen kann ich nun im Hauptprogramm -- oder wo auch immer sinnvoll -- immer darauf abstellen, ob die Kachelnummer in \texttt{level\_data[0]}, \texttt{level\_data[1]} oder \texttt{level\_data[2]} liegt. Das Ergebnis bzgl. der schwarzen Hintergründe hat sich auch verbessert, wie in \abbref[vref]{picTileMap07} zu sehen ist; kann ich doch jetzt in Level~0 eine grüne Wiese als Hintergrund zuerst ausgeben und dann später in Level~1 oder~2 ein Zelt oder einen Baum.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest04.py}{28}{72}{python}{Forest -- \texttt{Map} mit einem 2D-Array}{srcForest11}
+
+In \texttt{WindowGame} wird nun das Objekt der Klasse erstellt:
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest04.py}{82}{83}{python}{Forest -- \texttt{Map}-Objekt in \texttt{Game}}{srcForest12}
+
+In \texttt{draw()} wird dann nur noch auf das \texttt{Map}-Objekt zugegriffen. Unbesetzte Kacheln (siehe \zeiref{srcforest0401}) werden dabei übersprungen.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest04.py}{85}{96}{python}{Forest -- \texttt{Game.draw()} mit \texttt{Map}-Objekt}{srcForest12}
+
+\myezweihbild{TileMap06.png}{0.50}{Spieloberfläche (3)}{picTileMap06}{TileMap07.png}{0.50}{Spieloberfläche (4)}{picTileMap07}
+
+Die Kachelnummern so im Quelltext fest zu verdrahten ist natürlich ein Alptraum. Viel besser ist es, diese in separaten csv-Dateien abzulegen. Der Charme besteht dabei darin, dass man dann externe Programme wie \emph{Tiled} zum Leveldesign verwenden kann. Auch Selbstgebasteltes wie \texttt{forest00.py} (finden Sie im Github dieses Skripts) ist oft ausreichend und viel effizienter als die Daten direkt im Quelltext anzugeben.
+
+Also schnell auf csv-Dateien umgebaut. Zuerst muss das Modul \texttt{csv} importiert werden.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest05.py}{1}{1}{python}{Forest -- \texttt{csv} import}{srcForest13}
+
+Im Konstruktor werden nun die csv-Dateien im Unterverzeichnis \texttt{level} geladen. Bitte beachten Sie, dass das Erzeugen vom \texttt{Map}-Objekt nun die Angabe braucht, wie viele Level in csv-Dateien vorhanden sind.
+
+\lstsource{SRC/01 Techniken/01 Tilemap/forest05.py}{30}{37}{python}{Forest -- Konstruktor von \texttt{Map} mit \texttt{csv}}{srcForest14}
+
+Das soll hier an dieser Stelle reichen :-)
+
+
+
+
+
+
+
+
+
+
+
