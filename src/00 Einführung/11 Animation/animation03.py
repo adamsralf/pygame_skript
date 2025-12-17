@@ -84,8 +84,8 @@ class Rock(pygame.sprite.Sprite):
         rocknb = random.randint(6, 9)
         self.image = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
         self.rect = pygame.rect.FRect(self.image.get_rect())
-        self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width - self.rect.width)
-        self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height - self.rect.height)
+        self.rect.centerx = random.randint(int(self.rect.width), int(Settings.WINDOW.width - self.rect.width))
+        self.rect.centery = random.randint(int(self.rect.height), int(Settings.WINDOW.height - self.rect.height))
         self.speed = pygame.math.Vector2(random.randint(-100, 100), random.randint(-100, 100))
         self.anim = Animation([f"explosion0{i}.png" for i in range(1, 5)], False, 50)
         self.bumm = False
@@ -147,12 +147,14 @@ class ExplosionAnimation(object):
         if self.timer_newrock.is_next_stop_reached():
             self.all_rocks.add(Rock())
         self.all_rocks.update(action="move")
-        for a in self.all_rocks.sprites():
-            for b in self.all_rocks.sprites():
-                if a != b:
-                    if pygame.sprite.collide_rect(a, b):
-                        a.update(action="bumm")
-                        b.update(action="bumm")
+
+        rocks = self.all_rocks.sprites()
+        for i in range(len(rocks)):
+            for j in range(i + 1, len(rocks)):
+                a, b = rocks[i], rocks[j]
+                if pygame.sprite.collide_rect(a, b):
+                    a.update(action="bumm")
+                    b.update(action="bumm")
 
     def draw(self) -> None:
         self.screen.fill("black")

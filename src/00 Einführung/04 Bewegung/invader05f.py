@@ -1,17 +1,16 @@
 import pygame
-import pygame.time
 
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (120, 650))
     FPS = 300  # 10 30 60 120 240 300 600
     LIMIT = 500
-    DELTATIME = 1.0 / FPS  # Korrekturwert §\label{srcInvader05f01}§
+    DELTATIME = 1.0 / FPS  # §\label{srcInvader05f01}§
 
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -20,7 +19,7 @@ def main():
     defender_rect = defender_image.get_rect()
     defender_rect.centerx = Settings.WINDOW.centerx
     defender_rect.bottom = Settings.WINDOW.bottom - 5
-    defender_speed = 600  # Nicht mehr px/f sondern px/s §\label{srcInvader05f02}§
+    defender_speed = 600  # Not px/f but px/s§\label{srcInvader05f02}§
     defender_direction_v = -1
 
     start_time = pygame.time.get_ticks()

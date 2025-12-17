@@ -11,7 +11,7 @@ class Settings:
     FPS = 60
     DELTATIME = 1.0 / FPS
     KI = {"left": False, "right": False}
-    SOUNDFLAG = True  # Soundflags§\label{srcPong0701}§
+    SOUNDFLAG = True                                # Sound flag§\label{srcPong0701}§
     PATH = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
@@ -64,7 +64,7 @@ class Paddle(pygame.sprite.Sprite):
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
         self.speed = Settings.WINDOW.height // 2
-        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
+        self.direction = Paddle.DIRECTION["halt"]
         self.select_image()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -100,7 +100,7 @@ class Paddle(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.sounds: dict[str, pygame.mixer.Sound] = {}  # Geräusche speichern§\label{srcPong0702}§
+        self.sounds: dict[str, pygame.mixer.Sound] = {}  # Sound container§\label{srcPong0702}§
         self.sounds["left"] = pygame.mixer.Sound(Settings.get_sound("playerl.mp3"))
         self.sounds["right"] = pygame.mixer.Sound(Settings.get_sound("playerr.mp3"))
         self.sounds["bounce"] = pygame.mixer.Sound(Settings.get_sound("bounce.mp3"))
@@ -148,7 +148,7 @@ class Ball(pygame.sprite.Sprite):
 
     def horizontal_flip(self) -> None:
         if Settings.SOUNDFLAG:
-            if self.speedxy.x < 0:  # Flugrichtung nach links?§\label{srcPong0703}§
+            if self.speedxy.x < 0:                  # Ball to left?§\label{srcPong0703}§
                 self.channel.set_volume(0.9, 0.1)
                 self.channel.play(self.sounds["left"])
             else:
@@ -159,7 +159,7 @@ class Ball(pygame.sprite.Sprite):
 
     def vertical_flip(self) -> None:
         if Settings.SOUNDFLAG:
-            rel_pos = self.rect.centerx / Settings.WINDOW.width  # Wo bin ich?§\label{srcPong0704}§
+            rel_pos = self.rect.centerx / Settings.WINDOW.width  # Where am I?§\label{srcPong0704}§
             self.channel.set_volume(1.0 - rel_pos, rel_pos)
             self.channel.play(self.sounds["bounce"])
         self.speedxy.y *= -1

@@ -4,7 +4,7 @@
 
 \lstsource{SRC/00 Einführung/03 Bitmaps/invader01.py}{1}{999}{python}{Bitmaps laden und ausgeben, Version 1.0}{srcInvader01}
 
-In \srcref{srcInvader01} werden zwei Bitmaps -- hier zwei png-Dateien -- geladen und auf den Bildschirm ausgegeben. 
+In \srcref{srcInvader01} werden zwei Bitmaps -- hier zwei \Gls{png}-Dateien -- geladen und auf den Bildschirm ausgegeben. 
 
 Das Laden erfolgt über die Funktion \texttt{pygame.image.load()}\myindex{pyg}{\texttt{image}!\texttt{load()}}\randnotiz{load()}. In \zeiref{srcInvader0101}f. werden die Bitmaps -- auch \glspl{sprite} genannt -- geladen und in ein \texttt{Surface}-Objekt umgewandelt. Die beiden Bitmaps werden dann, ohne sie weiter zu verarbeiten, mit Hilfe von \texttt{pygame.Sur\-face.\-blit()}\myindex{pyg}{\texttt{Surface}!\texttt{blit()}}\randnotiz{blit()} auf das \texttt{screen}-Surface gedruckt (\zeiref{srcInvader0102}). Der erste Parameter von \texttt{blit()} ist das \texttt{Surface}-Objekt, welches gedruckt werden soll, und danach erfolgt die Angabe der Position. Dabei wird zuerst die horizontale (waagerechte) und dann die vertikale (senkrechte) Koordinate angegeben. Der 0-Punkt ist dabei anders als in der Schulmathematik nicht links unten, sondern links oben. Das Ergebnis können Sie in \abbref[vref]{picInvader01} \emph{bewundern}.
 
@@ -12,7 +12,7 @@ Das Laden erfolgt über die Funktion \texttt{pygame.image.load()}\myindex{pyg}{\
 
 Wir wollen nun die Bitmaps ein wenig unseren Bedürfnissen anpassen. Zunächst empfiehlt das Handbuch, dass das Bitmap nach dem Laden in ein für Pygame leichter zu verarbeitendes Format konvertiert wird. Darüber hinaus möchte ich die Größenverhältnisse der beiden Bitmaps angleichen, da mir der Enemy im Verhältnis zum Defender zu groß ist. 
 
-\lstsource{SRC/00 Einführung/03 Bitmaps/invader02.py}{16}{20}{python}{Bitmaps laden und ausgeben, Version 1.1}{srcInvader02}
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader02.py}{19}{23}{python}{Bitmaps laden und ausgeben, Version 1.1}{srcInvader02}
 
 \begin{wrapfigure}[9]{r}{5cm}%
     \vspace{-1em}%
@@ -31,17 +31,17 @@ Ich habe nun zwei Möglichkeiten, diese Transparenz wieder verfügbar zu machen:
 	\item \texttt{pygame.Surface.set\_colorkey()}\myindex{pyg}{\texttt{Surface}!\texttt{set\_colorkey()}}\randnotiz{set\_colorkey()}: Als Übergabeparameter übergeben Sie die Farbe, die von Pygame beim Drucken auf das Ziel-Surface übersprungen werden soll. Dabei können zwei Nachteile entstehen. Zum einen können Transparenzen, die zwischen sichtbar und unsichtbar liegen, nicht abgebildet werden. Es wäre also nicht möglich, einen Pixel \emph{halbdurchscheinen} zu lassen. Zum anderen werden Teile der Figur, die die gleiche Farbe wie der Hintergrund haben, ebenfalls transparent erscheinen. Würde unser Alien in der Mitte ein schwarzes Auge haben, würde es verschwinden und der Alien hätte ein Loch in der Mitte.
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/03 Bitmaps/invader03.py}{16}{21}{python}{Bitmaps laden und ausgeben, Version 1.2}{srcInvader03}
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader03.py}{19}{24}{python}{Bitmaps laden und ausgeben, Version 1.2}{srcInvader03}
 
 
 \begin{wrapfigure}[9]{r}{5cm}
     \vspace{-1.5em}
 	\myfigure{invader03.png}{0.8}{Transparenz OK}{picInvader03}
-\end{wrapfigure}In \srcref[vref]{srcInvader03} habe ich beide Varianten mal ausprobiert und in \abbref[vref]{picInvader03} können Sie das Ergebnis sehen. Nun sind beide Bitmaps ohne schwarze Hintergrund sichtbar, der weiße Hintergrund scheint wieder durch.
+\end{wrapfigure}In \srcref[vref]{srcInvader03} habe ich beide Varianten mal ausprobiert und in \abbref[vref]{picInvader03} können Sie das Ergebnis sehen. Nun sind beide Bitmaps ohne schwarze Hintergrund sichtbar; der weiße Hintergrund scheint wieder durch.
 
 Was mir nun immer noch nicht gefällt ist die Position und die Anzahl der Angreifer. Ich möchte den Verteidiger mittig unten platzieren und die Angreifer am oberen Bildschirmrand und zwar so, dass sie horizontal  \gls{aequidistant}\index{äquidistant}\randnotiz{äquidistant} sind. Dabei gibt es zwei Möglichkeiten: Ich gebe einen Mindestabstand an und die Anzahl wird ausgerechnet, oder ich gebe die maximale Anzahl an und der Abstand wird ausgerechnet. Welchen Weg ich wähle, hängt von meiner Spiellogik ab; meist ist die Anzahl vorgegeben.
 
-\lstsource{SRC/00 Einführung/03 Bitmaps/invader04.py}{17}{41}{python}{Bitmap: Positionen, Version 1.4}{srcInvader04}
+\lstsource{SRC/00 Einführung/03 Bitmaps/invader04.py}{20}{47}{python}{Bitmap: Positionen, Version 1.4}{srcInvader04}
 
 In \srcref[vref]{srcInvader04} sind die obigen Anforderungen umgesetzt worden. Schauen wir uns die einzelnen Aspekte genauer an.
 
@@ -49,23 +49,23 @@ Der Verteidiger sollte unten mittig positioniert werden. Wir erinnern uns, dass 
 
 Diese Angabe muss erst berechnet werden. Der Übersichtlichkeit wegen -- in einem normalen Quelltext würde ich die Berechnung nicht so kleinteilig programmieren -- berechne ich hier die Koordinaten einzeln.
 
-Die obere Kante ist dabei recht einfach zu ermitteln. Würden wir \texttt{defender\_top} auf die gesamte Höhe des Bildschirms \texttt{Settings.WINDOWS\_HEIGHT} setzen, würden wir den Verteidiger nicht sehen, da er komplett unten aus dem Bildschirm rausragen würden. Um wie viele Pixel müssen wir also die obere Kante anheben? Genau um die Höhe des Raumschiffs, $30~px$:
+Die obere Kante ist dabei recht einfach zu ermitteln. Würden wir \texttt{defender\_top} auf die gesamte Höhe des Bildschirms \texttt{Settings.WINDOWS\_HEIGHT} setzen, würden wir den Verteidiger nicht sehen, da er komplett unten aus dem Bildschirm rausragen würden. Um wie viele Pixel müssen wir also die obere Kante anheben? Genau um die Höhe des Raumschiffs, \unit[30]{px}:
 
-\lstset{firstnumber=20}
+\lstset{firstnumber=23}
 \begin{lstlisting}
 	defender_pos_top = Settings.WINDOWS_HEIGHT - 30
 \end{lstlisting}
 
-Mir gefällt aber nicht, dass der Verteidiger dabei so an den Rand angeklebt aussieht. Ich spendiere ihm noch weitere $5~px$, damit er mehr danach aussieht, als schwebe er im Raum:
+Mir gefällt aber nicht, dass der Verteidiger dabei so an den Rand angeklebt aussieht. Ich spendiere ihm noch weitere \unit[5]{px}, damit er mehr danach aussieht, als schwebe er im Raum:
 
-\lstset{firstnumber=20}
+\lstset{firstnumber=23}
 \begin{lstlisting}
 	defender_pos_top = Settings.WINDOWS_HEIGHT - 30 - 5
 \end{lstlisting}
 
 In \zeiref{srcInvader0401} wird der Abstand des linken Rands des Bitmaps vom Spielfeldrand berechnet. Mit
 
-\lstset{firstnumber=19}
+\lstset{firstnumber=22}
 \begin{lstlisting}
 	defender_pos_left = Settings.WINDOWS_WIDTH // 2
 \end{lstlisting}
@@ -74,26 +74,26 @@ würden wir die horizontale Mitte des Bildschirmes ausrechnen. Diesen Wert könn
 
 \myebild{invader04a.png}{0.7}{Bitmaps positionieren (Verteidiger)}{picInvader04a}
 
-Die Anzahl der Pixel, die wir zu weit nach rechts gerutscht sind, können wir aber genau bestimmen und dann abziehen: Es ist genau die Hälfte der Breite des Verteidigers (hier $30~px$):
-\begin{lstlisting}
+Die Anzahl der Pixel, die wir zu weit nach rechts gerutscht sind, können wir aber genau bestimmen und dann abziehen: Es ist genau die Hälfte der Breite des Verteidigers (hier \unit[30]{px}):
+\begin{lstlisting}{firstnumber=22}
 	defender_pos_left = Settings.WINDOWS_WIDTH // 2 - 30 // 2
 \end{lstlisting}
 
 Mit Hilfe von ein wenig Bruchrechnen lässt sich der Ausdruck vereinfachen:
-\begin{lstlisting}
+\begin{lstlisting}{firstnumber=22}
 	defender_pos_left = (Settings.WINDOWS_WIDTH - 30) // 2
 \end{lstlisting}
 
-Jetzt kommen die Angreifer. Im ersten Ansatz wollen wir diese hintereinander ohne Überschneidungen oben ausgeben. Die obere Kante \texttt{alien\_top} können wir konstant mit einem angenehmen Abstand von $10~px$ vom oberen Rand setzen:
+Jetzt kommen die Angreifer. Im ersten Ansatz wollen wir diese hintereinander ohne Überschneidungen oben ausgeben. Die obere Kante \texttt{alien\_top} können wir konstant mit einem angenehmen Abstand von \unit[10]{px} vom oberen Rand setzen:
 
-\lstset{firstnumber=37}
+\lstset{firstnumber=40}
 \begin{lstlisting}
 	alien_top = 10 
 \end{lstlisting}
 
-Die linke Position \texttt{alien\_left} muss für jedes Alien einzeln bestimmt werden. Da diese erstmal direkt nebeneinander liegen, ist ein linker Rand genau die Breite eines Aliens vom nächsten linken Rand entfernt. Wenn ich also beim $0ten$ Alien bin, liegt die horizontale Koordinate direkt am linken Bildschirmrand. Beim $1ten$ Alien genau $1\times50~px$, beim $2ten$ genau $2\times50~px$ usw., da die Breite des Aliens $50~px$ beträgt. In eine for-Schleife gegossen, sieht das so aus:
+Die linke Position \texttt{alien\_left} muss für jedes Alien einzeln bestimmt werden. Da diese erstmal direkt nebeneinander liegen, ist ein linker Rand genau die Breite eines Aliens vom nächsten linken Rand entfernt. Wenn ich also beim $0ten$ Alien bin, liegt die horizontale Koordinate direkt am linken Bildschirmrand. Beim $1ten$ Alien genau $1\times\unit[50]{px}$, beim $2ten$ genau $2\times\unit[50]{px}$ usw., da die Breite des Aliens \unit[50]{px} beträgt. In eine for-Schleife gegossen, sieht das so aus:
 
-\lstset{firstnumber=38}
+\lstset{firstnumber=41}
 \begin{lstlisting}
 	for i in range(Settings.ALIENS_NOF):
 	   alien_left = i * 50
@@ -105,50 +105,50 @@ Die linke Position \texttt{alien\_left} muss für jedes Alien einzeln bestimmt w
 \myebild{invader04b.png}{0.8}{Bitmaps positionieren (Angreifer, Version 1)}{picInvader04b}
 
 
-Der ganze Platz hinter dem letzten Alien kann jetzt aber vor, zwischen und nach den Aliens verteilt werden und zwar so, dass zwischen den Aliens, dem linken Alien und dem linken Bildschirmrand und dem rechten Alien und dem rechten Bildschirmrand immer gleich viel Abstand liegt. Wie viele Zwischenräume sind es denn? Nun einmal die beiden ganz rechts und ganz links, also 2:
+Der ganze Platz hinter dem letzten Alien kann jetzt aber vor, zwischen und nach den Aliens verteilt werden und zwar so, dass zwischen den Aliens, dem linken Alien und dem linken Bildschirmrand und dem rechten Alien und dem rechten Bildschirmrand immer gleich viel Abstand liegt. Wie viele Zwischenräume sind es denn? Nun einmal die beiden ganz rechts und ganz links, also~2:
 
-\lstset{firstnumber=27}
+\lstset{firstnumber=30}
 \begin{lstlisting}
 	space_nof = 2  
 \end{lstlisting}
 
 Dann die Anzahl der Räume zwischen den Aliens. Dies ist immer 1 weniger als die der Aliens (zählen Sie nach!):
 
-\lstset{firstnumber=27}
+\lstset{firstnumber=30}
 \begin{lstlisting}
 	space_nof = Settings.ALIENS_NOF - 1 + 2
 \end{lstlisting}
 
 also:
 
-\lstset{firstnumber=27}
+\lstset{firstnumber=30}
 \begin{lstlisting}
 	space_nof = Settings.ALIENS_NOF + 1     
 \end{lstlisting}
 
 Nun muss der verfügbare Platz \texttt{space\_availible} hinter den Aliens noch ausgerechnet werden. Ich erreiche dies, indem ich den Platz, den die Aliens verbrauchen, \texttt{space\_\-for\_\-a\-liens} ausrechne
 
-\lstset{firstnumber=25}
+\lstset{firstnumber=28}
 \begin{lstlisting}
 	space_for_aliens =  Settings.ALIENS_NOF * 50     
 \end{lstlisting}
 
 und diesen von der Bildschirmbreite abziehe.
-\lstset{firstnumber=26}
+\lstset{firstnumber=29}
 \begin{lstlisting}
 	space_availible = Settings.WINDOWS_WIDTH - space_for_aliens
 \end{lstlisting}
 
 Ich habe also den verfügbaren Platz in \texttt{space\_availible} und die Anzahl der Räume, die gefüllt werden müssen in \texttt{space\_nof}. Wenn ich jetzt die Breite der Räume \texttt{space\_between\_\-aliens} ermitteln will, muss ich diese beiden Werte dividieren:
 
-\lstset{firstnumber=28}
+\lstset{firstnumber=31}
 \begin{lstlisting}
 	space_between_aliens = space_availible // space_nof
 \end{lstlisting}
 
 Jetzt müssen wir nur noch die Berechnung von \texttt{alien\_left} anpassen. Erstmal verschieben wir den Start um einen solchen Freiraum (siehe \abbref[vref]{picInvader04c}):
 
-\lstset{firstnumber=38}
+\lstset{firstnumber=41}
 \begin{lstlisting}
 	for i in range(Settings.ALIENS_NOF):
 	   alien_left = space_between_aliens + i * 50
@@ -160,10 +160,10 @@ Jetzt müssen wir nur noch die Berechnung von \texttt{alien\_left} anpassen. Ers
 
 Nun muss der Abstand von einem linken Rand zum anderen, der bisher nur aus der Breite des Aliens bestand, um den Abstand \texttt{space\_between\_aliens} erweitert werden:
 
-\lstset{firstnumber=38}
+\lstset{firstnumber=41}
 \begin{lstlisting}
 	for i in range(Settings.ALIENS_NOF):
-	   alien_left = space_between_aliens + i * (space_between_aliens + 50)
+	   alien_left = (i + 1) * space_between_aliens + i * 50
 	   alien_pos = (alien_left, alien_top)
 	   screen.blit(alien_image, alien_pos)
 \end{lstlisting} 

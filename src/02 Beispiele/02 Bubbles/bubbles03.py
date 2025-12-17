@@ -14,11 +14,11 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
-    MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000  # Erfahrungswert§\label{srcBubble0301}§
+    MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000  # A guess§\label{srcBubble0301}§
 
     @staticmethod
     def get_file(filename: str) -> str:
@@ -61,7 +61,7 @@ class Bubble(pygame.sprite.DirtySprite):
     def __init__(self) -> None:
         super().__init__()
         self.radius = Settings.RADIUS["min"]
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.image = pygame.transform.scale(self.image, (Settings.RADIUS["min"], Settings.RADIUS["min"]))
         self.rect: pygame.rect.Rect = self.image.get_rect()
@@ -79,7 +79,7 @@ class Bubble(pygame.sprite.DirtySprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -105,7 +105,7 @@ class Game:
 
     def spawn_bubble(self) -> None:
         if self.timer_bubble.is_next_stop_reached():
-            if len(self.all_sprites) <= Settings.MAX_BUBBLES:  # Platz?§\label{srcBubble0306}§
+            if len(self.all_sprites) <= Settings.MAX_BUBBLES:  # Enough space?§\label{srcBubble0306}§
                 b = Bubble()
                 for _ in range(100):
                     b.randompos()

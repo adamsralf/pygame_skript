@@ -52,7 +52,7 @@ class WindowGame:
         self.screen.fill("black")
         for row in range(Settings.TILEMAP_NOF_ROWS):
             for col in range(Settings.TILEMAP_NOF_COLS):
-                index = self.tiles[row][col]                # §\label{srcforest0301}§
+                index = self.tiles[row][col]        # §\label{srcforest0301}§
                 image = self.spritelib.subsurface(index)
                 position = col * Settings.TILESIZE.x, row * Settings.TILESIZE.y
                 self.screen.blit(image, position)

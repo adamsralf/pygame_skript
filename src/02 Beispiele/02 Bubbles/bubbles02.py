@@ -14,10 +14,10 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
-    RADIUS = {"min": 15}  # Radius Startwert§\label{srcBubble0201}§
-    DISTANCE = 50  # Rand-/Blasenabstand§\label{srcBubble0202}§
-    PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)  # Rechteck im Aquarium§\label{srcBubble0203}§
+    CAPTION = 'Bubbles'
+    RADIUS = {"min": 15}                            # Radius to start with§\label{srcBubble0201}§
+    DISTANCE = 50                                   # Border-/Bubbledistance§\label{srcBubble0202}§
+    PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)# Rect inside aquarium§\label{srcBubble0203}§
 
     @staticmethod
     def get_file(filename: str) -> str:
@@ -60,7 +60,7 @@ class Bubble(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.radius = Settings.RADIUS["min"]
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.image = pygame.transform.scale(self.image, (Settings.RADIUS["min"], Settings.RADIUS["min"]))
         self.rect: pygame.rect.Rect = self.image.get_rect()
@@ -78,12 +78,12 @@ class Bubble(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())  # §\label{srcBubble0204}§
-        self.timer_bubble = Timer(500, False)  # Timer 500ms§\label{srcBubble0205}§
-        self.all_sprites = pygame.sprite.Group()  # Alle Blasen §\label{srcBubble0206}§
+        self.timer_bubble = Timer(500, False)       # Timer 500ms§\label{srcBubble0205}§
+        self.all_sprites = pygame.sprite.Group()    # All bubbles§\label{srcBubble0206}§
         self.running = True
 
     def watch_for_events(self) -> None:
@@ -107,9 +107,9 @@ class Game:
             b = Bubble()
             for _ in range(100):
                 b.randompos()
-                b.radius += Settings.DISTANCE  # Abstand zu Blasen§\label{srcBubble0207}§
+                b.radius += Settings.DISTANCE       # Distance to other bubbles§\label{srcBubble0207}§
                 collided = pygame.sprite.spritecollide(b, self.all_sprites, False, pygame.sprite.collide_circle)
-                b.radius -= Settings.DISTANCE  # Alter Radius!§\label{srcBubble0208}§
+                b.radius -= Settings.DISTANCE       # Old radius!§\label{srcBubble0208}§
                 if not collided:
                     self.all_sprites.add(b)
                     break

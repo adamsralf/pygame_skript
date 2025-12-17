@@ -11,13 +11,13 @@ def main():
     pygame.init()
     window = pygame.Window(
         size=(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 
-        title="Bitmaps laden und ausgeben", 
+        title="Load and Draw of Bitmaps", 
         position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
-    defender_image = pygame.image.load("images/defender01.png").convert()   # konvertieren §\label{srcInvader0201}§
-    defender_image = pygame.transform.scale(defender_image, (30, 30))       # skalieren §\label{srcInvader0202}§
+    defender_image = pygame.image.load("images/defender01.png").convert() # to display format§\label{srcInvader0201}§
+    defender_image = pygame.transform.scale(defender_image, (30, 30))     # Scale surface§\label{srcInvader0202}§
 
     enemy_image = pygame.image.load("images/alienbig0101.png").convert()
     enemy_image = pygame.transform.scale(enemy_image, (50, 45))

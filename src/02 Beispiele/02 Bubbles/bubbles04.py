@@ -14,8 +14,8 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
-    RADIUS = {"min": 15, "max": 240}  # Obergrenze§\label{srcBubble0400}§
+    CAPTION = 'Bubbles'
+    RADIUS = {"min": 15, "max": 240}                # Limit§\label{srcBubble0400}§
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
     MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000
@@ -59,22 +59,22 @@ class Background(pygame.sprite.Sprite):
 
 class BubbleContainer:
     def __init__(self) -> None:
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}  # §\label{srcBubble0403}§
 
     def get(self, radius: int) -> pygame.surface.Surface:
-        radius = max(Settings.RADIUS["min"], radius)  # Untere Grenze§\label{srcBubble0404}§
-        radius = min(Settings.RADIUS["max"], radius)  # Obere Grenze§\label{srcBubble0405}§
+        radius = max(Settings.RADIUS["min"], radius)  # Lower limit§\label{srcBubble0404}§
+        radius = min(Settings.RADIUS["max"], radius)  # Upper limit§\label{srcBubble0405}§
         return self.images[radius]
 
 
 class Bubble(pygame.sprite.Sprite):
     def __init__(self, bubble_container: BubbleContainer) -> None:
         super().__init__()
-        self.bubble_container = bubble_container  # Verweis auf Container§\label{srcBubble0406}§
+        self.bubble_container = bubble_container    # Refernece to container§\label{srcBubble0406}§
         self.radius = Settings.RADIUS["min"]
-        self.image = self.bubble_container.get(self.radius)  # Zugriff auf Bubbles §\label{srcBubble0407}§
+        self.image = self.bubble_container.get(self.radius)  # Get bubble§\label{srcBubble0407}§
         self.rect: pygame.rect.Rect = self.image.get_rect()
         self.fradius = float(self.radius)
         self.speed = 100
@@ -83,12 +83,12 @@ class Bubble(pygame.sprite.Sprite):
         if "action" in kwargs.keys():
             if kwargs["action"] == "grow":
                 self.fradius += self.speed * Settings.DELTATIME
-                self.fradius = min(self.fradius, Settings.RADIUS["max"])  # Neuer Radius  §\label{srcBubble0410}§
+                self.fradius = min(self.fradius, Settings.RADIUS["max"])  # New radius§\label{srcBubble0410}§
                 self.radius = round(self.fradius)
-                center = self.rect.center  # Alter Mittelpunkt §\label{srcBubble0411}§
-                self.image = self.bubble_container.get(self.radius)  # Neues Image §\label{srcBubble0412}§
+                center = self.rect.center           # Save center pos§\label{srcBubble0411}§
+                self.image = self.bubble_container.get(self.radius)  # New image §\label{srcBubble0412}§
                 self.rect = self.image.get_rect()
-                self.rect.center = center  # Neuer MP = Alter MP §\label{srcBubble0413}§
+                self.rect.center = center           # Restore center pos§\label{srcBubble0413}§
 
     def randompos(self) -> None:
         bubbledistance = Settings.DISTANCE + Settings.RADIUS["min"]
@@ -100,7 +100,7 @@ class Bubble(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -123,13 +123,13 @@ class Game:
         self.window.flip()
 
     def update(self) -> None:
-        self.all_sprites.update(action="grow")  # Bubbles aktualisieren §\label{srcBubble0414}§
+        self.all_sprites.update(action="grow")      # Bubbles growing §\label{srcBubble0414}§
         self.spawn_bubble()
 
     def spawn_bubble(self) -> None:
         if self.timer_bubble.is_next_stop_reached():
             if len(self.all_sprites) <= Settings.MAX_BUBBLES:
-                b = Bubble(self.bubble_container)  # Verweis auf Bubbles §\label{srcBubble0415}§
+                b = Bubble(self.bubble_container)  # §\label{srcBubble0415}§
                 for _ in range(100):
                     b.randompos()
                     b.radius += Settings.DISTANCE

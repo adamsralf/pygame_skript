@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -60,7 +60,7 @@ class Background(pygame.sprite.Sprite):
 
 class BubbleContainer:
     def __init__(self) -> None:
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self._images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}
 
@@ -101,7 +101,7 @@ class Bubble(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -117,9 +117,9 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:  # Mausklick? §\label{srcBubble0601}§
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # Mouse clicked?§\label{srcBubble0601}§
                 if event.button == 1:  # left
-                    self.sting(pygame.mouse.get_pos())  # Aufruf §\label{srcBubble0602}§
+                    self.sting(pygame.mouse.get_pos())  #§\label{srcBubble0602}§
 
     def draw(self) -> None:
         self.background.draw(self.screen)
@@ -165,7 +165,7 @@ class Game:
 
     def sting(self, mousepos: Tuple[int, int]) -> None:
         for bubble in self.all_sprites:
-            if self.collidepoint(mousepos, bubble):  # Innerhalb? §\label{srcBubble0603}§
+            if self.collidepoint(mousepos, bubble): # Inside? §\label{srcBubble0603}§
                 bubble.kill()
 
     def run(self) -> None:

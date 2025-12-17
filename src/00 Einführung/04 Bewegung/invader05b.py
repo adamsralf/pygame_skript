@@ -8,7 +8,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -17,8 +17,8 @@ def main():
     defender_rect = defender_image.get_rect()
     defender_rect.centerx = Settings.WINDOW.centerx
     defender_rect.bottom = Settings.WINDOW.height - 5
-    defender_speed = 2  # Geschwindigkeit §\label{srcInvader0505}§
-    defender_direction_h = +1  # Richtung §\label{srcInvader0506}§
+    defender_speed = 2          # §\label{srcInvader0505}§
+    defender_direction_h = +1   # §\label{srcInvader0506}§
 
     running = True
     while running:
@@ -28,7 +28,7 @@ def main():
                 running = False
 
         # Update
-        defender_rect.left += defender_direction_h * defender_speed  # Flexibler §\label{srcInvader0507}§
+        defender_rect.left += defender_direction_h * defender_speed  # more flexible§\label{srcInvader0507}§
 
         # Draw
         screen.fill("white")

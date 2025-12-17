@@ -4,55 +4,54 @@
 %\subsection{Beispiele}
 In Spielen werden an vielen Stellen zeitgesteuerte Aktionen benötigt: Jede halbe Sekunde fällt eine Bombe, das Schutzschild ist 10 Sekunden aktiv, nach 3~Sprüngen steht die Funktion \emph{Sprung} 5~Minuten lang nicht zur Verfügung, bei einer Animation sollen die Teilbilder jede $1/30$ Sekunde erscheinen usw..
 
-Schauen wir uns zunächst die Bildschirmausgabe von \srcref[vref]{srcZeit00a}ff. in \abbref[vref]{picZeit00} an. Die Feuerbälle werden offensichtlich in dichter Folge abgeworfen, so dass diese wie eine Kette erscheinen. Durch die horizontale Bewegung des Enemys bekommen wir eine schräge Linie; so soll es offensichtlich nicht sein. 
+Schauen wir uns zunächst die Bildschirmausgabe von \srcref[vref]{srcTime00a}ff. in \abbref[vref]{pictime00} an. Die Feuerbälle werden offensichtlich in dichter Folge abgeworfen, so dass diese wie eine Kette erscheinen. Durch die horizontale Bewegung des Enemys bekommen wir eine schräge Linie; so soll es offensichtlich nicht sein. 
 
-\myebild{zeit00.png}{0.8}{Feuerball ohne Zeitsteuerung}{picZeit00}
+\myebild{time00.png}{0.8}{Feuerball ohne Zeitsteuerung}{pictime00}
 
 Bevor wir die Zeitsteuerung selbst angehen, ein kurzer Blick ins Programm. Präambel und die Klasse \texttt{Settings} kommen mit nichts Neuem um die Ecke.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{1}{23}{python}{Zeitsteuerung (1), Version 1.0: Präambel und \texttt{Settings}}{srcZeit00a} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{1}{23}{python}{Zeitsteuerung (1), Version 1.0: Präambel und \texttt{Settings}}{srcTime00a} 
 
-Die Klasse \texttt{Enemy} liefert auch nichts Weltbewegendes. Mit $10~px$~Abstand pendelt der Enemy immer von links nach rechts bzw. umgekehrt.
+Die Klasse \texttt{Enemy} liefert auch nichts Weltbewegendes. Mit \unit[10]{px}~Abstand pendelt der Enemy immer von links nach rechts bzw. umgekehrt.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{26}{41}{python}{Zeitsteuerung (2), Version 1.0: \texttt{Enemy}}{srcZeit00b} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{26}{41}{python}{Zeitsteuerung (2), Version 1.0: \texttt{Enemy}}{srcTime00b} 
 
-Auch \texttt{Bullet} ist in weiten Teilen eine Wiederholung. Interessant dürfte \zeiref{srcZeit0004} sein. Die Methode \texttt{pygame.sprite.Sprite.kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}|underline}\randnotiz{kill()} ist nicht wirklich eine Selbstzerstörung. Vielmehr entfernt diese Methode das \texttt{Sprite}-Objekt aus allen Spritegroups. Wenn damit auch alle Referenzen verloren gehen, wird natürlich auch dieses Objekt zerstört, besteht aber noch irgendwo eine Referenz, bleibt das Objekt erhalten. In der Regel werden \texttt{Sprite}-Objekte aber in Gruppen (also in \texttt{pygame.sprite.Group}-Objekten) verwaltet und somit durch \texttt{kill()} zerstört. Sie können das in \abbref[vref]{picZeit00} dadurch erkennen, dass $30~px$ vor dem unteren Bildschirmrand der Feuerball verschwindet.
+Auch \texttt{Bullet} ist in weiten Teilen eine Wiederholung. Interessant dürfte \zeiref{srcTime0004} sein. Die Methode \texttt{pygame.sprite.Sprite.kill()}\myindex{pyg}{\texttt{sprite}!\texttt{Sprite}!\texttt{kill()}|underline}\randnotiz{kill()} ist nicht wirklich eine Selbstzerstörung. Vielmehr entfernt diese Methode das \texttt{Sprite}-Objekt aus allen Spritegroups. Wenn damit auch alle Referenzen verloren gehen, wird natürlich auch dieses Objekt zerstört, besteht aber noch irgendwo eine Referenz, bleibt das Objekt erhalten. In der Regel werden \texttt{Sprite}-Objekte aber in Gruppen (also in \texttt{pygame.sprite.Group}-Objekten) verwaltet und somit durch \texttt{kill()} zerstört. Sie können das in \abbref[vref]{pictime00} dadurch erkennen, dass $30~px$ vor dem unteren Bildschirmrand der Feuerball verschwindet.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{44}{57}{python}{Zeitsteuerung (3), Version 1.0: \texttt{Bullet}}{srcZeit00c} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{44}{57}{python}{Zeitsteuerung (3), Version 1.0: \texttt{Bullet}}{srcTime00c} 
 
-Im Konstruktor Der Klasse \texttt{Game} wird eine Spritegroup für die Feuerbälle angelegt und ein \texttt{GroupSingle}-Objekt für den Enemy. In \texttt{run()} erfolgt die übliche Abarbeitung der Teilaufgaben durch entsprechende Funktionsaufrufe. Ein kurzes Augenmerk möchte ich auf \zeiref{srcZeit0005}ff. lenken. Durch den Aufruf von \texttt{pygame.time.Clock.tick()}\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick()}}\randnotiz{tick()} wird das Spiel getaktet -- hier auf das $1/60$ einer Sekunde und anschließend die \emph{Deltatime}\randnotiz{deltatime}\index{deltatime} berechnet. 
+Im Konstruktor Der Klasse \texttt{Game} wird eine Spritegroup für die Feuerbälle angelegt und ein \texttt{GroupSingle}-Objekt für den Enemy. In \texttt{run()} erfolgt die übliche Abarbeitung der Teilaufgaben durch entsprechende Funktionsaufrufe. Ein kurzes Augenmerk möchte ich auf \zeiref{srcTime0005}ff. lenken. Durch den Aufruf von \texttt{pygame.time.Clock.tick()}\myindex{pyg}{\texttt{time}!\texttt{Clock}!\texttt{tick()}}\randnotiz{tick()} wird das Spiel getaktet -- hier auf das $1/60$ einer Sekunde und anschließend die \emph{Deltatime}\randnotiz{deltatime}\index{deltatime} berechnet. 
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{60}{83}{python}{Zeitsteuerung (4), Version 1.0: Konstruktor und \texttt{run()} von \texttt{Game}}{srcZeit00d} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{60}{83}{python}{Zeitsteuerung (4), Version 1.0: Konstruktor und \texttt{run()} von \texttt{Game}}{srcTime00d} 
 
 Die Methoden \texttt{watch\_for\_events()} und \texttt{draw()} sind auch ohne Besonderheiten.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{85}{97}{python}{Zeitsteuerung (5), Version 1.0:  \texttt{watch\_for\_events()} und \texttt{draw()} von \texttt{Game}}{srcZeit00e} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{85}{97}{python}{Zeitsteuerung (5), Version 1.0:  \texttt{watch\_for\_events()} und \texttt{draw()} von \texttt{Game}}{srcTime00e} 
 
-Die Methode \texttt{update()} ist nur bzgl. \zeiref{srcZeit0006} erwähnenswert, da dort ein neuer Feuerball erzeugt/abgeworfen wird, indem die Methode \texttt{new\_bullet()} aufgerufen wird. Die Startposition ergibt sich aus der aktuellen Position des Enemys. Das horizontale Zentrum von Feuerball und Enemy soll gleich sein. Das vertikale Zentrum ist etwas nach unten verschoben; sieht besser aus. 
+Die Methode \texttt{update()} ist nur bzgl. \zeiref{srcTime0006} erwähnenswert, da dort ein neuer Feuerball erzeugt/abgeworfen wird, indem die Methode \texttt{new\_bullet()} aufgerufen wird. Die Startposition ergibt sich aus der aktuellen Position des Enemys. Das horizontale Zentrum von Feuerball und Enemy soll gleich sein. Das vertikale Zentrum ist etwas nach unten verschoben; sieht besser aus. 
 
-\newpage
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit00.py}{99}{105}{python}{Zeitsteuerung (6), Version 1.0:  \texttt{update()} und \texttt{new\_bullet()} von \texttt{Game}}{srcZeit00f} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time00.py}{99}{105}{python}{Zeitsteuerung (6), Version 1.0:  \texttt{update()} und \texttt{new\_bullet()} von \texttt{Game}}{srcTime00f} 
 
 
-Zurück zum eigentlichen Problem. Wir haben oben festgestellt, dass durch \texttt{Settings.FPS} und dem Aufruf von \texttt{tick()} in \zeiref{srcZeit0005} die Anwendung auf das $1/60$ einer Sekunde getaktet ist. Mit anderen Worten: Derzeit werden maximal 60~Feuerbälle pro Sekunde erzeugt, was Schwachsinn ist. Eine naive Idee wäre nun, die Taktung zu verringern. Will ich also nur jede halbe Sekunde einen Feuerball erzeugen, müsste die Taktung auf~2 gesetzt werden. Probieren Sie es aus!
+Zurück zum eigentlichen Problem. Wir haben oben festgestellt, dass durch \texttt{Settings.FPS} und dem Aufruf von \texttt{tick()} in \zeiref{srcTime0005} die Anwendung auf das $1/60$ einer Sekunde getaktet ist. Mit anderen Worten: Derzeit werden maximal 60~Feuerbälle pro Sekunde erzeugt, was Schwachsinn ist. Eine naive Idee wäre nun, die Taktung zu verringern. Will ich also nur jede halbe Sekunde einen Feuerball erzeugen, müsste die Taktung auf~2 gesetzt werden. Probieren Sie es aus! Das Ergebnis ist ernüchternd. Es wird ja damit das ganze Spiel verlangsamt. Das ist nicht Sinn der Sache.
 
-Das Ergebnis ist ernüchternd. Es wird ja damit das ganze Spiel verlangsamt. Das ist nicht Sinn der Sache. Eine nächste und gar nicht so schlechte Idee wäre die Einführung einer Zählers. Der Gedanke dabei ist, wenn die Taktung $1/60$ ist, zähle ich bis~30 und werfe erst dann einen Feuerball ab. 
+Eine nächste und gar nicht so schlechte Idee wäre die Einführung einer Zählers. Der Gedanke dabei ist, wenn die Taktung $1/60$ ist, zähle ich bis~30 und werfe erst dann einen Feuerball ab. 
 
-Im ersten Schritt werden in \texttt{Game} dazu zwei Attribute angelegt (\zeiref{srcZeit0101} und \zeiref{srcZeit0102}). 
+Im ersten Schritt werden in \texttt{Game} dazu zwei Attribute angelegt (\zeiref{srcTime0101} und \zeiref{srcTime0102}). 
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit01.py}{69}{72}{python}{Zeitsteuerung (7), Version 1.1: Konstruktor von \texttt{Game}}{srcZeit01a} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time01.py}{69}{72}{python}{Zeitsteuerung (7), Version 1.1: Konstruktor von \texttt{Game}}{srcTime01a} 
 
 
 In der Methode \texttt{new\_bullet()} werden diese beiden Werte nun dazu genutzt, um den zeitlichen Abstand zwischen zwei Abwürfen zu steuern. Zunächst wird bei jedem Aufruf der Zähler um~1 erhöht. Da die Methode bei jedem Schleifendurchlauf der Hauptprogrammschleife aufgerufen wird und jeder Durchlauf getaktet ist, wird dadurch die Anzahl der Takte mitgezählt. 
 
 Überschreitet der Zähler seine Obergrenze (in unserem Beispiel die 30), ist eine halbe Sekunde seit dem letzten Abwurf vergangen, und ein neuer Abwurf wird durchgeführt. 
 
-Zum Schluss muss der Zähler wieder auf~0 gesetzt werden, da wir ja wieder die nächsten 30~Takte warten müssen. Das Ergebnis sehen wir in \abbref[vref]{picZeit01}: Es sind nur noch zwei Feuerbälle sichtbar.
+Zum Schluss muss der Zähler wieder auf~0 gesetzt werden, da wir ja wieder die nächsten 30~Takte warten müssen. Das Ergebnis sehen wir in \abbref[vref]{pictime01}: Es sind nur noch zwei Feuerbälle sichtbar.
 
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit01.py}{106}{110}{python}{Zeitsteuerung (8), Version 1.1: \texttt{new\_bullet()} von \texttt{Game}}{srcZeit01b} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time01.py}{106}{110}{python}{Zeitsteuerung (8), Version 1.1: \texttt{new\_bullet()} von \texttt{Game}}{srcTime01b} 
 
-\myebild{zeit01.png}{0.8}{Feuerball mit Zeitsteuerung}{picZeit01}
+\myebild{time01.png}{0.8}{Feuerball mit Zeitsteuerung}{pictime01}
 
 Die Vorteile dieses Verfahrens sind: Es ist einfach zu implementieren, und die Geschwindigkeit des Spiels selbst wird nicht beeinflusst. 
 
@@ -60,30 +59,133 @@ Es gibt aber einen entscheidenden Nachteil: Das ganze funktioniert nur, wenn die
 
 Besser ist es, die Zeitsteuerung an einen echten Zeitmesser zu koppeln. Hilfreich ist dabei die Methode \texttt{pygame.time.get\_ticks()}\myindex{pyg}{\texttt{time}!\texttt{get\_ticks()}}\randnotiz{get\_ticks()}. Diese Methode liefert mir die Zeitspanne seit Start des Spiels in \gls{ms} und das ist unabhängig von der Arbeitsgeschwindigkeit der Hardware oder meines Programmes.
 
-Nun kann man den Quelltext umbauen. Zuerst wird in \zeiref{srcZeit0201} die aktuelle Anzahl der $~ms$ seit Programmstart gemessen und in \zeiref{srcZeit0202} wird festgehalten, wie viele$~ms$ ein Zeitintervall dauern soll; wir wollen alle halbe Sekunde einen Feuerball abwerfen, also~500.
+Nun kann man den Quelltext umbauen. Zuerst wird in \zeiref{srcTime0201} die aktuelle Anzahl der~$ms$ seit Programmstart gemessen und in \zeiref{srcTime0202} wird festgehalten, wie viele$~ms$ ein Zeitintervall dauern soll; wir wollen alle halbe Sekunde einen Feuerball abwerfen, also~500.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit02.py}{69}{72}{python}{Zeitsteuerung (9), Version 1.2: Konstruktor von \texttt{Game}}{srcZeit02a} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time02.py}{69}{72}{python}{Zeitsteuerung (9), Version 1.2: Konstruktor von \texttt{Game}}{srcTime02a} 
 
-Danach wird in \texttt{new\_bullet()} abgeprüft, ob das Intervallende erreicht wurde. In \zeiref{srcZeit0204} wird zuerst wieder mit \texttt{pygame.time.get\_ticks()} die aktuelle Zeit gemessen. Ist diese größer als der alte Intervallbeginn plus Intervalldauer -- was ja das gleiche wie das Intervallende ist --, so müssen $500~ms$ vergangen sein, und ein neuer Feuerball wird abgeworfen. Nun muss nur noch der neue Intervallstart ermittelt werden, und das erfolgt in \zeiref{srcZeit0204}.
+Danach wird in \texttt{new\_bullet()} abgeprüft, ob das Intervallende erreicht wurde. In \zeiref{srcTime0204} wird zuerst wieder mit \texttt{pygame.time.get\_ticks()} die aktuelle Zeit gemessen. Ist diese größer als der alte Intervallbeginn plus Intervalldauer -- was ja das gleiche wie das Intervallende ist --, so müssen \unit[500]{ms} vergangen sein, und ein neuer Feuerball wird abgeworfen. Nun muss nur noch der neue Intervallstart ermittelt werden, und das erfolgt in \zeiref{srcTime0204}.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit02.py}{106}{109}{python}{Zeitsteuerung (10), Version 1.2: \texttt{new\_bullet()} von \texttt{Game}}{srcZeit02b} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time02.py}{106}{109}{python}{Zeitsteuerung (10), Version 1.2: \texttt{new\_bullet()} von \texttt{Game}}{srcTime02b} 
 
-Da wir diese Logik mehrfach brauchen, habe ich das ganze in der Klasse \texttt{Timer}\randnotiz{Timer}\index{Timer|underline} gekapselt. Das Herzstück sind wieder die beiden Attribute, die sich die Intervalldauer (\texttt{duration}) und das Intervallende (\texttt{next})  merken. Anders als bisher wird sich also nicht der Intervallstart gemerkt, sondern das Intervallende -- was ein wenig Rechenzeit spart. Interessant ist der optionale Übergabeparameter \texttt{with\_start}. Über diesen kann ich steuern, ob schon beim ersten Durchlauf bis zum Intervallende gewartet werden soll, oder ob beim aller ersten Aufruf von \texttt{is\_next\_stop\_reached()} schon \true\ zurückgeliefert werden soll. Was würde das bei unserem Beispiel bedeuten? Würde \texttt{width\_start} den Wert \true\ haben, würde der erste Feuerball sofort beim ersten Schleifendurchlauf abgeworfen werden. Wäre der Wert \false, würde der erste Feuerball erst nach $500~ms$ abgeworfen werden.
+Da wir diese Logik mehrfach brauchen, habe ich das ganze in der Klasse \texttt{Timer}\randnotiz{Timer}\index{Timer|underline} gekapselt. Das Herzstück sind wieder die beiden Attribute, die sich die Intervalldauer (\texttt{duration}) und das Intervallende (\texttt{next})  merken. Anders als bisher wird sich also nicht der Intervallstart gemerkt, sondern das Intervallende -- was ein wenig Rechenzeit spart. Interessant ist der optionale Übergabeparameter \texttt{with\_start}. Über diesen kann ich steuern, ob schon beim ersten Durchlauf bis zum Intervallende gewartet werden soll, oder ob beim aller ersten Aufruf von \texttt{is\_next\_stop\_reached()} schon \true\ zurückgeliefert werden soll. Was würde das bei unserem Beispiel bedeuten? Würde \texttt{width\_start} den Wert \true\ haben, würde der erste Feuerball sofort beim ersten Schleifendurchlauf abgeworfen werden. Wäre der Wert \false, würde der erste Feuerball erst nach \unit[500]{ms} abgeworfen werden.
 
 In \texttt{is\_next\_stop\_reached()} wird das Erreichen des Intervallendes überprüft und ggf. das neue Intervallende festgelegt. Die Methode liefert ein \true, wenn das Intervallende erreicht/überschritten wurde und ansonsten \false.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit03.py}{26}{39}{python}{Zeitsteuerung (11), Version 1.3: \texttt{Timer}}{srcZeit03a} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time03.py}{26}{39}{python}{Zeitsteuerung (11), Version 1.3: \texttt{Timer}}{srcTime03a} 
 
-Wie wird dieser Timer nun verwendet? Zunächt wird im Konstruktor ein entsprechendes Objekt erzeugt (\zeiref{srcZeit0301}); die beiden Variablen von eben werden nicht mehr gebraucht.
+Wie wird dieser Timer nun verwendet? Zunächt wird im Konstruktor ein entsprechendes Objekt erzeugt (\zeiref{srcTime0301}); die beiden Variablen von eben werden nicht mehr gebraucht.
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit03.py}{85}{87}{python}{Zeitsteuerung (12), Version 1.3: \texttt{Timer}-Objekt erzeugen}{srcZeit03b} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time03.py}{85}{87}{python}{Zeitsteuerung (12), Version 1.3: \texttt{Timer}-Objekt erzeugen}{srcTime03b} 
 
-Die Methode \texttt{new\_bullet()} hat sich nun vereinfacht, da sie sich nicht mehr um die interne Timer-Logik kümmern muss. Es wird lediglich in \zeiref{srcZeit0302} abgefragt, ob das Intervallende erreicht wurde und fertig!
+Die Methode \texttt{new\_bullet()} hat sich nun vereinfacht, da sie sich nicht mehr um die interne Timer-Logik kümmern muss. Es wird lediglich in \zeiref{srcTime0302} abgefragt, ob das Intervallende erreicht wurde und fertig!
 
-\lstsource{SRC/00 Einführung/10 Zeitsteuerung/zeit03.py}{122}{124}{python}{Zeitsteuerung (13), Version 1.3: \texttt{Timer}-Objekt verwenden}{srcZeit03c} 
+\lstsource{SRC/00 Einführung/10 Zeitsteuerung/time03.py}{122}{124}{python}{Zeitsteuerung (13), Version 1.3: \texttt{Timer}-Objekt verwenden}{srcTime03c} 
+
+Der Vergleichbarkeit -- ist vielleicht gerade etwas verwirrend gewesen -- habe ich die 4~Abläufe in \abbref[vref]{picTimeVergleich01} mal nebeneinander gestellt.
+
+\begin{figure}[H]
+	\begin{center}\begin{tikzpicture}[
+	font=\small,
+	>=latex,
+	line/.style={->, thick},
+	block/.style={rectangle, draw, rounded corners, align=center, minimum width=3.0cm, minimum height=8mm},
+	decision/.style={diamond, draw, aspect=2.2, align=center, inner sep=1pt, minimum width=3.0cm, minimum height=8mm},
+	title/.style={rectangle, draw, fill=gray!10, rounded corners, align=center, minimum width=5.2cm, minimum height=7mm},
+	note/.style={align=left, text width=5.0cm}
+	]
+	
+	% --- Helper: base loop blocks as nodes inside each panel ---
+	% Panel 1: time00 ---------------------------------------------------------
+	\begin{scope}[shift={(0,0)}, scale=0.7, transform shape]
+		\node[title] (t00) {time00: Spawn \textbf{every frame} (no timer)};
+		\node[block, below=6mm of t00] (t00_events) {Events (QUIT, ESC, input)};
+		\node[block, below=4mm of t00_events] (t00_update) {Update};
+		\node[block, below=4mm of t00_update] (t00_spawn) {Spawn bullet\\\textbf{alwasy} in update()};
+		\node[block, below=4mm of t00_spawn] (t00_move) {Move sprites using $\Delta t$};
+		\node[block, below=4mm of t00_move] (t00_draw) {Draw + flip};
+		\node[block, below=4mm of t00_draw] (t00_tick) {clock.tick(FPS) + compute $\Delta t$};
+		\node[note, below=3mm of t00_tick] {\textit{Eigenschaft: FPS-abhängig, sehr viele Bullets.}};
+		\draw[line] (t00_events) -- (t00_update);
+		\draw[line] (t00_update) -- (t00_spawn);
+		\draw[line] (t00_spawn) -- (t00_move);
+		\draw[line] (t00_move) -- (t00_draw);
+		\draw[line] (t00_draw) -- (t00_tick);
+		\draw[line] (t00_tick.west) -- ++(-10mm,0) |- (t00_events.west);
+	\end{scope}
+	
+	% Panel 2: time01 ---------------------------------------------------------
+	\begin{scope}[shift={(7.2,0)}, scale=0.7, transform shape]
+		\node[title] (t01) {time01: Spawn every \textbf{N Frames} (Counter)};
+		\node[block, below=6mm of t01] (t01_events) {Events (QUIT, ESC, input)};
+		\node[block, below=4mm of t01_events] (t01_update) {Update};
+		\node[block, below=4mm of t01_update] (t01_inc) {counter \,+= 1};
+		\node[decision, below=4mm of t01_inc] (t01_dec) {counter $\ge$ limit?};
+		\node[block, below=4mm of t01_dec] (t01_move) {Move sprites using $\Delta t$};
+		\node[block, right=13mm of t01_dec] (t01_spawn) {Spawn bullet\\reset counter};
+		\node[block, below=4mm of t01_move] (t01_draw) {Draw + flip};
+		\node[block, below=4mm of t01_draw] (t01_tick) {clock.tick(FPS) + compute $\Delta t$};
+		\node[note, below=3mm of t01_tick] {\textit{Eigenschaft: einfach, aber FPS-abhängig.}};
+		\draw[line] (t01_events) -- (t01_update);
+		\draw[line] (t01_update) -- (t01_inc);
+		\draw[line] (t01_inc) -- (t01_dec);
+		\draw[line] (t01_dec) -- node[left]{no} (t01_move);
+		\draw[line] (t01_dec.east) -- node[above]{yes} (t01_spawn.west);
+		\draw[line] (t01_spawn) |- (t01_move);
+		\draw[line] (t01_move) -- (t01_draw);
+		\draw[line] (t01_draw) -- (t01_tick);
+		\draw[line] (t01_tick.west) -- ++(-10mm,0) |- (t01_events.west);
+	\end{scope}
+	
+	% Panel 3: time02 ---------------------------------------------------------
+	\begin{scope}[shift={(0,-8.5)}, scale=0.7, transform shape]
+		\node[title] (t02) {time02: Spawn per \textbf{Timestamp} (get\_ticks)};
+		\node[block, below=6mm of t02] (t02_events) {Events (QUIT, ESC, input)};
+		\node[block, below=4mm of t02_events] (t02_update) {Update};
+		\node[decision, below=4mm of t02_update] (t02_dec) {ticks $\ge$ \\stamp + duration?};
+		\node[block, right=13mm of t02_dec] (t02_spawn) {Spawn bullet\\stamp = ticks};
+		\node[block, below=4mm of t02_dec] (t02_move) {Move sprites using $\Delta t$};
+		\node[block, below=4mm of t02_move] (t02_draw) {Draw + flip};
+		\node[block, below=4mm of t02_draw] (t02_tick) {clock.tick(FPS) + compute $\Delta t$};
+		\node[note, below=3mm of t02_tick] {\textit{Eigenschaft: FPS-unabhängig, aber Logik duplizierbar.}};
+		\draw[line] (t02_events) -- (t02_update);
+		\draw[line] (t02_update) -- (t02_dec);
+		\draw[line] (t02_dec) -- node[left]{no} (t02_move);
+		\draw[line] (t02_dec.east) -- node[above]{yes} (t02_spawn.west);
+		\draw[line] (t02_spawn) |- (t02_move);
+		\draw[line] (t02_move) -- (t02_draw);
+		\draw[line] (t02_draw) -- (t02_tick);
+		\draw[line] (t02_tick.west) -- ++(-10mm,0) |- (t02_events.west);
+	\end{scope}
+	
+	% Panel 4: time03 ---------------------------------------------------------
+	\begin{scope}[shift={(7.2,-8.5)}, scale=0.7, transform shape]
+		\node[title] (t03) {time03: Spawn per \textbf{Timer-Class}};
+		\node[block, below=6mm of t03] (t03_events) {Events (QUIT, ESC, input)};
+		\node[block, below=4mm of t03_events] (t03_update) {Update};
+		\node[decision, below=4mm of t03_update] (t03_dec) {is\_next\_stop\_reached()?};
+		\node[block, right=13mm of t03_dec] (t03_spawn) {Spawn bullet};
+		\node[block, below=4mm of t03_dec] (t03_move) {Move sprites using $\Delta t$};
+		\node[block, below=4mm of t03_move] (t03_draw) {Draw + flip};
+		\node[block, below=4mm of t03_draw] (t03_tick) {clock.tick(FPS) + compute $\Delta t$};
+		\node[note, below=3mm of t03_tick] {\textit{Eigenschaft: FPS-unabhängig, sauber gekapselt (SRP).}};
+		\draw[line] (t03_events) -- (t03_update);
+		\draw[line] (t03_update) -- (t03_dec);
+		\draw[line] (t03_dec) -- node[left]{no} (t03_move);
+		\draw[line] (t03_dec.east) -- node[above]{yes} (t03_spawn.west);
+		\draw[line] (t03_spawn) |- (t03_move);
+		\draw[line] (t03_move) -- (t03_draw);
+		\draw[line] (t03_draw) -- (t03_tick);
+		\draw[line] (t03_tick.west) -- ++(-10mm,0) |- (t03_events.west);
+	\end{scope}
+	
+\end{tikzpicture}
+\caption{Vergleich der vier Zeit-Algorithmen}\label{picTimeVergleich01}
+\end{center}
+\end{figure}
 
 Hinweis: Eine Zeitsteuerung über Ereignisse wird in \kapref[vref]{eventtime} vorgestellt.
 
+\newpage
 \subsection*{Was war neu?}
 Zeitliche Ereignisse oder Zeitspannen sollten von der Framerate unabhängig gemacht werden und sich an der tatsächlich verstrichenen Zeit orientieren. Da es sich um eine oft verwendete Logik handelt, wird diese in einer Klasse gekapselt.
 

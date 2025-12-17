@@ -1,5 +1,4 @@
 import pygame
-import pygame.time
 
 
 class Settings:
@@ -11,7 +10,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 

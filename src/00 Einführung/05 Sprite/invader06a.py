@@ -9,9 +9,9 @@ class Settings:
     DELTATIME = 1.0 / FPS
 
 
-class Defender(pygame.sprite.Sprite):  # Kindklasse von Sprite §\label{srcInvader06a01}§
+class Defender(pygame.sprite.Sprite):               # Child class of Sprite§\label{srcInvader06a01}§
 
-    def __init__(self) -> None:  # Konstruktor §\label{srcInvader06a02}§
+    def __init__(self) -> None:                     # Constructor§\label{srcInvader06a02}§
         super().__init__()
         self.image = pygame.image.load("images/defender01.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (30, 30))
@@ -20,7 +20,7 @@ class Defender(pygame.sprite.Sprite):  # Kindklasse von Sprite §\label{srcInvad
         self.rect.bottom = Settings.WINDOW.bottom - 5
         self.speed = 300
 
-    def update(self) -> None:  # Zustandsberechnung §\label{srcInvader06a03}§
+    def update(self) -> None:                       # State update§\label{srcInvader06a03}§
         newpos = self.rect.move(self.speed * Settings.DELTATIME, 0)
         if newpos.right >= Settings.WINDOW.right:
             self.change_direction()
@@ -30,10 +30,10 @@ class Defender(pygame.sprite.Sprite):  # Kindklasse von Sprite §\label{srcInvad
             newpos.left = Settings.WINDOW.left
         self.rect = newpos
 
-    def draw(self, screen: pygame.surface.Surface) -> None:  # Malen §\label{srcInvader06a04}§
+    def draw(self, screen: pygame.surface.Surface) -> None:  # Drawing§\label{srcInvader06a04}§
         screen.blit(self.image, self.rect)
 
-    def change_direction(self) -> None:  # OO style §\label{srcInvader06a08}§
+    def change_direction(self) -> None:             # OO style§\label{srcInvader06a08}§
         self.speed *= -1
 
 
@@ -42,7 +42,7 @@ def main():
     window = pygame.Window(size=Settings.WINDOW.size, title="Sprite", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
-    defender = Defender()  # Objekt anlegen §\label{srcInvader06a05}§
+    defender = Defender()                           # Create object§\label{srcInvader06a05}§
 
     time_previous = time()
     running = True
@@ -53,11 +53,11 @@ def main():
                 running = False
 
         # Update
-        defender.update()  # Aufruf §\label{srcInvader06a06}§
+        defender.update()                           # Call§\label{srcInvader06a06}§
 
         # Draw
         screen.fill("white")
-        defender.draw(screen)  # Aufruf §\label{srcInvader06a07}§
+        defender.draw(screen)                       # Call§\label{srcInvader06a07}§
         window.flip()
 
         clock.tick(Settings.FPS)

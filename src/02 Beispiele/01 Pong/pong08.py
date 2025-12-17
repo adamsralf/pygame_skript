@@ -49,7 +49,7 @@ class Pause(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.rect = pygame.rect.Rect(Settings.WINDOW.topleft, Settings.WINDOW.size)
         self.image = pygame.surface.Surface(self.rect.size).convert_alpha()
-        self.image.fill([120, 120, 120, 200])  # transparentes Grau§\label{srcPong0801}§
+        self.image.fill([120, 120, 120, 200])       # Transparent Grey§\label{srcPong0801}§
 
 
 class Help(pygame.sprite.Sprite):
@@ -57,7 +57,7 @@ class Help(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.rect = pygame.rect.Rect(Settings.WINDOW.topleft, Settings.WINDOW.size)
         self.image = pygame.surface.Surface(self.rect.size).convert_alpha()
-        self.image.fill([20, 20, 20, 200])  # transparentes Grau§\label{srcPong0802}§
+        self.image.fill([20, 20, 20, 200])          # Transparent Grey§\label{srcPong0802}§
         font = pygame.font.Font(pygame.font.get_default_font(), 20)
         text_l = "h\np\nESC\n\nF2\nk\nl\nr\n\nUP\nDOWN\nw\ns"
         text_r = "- toogle help modus\n- toogle pause modus\n- quit\n\n- toogle sound modus\n"
@@ -229,8 +229,8 @@ class Game:
         self.ball = Ball(self.all_sprites)
         self.score = Score(self.all_sprites)
         self.running = True
-        self.pausing = False  # Pause Flag§\label{srcPong0803}§
-        self.helping = False  # Hilfe Flag§\label{srcPong0804}§
+        self.pausing = False                        # Pause Flag§\label{srcPong0803}§
+        self.helping = False                        # Help Flag§\label{srcPong0804}§
         self.pause = pygame.sprite.GroupSingle(Pause())
         self.help = pygame.sprite.GroupSingle(Help())
 
@@ -247,7 +247,7 @@ class Game:
         pygame.quit()
 
     def update(self):
-        if not (self.pausing or self.helping):  # Nur bei Normalbetrieb§\label{srcPong0805}§
+        if not (self.pausing or self.helping):      # §\label{srcPong0805}§
             self.check_collision()
             for i in Settings.KI.keys():
                 if Settings.KI[i]:
@@ -257,9 +257,9 @@ class Game:
     def draw(self):
         self.background.draw(self.screen)
         self.all_sprites.draw(self.screen)
-        if self.pausing:  # Pausedarstellung§\label{srcPong0806}§
+        if self.pausing:                            # §\label{srcPong0806}§
             self.pause.draw(self.screen)
-        elif self.helping:  # Hilfedarstellung§\label{srcPong0807}§
+        elif self.helping:                          # §\label{srcPong0807}§
             self.help.draw(self.screen)
         self.window.flip()
 
@@ -294,10 +294,10 @@ class Game:
                         self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_p:
                     if not self.helping:
-                        self.pausing = not self.pausing  # Toogle Pausenmodus§\label{srcPong0805}§
+                        self.pausing = not self.pausing  # Toogle pause mode§\label{srcPong0805}§
                 elif event.key == pygame.K_h:
                     if not self.pausing:
-                        self.helping = not self.helping  # Toogle Hilfemodus§\label{srcPong0806}§
+                        self.helping = not self.helping  # Toogle help mode§\label{srcPong0806}§
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     if not Settings.KI["right"]:

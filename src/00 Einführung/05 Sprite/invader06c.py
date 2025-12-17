@@ -58,14 +58,14 @@ def main():
                 running = False
 
         # Update
-        if pygame.sprite.spritecollide(defender.sprite, all_border, False):  # ! §\label{srcInvader06c01}§
-            defender.sprite.change_direction()  # §\label{srcInvader06c02}§
+        if pygame.sprite.spritecollide(defender.sprite, all_border, False):  # !§\label{srcInvader06c01}§
+            defender.sprite.change_direction()                               # §\label{srcInvader06c02}§
         defender.update()
 
         # Draw
         screen.fill((255, 255, 255))
         defender.draw(screen)
-        all_border.draw(screen)  # Mit einem Rutsch §\label{srcInvader06c03}§
+        all_border.draw(screen)                                              # In one go§\label{srcInvader06c03}§
         window.flip()
 
         clock.tick(Settings.FPS)

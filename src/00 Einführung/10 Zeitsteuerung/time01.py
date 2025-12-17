@@ -9,7 +9,7 @@ class Settings(object):
     WINDOW = pygame.rect.Rect((0, 0), (700, 200))
     FPS = 60
     DELTATIME = 1.0 / FPS
-    TITLE = "Zeitsteuerung"
+    TITLE = "Time-dependent behavior"
     PATH: dict[str, str] = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
@@ -21,22 +21,6 @@ class Settings(object):
     @staticmethod
     def imagepath(name: str) -> str:
         return os.path.join(Settings.PATH["image"], name)
-
-
-class Timer(object):
-
-    def __init__(self, duration: int, with_start: bool = True) -> None:
-        self.duration = duration
-        if with_start:
-            self.next = pygame.time.get_ticks()
-        else:
-            self.next = pygame.time.get_ticks() + self.duration
-
-    def is_next_stop_reached(self) -> bool:
-        if pygame.time.get_ticks() > self.next:
-            self.next = pygame.time.get_ticks() + self.duration
-            return True
-        return False
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -83,7 +67,8 @@ class Game(object):
 
         self.enemy = pygame.sprite.GroupSingle(Enemy("alienbig1.png"))
         self.all_bullets = pygame.sprite.Group()
-        self.bullet_timer = Timer(500)  # Timer ohne Verzögerung§\label{srcZeit0301}§
+        self.time_counter = 0                       # Counter§\label{srcTime0101}§
+        self.time_range = 30                        # Threshold§\label{srcTime0102}§
         self.running = False
 
     def run(self) -> None:
@@ -119,8 +104,10 @@ class Game(object):
         self.enemy.update()
 
     def new_bullet(self) -> None:
-        if self.bullet_timer.is_next_stop_reached():  # Wenn Intervallgrenze erreicht§\label{srcZeit0302}§
+        self.time_counter += 1                      # Increment per frame§\label{srcTime0103}§
+        if self.time_counter >= self.time_range:    # If threshold reached§\label{srcTime0104}§
             self.all_bullets.add(Bullet("shoot.png", self.enemy.sprite.rect.move(0, 20).center))
+            self.time_counter = 0                   # reset counter§\label{srcTime0105}§
 
 
 def main():

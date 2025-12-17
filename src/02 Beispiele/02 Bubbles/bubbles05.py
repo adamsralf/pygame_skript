@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -60,7 +60,7 @@ class Background(pygame.sprite.Sprite):
 
 class BubbleContainer:
     def __init__(self) -> None:
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}
 
@@ -101,7 +101,7 @@ class Bubble(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -126,7 +126,7 @@ class Game:
     def update(self) -> None:
         self.all_sprites.update(action="grow")
         self.spawn_bubble()
-        self.set_mousecursor()  # Mauscursor §\label{srcBubble0501}§
+        self.set_mousecursor()                      # §\label{srcBubble0501}§
 
     def spawn_bubble(self) -> None:
         if self.timer_bubble.is_next_stop_reached():
@@ -152,7 +152,7 @@ class Game:
         is_over = False
         pos = pygame.mouse.get_pos()
         for b in self.all_sprites:
-            if self.collidepoint(pos, b):  # Innerhalb? §\label{srcBubble0502}§
+            if self.collidepoint(pos, b):           # Mouse pos inside? §\label{srcBubble0502}§
                 is_over = True
                 break
         if is_over:

@@ -17,7 +17,7 @@ class Circle:
 def main():
     size = (300, 600)
     pygame.init()
-    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    window = pygame.Window( size=size, title = "Particle swarm", position = (10, 50))         
     screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []
@@ -28,7 +28,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        if pygame.mouse.get_pressed()[0]:           # Linke Maustaste?§\label{srcCircles0105}§
+        if pygame.mouse.get_pressed()[0]:           # Left mouse button?§\label{srcCircles0105}§
             circles.append(Circle(pygame.mouse.get_pos()))
 
         screen.fill("white")

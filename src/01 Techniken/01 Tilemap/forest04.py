@@ -89,7 +89,7 @@ class WindowGame:
             for row in range(Settings.TILEMAP_NOF_ROWS):
                 for col in range(Settings.TILEMAP_NOF_COLS):
                     index = tiles[row][col]                
-                    if index > -1:                          # §\label{srcforest0401}§
+                    if index > -1:                  # §\label{srcforest0401}§
                         image = self.spritelib.subsurface(index)
                         position = col * Settings.TILESIZE.x, row * Settings.TILESIZE.y
                         self.screen.blit(image, position)

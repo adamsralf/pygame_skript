@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -140,11 +140,11 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
-        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("blase1.png")
-        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("blase2.png")
+        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("bubble1.png")
+        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("bubble2.png")
         self.background = pygame.sprite.GroupSingle(Background())
         self.timer_bubble = Timer(500, False)
         self.timer_bubble_speed = Timer(1000, False)
@@ -152,7 +152,7 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(Points())
         self.running = True
-        self.pausing = False  # §\label{srcBubble1102}§
+        self.pausing = False                        # §\label{srcBubble1102}§
         self.msgpause = Pause()
 
     def watch_for_events(self) -> None:
@@ -163,13 +163,13 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_p:  # §\label{srcBubble1103}§
+                if event.key == pygame.K_p:         # §\label{srcBubble1103}§
                     self.setpause()
             elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 3:  # right§\label{srcBubble1104}§
+                if event.button == 3:               # right§\label{srcBubble1104}§
                     self.setpause()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # left
+                if event.button == 1:               # left
                     self.sting(pygame.mouse.get_pos())
 
     def draw(self) -> None:
@@ -178,7 +178,7 @@ class Game:
         self.window.flip()
 
     def update(self) -> None:
-        if not self.pausing and self.running:  # Pausenbildschirm§\label{srcBubble1107}§
+        if not self.pausing and self.running:       # Pause screen§\label{srcBubble1107}§
             if self.check_bubblecollision():
                 self.running = False
             else:

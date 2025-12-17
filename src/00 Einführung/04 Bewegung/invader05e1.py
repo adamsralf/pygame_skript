@@ -1,4 +1,4 @@
-from statistics import fmean, median, pvariance
+from statistics import fmean, median
 
 import pygame
 import pygame.time
@@ -13,7 +13,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -57,9 +57,9 @@ def main():
             messures.append(defender_rect.top)
             if fps in (10, 30, 60, 120, 240, 300, 600):
                 pygame.image.save(screen, f"fps_05e_{Settings.FPS:03d}_{index:02d}.png")
-        avg = fmean(messures)  # arithmetische Mittel
+        avg = fmean(messures)   # Arithmetic average
         med = median(messures)  # Median
-        mad = 0.0  # Mittlerer absolute Abweichung/Fehler
+        mad = 0.0               #  Mea absolute deviation/error
         for val in messures:
             mad += abs(val - 315)
         mad /= len(messures)

@@ -9,7 +9,7 @@ class Settings:
     WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0 / FPS
-    POINTS = [0, 0]  # Punktestand§\label{srcPong0300}§
+    POINTS = [0, 0]                                 # Score§\label{srcPong0300}§
 
 
 class Background(pygame.sprite.Sprite):
@@ -68,13 +68,13 @@ class Paddle(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.rect.FRect(0, 0, 20, 20)  # Größe§\label{srcPong0301}§
+        self.rect = pygame.rect.FRect(0, 0, 20, 20) # Size§\label{srcPong0301}§
         self.image = pygame.surface.Surface(self.rect.size).convert()
         self.image.set_colorkey("black")
         pygame.draw.circle(self.image, "green", self.rect.center, self.rect.width // 2)
-        self.speed = Settings.WINDOW.width // 3  # Geschwindigkeit§\label{srcPong0302}§
+        self.speed = Settings.WINDOW.width // 3     # Speed§\label{srcPong0302}§
         self.speedxy = pygame.Vector2()
-        self.service()  # Aufschlag§\label{srcPong0303}§
+        self.service()                              # §\label{srcPong0303}§
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
@@ -86,7 +86,7 @@ class Ball(pygame.sprite.Sprite):
 
     def move(self) -> None:
         self.rect.move_ip(self.speedxy * Settings.DELTATIME)
-        if self.rect.top <= 0:  # Rändercheck§\label{srcPong0304}§
+        if self.rect.top <= 0:                      # §\label{srcPong0304}§
             self.vertical_flip()
             self.rect.top = 0
         elif self.rect.bottom >= Settings.WINDOW.bottom:
@@ -102,7 +102,7 @@ class Ball(pygame.sprite.Sprite):
     def service(self) -> None:
         self.rect.center = Settings.WINDOW.center
         self.speedxy = pygame.Vector2(choice([-1, 1]), choice([-1, 1])) * self.speed
-        print(Settings.POINTS)  # Provisorium§\label{srcPong0305}§
+        print(Settings.POINTS)                      # Ugly§\label{srcPong0305}§
 
     def horizontal_flip(self) -> None:
         self.speedxy.x *= -1

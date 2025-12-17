@@ -21,7 +21,7 @@ class Defender(pygame.sprite.Sprite):
         self.speed = 300
 
     def update(self) -> None:
-        self.rect.move_ip(self.speed * Settings.DELTATIME, 0)  # §\label{srcInvader06b01}§
+        self.rect.move_ip(self.speed * Settings.DELTATIME, 0)  # Move in-place§\label{srcInvader06b01}§
 
     def draw(self, screen: pygame.surface.Surface) -> None:
         screen.blit(self.image, self.rect)
@@ -35,7 +35,7 @@ class Border(pygame.sprite.Sprite):
     def __init__(self, leftright: str) -> None:
         super().__init__()
         self.image = pygame.image.load("images/brick01.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.width))
+        self.image = pygame.transform.scale(self.image, (35, Settings.WINDOW.height))
         self.rect = self.image.get_rect()
         if leftright == "right":
             self.rect.left = Settings.WINDOW.width - self.rect.width

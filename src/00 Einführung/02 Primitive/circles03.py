@@ -4,14 +4,14 @@ import pygame
 
 
 class Circle:
-    GRAVITY = 0.3                                   # Schwerkraft als statisches Element§\label{srcCircles0302}§
+    GRAVITY = 0.3                                   # Gravity as a static attribute§\label{srcCircles0302}§
 
     def __init__(self, pos) -> None:
         self.posx = pos[0] + randint(-2, 2)
         self.posy = pos[1] + randint(-2, 2)
         self.radius = 2
         self.color = [randint(100, 255), randint(50, 255), 0]
-        self.speedy = randint(-100, 0) / 10.01      # §\label{srcCircles0301}§
+        self.speedy = randint(-100, 0) / 10.01      # Initial vertical speed§\label{srcCircles0301}§
 
     def update(self) -> None:
         self.speedy += Circle.GRAVITY
@@ -24,7 +24,7 @@ class Circle:
 def main():
     size = (300, 600)
     pygame.init()
-    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    window = pygame.Window( size=size, title = "Particle swarm", position = (10, 50))         
     screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []

@@ -82,6 +82,7 @@ class Mob(pygame.sprite.Sprite):
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.rect.move_ip(self.direction * self.speed * Settings.DELTATIME)
+        self.rect.clamp_ip(Settings.WORLD)
         if self.rect.right < Settings.WORLD.left:
             self.rect.left = Settings.WORLD.right
         elif self.rect.left > Settings.WORLD.right:

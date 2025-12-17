@@ -13,7 +13,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -32,7 +32,7 @@ def main():
             defender_direction_v = -1
 
             clock.tick(Settings.FPS)
-            start_time = pygame.time.get_ticks()  # Startzeit der Bewegung
+            start_time = pygame.time.get_ticks()
             running = True
             while running:
                 if pygame.time.get_ticks() > start_time + Settings.LIMIT:
@@ -59,9 +59,9 @@ def main():
             messures.append(defender_rect.top)
             if fps in (10, 30, 60, 120, 240, 300, 600):
                 pygame.image.save(screen, f"fps_05g_{Settings.FPS:03d}_{index:02d}.png")
-        avg = fmean(messures)  # arithmetische Mittel
-        med = median(messures)  # Median
-        mad = 0.0  # Mittlerer absolute Abweichung/Fehler
+        avg = fmean(messures)  
+        med = median(messures) 
+        mad = 0.0  
         for val in messures:
             mad += abs(val - 315)
         mad /= len(messures)

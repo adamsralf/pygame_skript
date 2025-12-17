@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -73,7 +73,7 @@ class Background(pygame.sprite.Sprite):
 
 
 class Message(pygame.sprite.Sprite):
-    def __init__(self, filename: str) -> None:  # §\label{srcBubble1202}§
+    def __init__(self, filename: str) -> None:      # §\label{srcBubble1202}§
         super().__init__()
         imagename = Settings.get_image(filename)
         self.image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
@@ -140,17 +140,17 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
-        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("blase1.png")
-        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("blase2.png")
+        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("bubble1.png")
+        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("bubble2.png")
         self.background = pygame.sprite.GroupSingle(Background())
         self.all_sprites = pygame.sprite.Group()
         self.running = True
         self.pausing = False
-        self.msg_pause = Message("pause.png")  # §\label{srcBubble1203}§
-        self.msg_restart = Message("neustart.png")
+        self.msg_pause = Message("pause.png")       # §\label{srcBubble1203}§
+        self.msg_restart = Message("restart.png")
         self.restart()
 
     def watch_for_events(self) -> None:
@@ -163,15 +163,15 @@ class Game:
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_p:
                     self.setpause()
-                elif event.key == pygame.K_j:  # §\label{srcBubble1205}§
+                elif event.key == pygame.K_j:       # §\label{srcBubble1205}§
                     self.do_start = True
-                elif event.key == pygame.K_n:  # §\label{srcBubble1206}§
+                elif event.key == pygame.K_n:       # §\label{srcBubble1206}§
                     self.running = False
             elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 3:  # right
+                if event.button == 3:               # right
                     self.setpause()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # left
+                if event.button == 1:               # left
                     self.sting(pygame.mouse.get_pos())
 
     def draw(self) -> None:
@@ -180,7 +180,7 @@ class Game:
         self.window.flip()
 
     def update(self) -> None:
-        if self.do_start:  # Neustart?§\label{srcBubble1208}§
+        if self.do_start:                           # Restart?§\label{srcBubble1208}§
             self.restart()
         if not self.pausing and self.running:
             if self.check_bubblecollision():

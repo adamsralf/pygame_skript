@@ -23,9 +23,9 @@ class Defender(pygame.sprite.Sprite):
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
-            if kwargs["action"] == "newpos":  # Neue Position berechnen §\label{srcInvader06e01}§
+            if kwargs["action"] == "newpos":        # Compute new position§\label{srcInvader06e01}§
                 self.rect.move_ip(self.speed * Settings.DELTATIME, 0)
-            elif kwargs["action"] == "direction":  # Richtung wechseln§\label{srcInvader06e02}§
+            elif kwargs["action"] == "direction":   # Change direction§\label{srcInvader06e02}§
                 self.change_direction()
 
     def change_direction(self) -> None:
@@ -77,7 +77,7 @@ class Game(object):
 
     def update(self) -> None:
         if pygame.sprite.spritecollide(self.defender.sprite, self.all_border, False):
-            self.defender.update(action="direction")  # Besser §\label{srcInvader06e03}§
+            self.defender.update(action="direction")  # Better (don't aks - tell!)§\label{srcInvader06e03}§
         self.defender.update(action="newpos")
 
     def draw(self) -> None:

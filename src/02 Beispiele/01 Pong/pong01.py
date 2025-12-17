@@ -23,7 +23,7 @@ class Background(pygame.sprite.Sprite):
         net_rect.centerx = Settings.WINDOW.centerx
         net_rect.top = 50
         net_rect.size = (3, 30)
-        while net_rect.bottom < Settings.WINDOW.bottom:  # Netz als Folge von Rechtecken §\label{srcPong0101}§
+        while net_rect.bottom < Settings.WINDOW.bottom:  # Net as a seq of rectangles§\label{srcPong0101}§
             pygame.draw.rect(self.image, "grey", net_rect, 0)
             net_rect.move_ip(0, 40)
 

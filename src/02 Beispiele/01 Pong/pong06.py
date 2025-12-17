@@ -9,7 +9,7 @@ class Settings:
     WINDOW = pygame.rect.Rect(0, 0, 1000, 600)
     FPS = 60
     DELTATIME = 1.0 / FPS
-    KI = {"left": False, "right": False}  # Computerspielerflags§\label{srcPong0602}§
+    KI = {"left": False, "right": False}            # Flag computer player§\label{srcPong0602}§
 
 
 class MyEvents:
@@ -55,7 +55,7 @@ class Paddle(pygame.sprite.Sprite):
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
         self.speed = Settings.WINDOW.height // 2
-        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
+        self.direction = Paddle.DIRECTION["halt"]  
         self.select_image()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -193,7 +193,7 @@ class Game:
 
     def update(self):
         self.check_collision()
-        for i in Settings.KI.keys():  # Computerbefehl §\label{srcPong0603}§
+        for i in Settings.KI.keys():                # Computer commands§\label{srcPong0603}§
             if Settings.KI[i]:
                 self.paddlecontroler(self.paddle[i])
         self.all_sprites.update(action="move")
@@ -211,7 +211,7 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
                 elif event.key == pygame.K_UP:
-                    if not Settings.KI["right"]:  # Computerspielerflags§\label{srcPong0604}§
+                    if not Settings.KI["right"]:    # §\label{srcPong0604}§
                         self.paddle["right"].update(action="up")
                 elif event.key == pygame.K_DOWN:
                     if not Settings.KI["right"]:
@@ -224,7 +224,7 @@ class Game:
                         self.paddle["left"].update(action="down")
                 elif event.key == pygame.K_1:
                     Settings.KI["left"] = not Settings.KI["left"]
-                    if not Settings.KI["left"]:  # Stehen bleiben!§\label{srcPong0605}§
+                    if not Settings.KI["left"]:     # Stop!§\label{srcPong0605}§
                         self.paddle["left"].update(action="halt")
                 elif event.key == pygame.K_2:
                     Settings.KI["right"] = not Settings.KI["right"]

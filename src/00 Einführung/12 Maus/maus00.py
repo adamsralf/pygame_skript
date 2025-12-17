@@ -18,24 +18,21 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
-        if "go" in kwargs.keys():  # Parameter vorhanden?§\label{srcMaus0009}§
+        if "go" in kwargs.keys():                   # Parameter present?§\label{srcMaus0009}§
             if kwargs["go"]:
-                self.rect.left = max(self.rect.left, Game.INNER_RECT.left)
-                self.rect.right = min(self.rect.right, Game.INNER_RECT.right)
-                self.rect.top = max(self.rect.top, Game.INNER_RECT.top)
-                self.rect.bottom = min(self.rect.bottom, Game.INNER_RECT.bottom)
-                c = self.rect.center  # altes Zentrum merken
+                self.rect.clamp_ip(Game.INNER_RECT)
+                c = self.rect.center                # Store previous center
                 self.image = pygame.transform.scale(self.image_orig, (self.scale, self.scale))
                 self.rect = self.image.get_rect()
-                self.rect.center = c  # Zentrum zurücksetzen
+                self.rect.center = c                # Reset center
 
-        if "rotate" in kwargs.keys():  # §\label{srcMaus0010}§
+        if "rotate" in kwargs.keys():               # §\label{srcMaus0010}§
             self.rotate(kwargs["rotate"])
 
-        if "scale" in kwargs.keys():  # §\label{srcMaus0011}§
+        if "scale" in kwargs.keys():                # §\label{srcMaus0011}§
             self.resize(kwargs["scale"])
 
-        if "center" in kwargs.keys():  # §\label{srcMaus0012}§
+        if "center" in kwargs.keys():               # §\label{srcMaus0012}§
             self.set_center(kwargs["center"])
 
     def draw(self, screen: pygame.surface.Surface) -> None:
@@ -63,11 +60,11 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Game.WINDOW.size, title="Mausaktionen")
+        self.window = pygame.Window(size=Game.WINDOW.size, title="Dealing with mouse events")
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
 
-        self.ball = Ball()  # Ball-Objekt§\label{srcMaus0001}§
+        self.ball = Ball()                          # Create ball object§\label{srcMaus0001}§
         self._running = True
 
     def run(self) -> None:
@@ -89,22 +86,22 @@ class Game:
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self._running = False
-            elif event.type == MOUSEBUTTONDOWN:  # Maustaste gedrückt§\label{srcMaus0002}§
-                if event.button == 1:  # left§\label{srcMaus0004}§
+            elif event.type == MOUSEBUTTONDOWN:     # Mouse button pressed§\label{srcMaus0002}§
+                if event.button == 1:               # Left§\label{srcMaus0004}§
                     self.ball.update(rotate=90)
-                elif event.button == 2:  # middle§\label{srcMaus0005}§
+                elif event.button == 2:             # Middle§\label{srcMaus0005}§
                     self._running = False
-                elif event.button == 3:  # right§\label{srcMaus0006}§
+                elif event.button == 3:             # Right§\label{srcMaus0006}§
                     self.ball.update(rotate=-90)
-                elif event.button == 4:  # scroll up§\label{srcMaus0007}§
+                elif event.button == 4:             # Scroll up§\label{srcMaus0007}§
                     self.ball.update(scale=2)
-                elif event.button == 5:  # scroll down§\label{srcMaus0008}§
+                elif event.button == 5:             # Scroll down§\label{srcMaus0008}§
                     self.ball.update(scale=-2)
 
     def update(self):
         newpos = pygame.mouse.get_pos()
         self.ball.update(center=newpos)
-        if Game.INNER_RECT.collidepoint(pygame.mouse.get_pos()):  # Unsichtbar?§\label{srcMaus0003}§
+        if Game.INNER_RECT.collidepoint(pygame.mouse.get_pos()):  # Hide cursor?§\label{srcMaus0003}§
             pygame.mouse.set_visible(False)
         else:
             pygame.mouse.set_visible(True)

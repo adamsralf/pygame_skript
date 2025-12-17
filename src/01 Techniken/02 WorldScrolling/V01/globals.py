@@ -8,7 +8,7 @@ class Settings:
     TILESIZE_WINDOW = Vector2(6, 6)
     NOF_COLS = 90
     NOF_ROWS = 70
-    WORLD: FRect = FRect(0, 0, NOF_COLS * TILESIZE_WORLD.y, NOF_ROWS * TILESIZE_WORLD.y) #§\label{globalsv0101}§
+    WORLD: FRect = FRect(0, 0, NOF_COLS * TILESIZE_WORLD.y, NOF_ROWS * TILESIZE_WORLD.y)    #§\label{globalsv0101}§
     WINDOW: FRect = FRect(0, 0, NOF_COLS * TILESIZE_WINDOW.x, NOF_ROWS * TILESIZE_WINDOW.y) #§\label{globalsv0102}§
     TILE_WITH_BORDER = 0
     NOF_MOBS = 50

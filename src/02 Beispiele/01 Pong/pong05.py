@@ -48,7 +48,7 @@ class Paddle(pygame.sprite.Sprite):
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
         self.speed = Settings.WINDOW.height // 2
-        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
+        self.direction = Paddle.DIRECTION["halt"]  
         self.image = pygame.surface.Surface(self.rect.size)
         self.image.fill("yellow")
 

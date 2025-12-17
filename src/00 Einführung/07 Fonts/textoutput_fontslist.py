@@ -14,7 +14,10 @@ class TextSprite(pygame.sprite.Sprite):
         self.fontsize = fontsize
         self.fontcolor = fontcolor
         self.fontsize_update(0)
-        self.text = f"{self.fontname}: abcdefghijklmnopqrstxyzßöäü0123456789"
+        if text == "":
+            self.text = text
+        else:
+            self.text = f"{self.fontname}: abcdefghijklmnopqrstxyzßöäü0123456789"
         self.render()
 
     def render(self) -> None:
@@ -43,7 +46,7 @@ class BigImage(pygame.sprite.Sprite):
         self.image_total.fill((200, 200, 200))
         self.update(0)
 
-    def update(self, delta: int) -> None:  # Ermittle der Ausschnitt §\label{srcTextoutputFontlist01}§
+    def update(self, delta: int) -> None:  # Compute offset§\label{srcTextoutputFontlist01}§
         if self.offset.top + delta >= 0:
             if self.offset.bottom + delta <= self.image_total.get_rect().height:
                 self.offset.move_ip(0, delta)
@@ -57,11 +60,11 @@ class BigImage(pygame.sprite.Sprite):
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Fontliste", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Fontlist", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
-    fonts = pygame.font.get_fonts()  # Ermittle installierte Fonts §\label{srcTextoutputFontlist02}§
+    fonts = pygame.font.get_fonts()  # All installed Fonts§\label{srcTextoutputFontlist02}§
 
     list_of_fontsprites = pygame.sprite.Group()
     height = 0

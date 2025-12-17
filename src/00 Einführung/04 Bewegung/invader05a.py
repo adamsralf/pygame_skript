@@ -8,7 +8,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -26,11 +26,11 @@ def main():
                 running = False
 
         # Update
-        defender_rect.left = defender_rect.left + 1
+        defender_rect.left += 1
 
         # Draw
         screen.fill("white")
-        screen.blit(defender_image, defender_rect)  # blit kann auch rect §\label{srcInvader0504}§
+        screen.blit(defender_image, defender_rect)  # blit can also take a Rect§\label{srcInvader0504}§
         window.flip()
         clock.tick(Settings.FPS)
 

@@ -9,7 +9,7 @@ class Settings(object):
     WINDOW = pygame.rect.Rect((0, 0), (700, 200))
     FPS = 60
     DELTATIME = 1.0 / FPS
-    TITLE = "Zeitsteuerung"
+    TITLE = "Time-dependent behavior"
     PATH: dict[str, str] = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
@@ -54,7 +54,7 @@ class Bullet(pygame.sprite.Sprite):
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.rect.move_ip(self.speed * Settings.DELTATIME * self.direction)
         if self.rect.top > Settings.WINDOW.bottom - 30:
-            self.kill()
+            self.kill()                             # self-destruction (remove sprite)§\label{srcTime0004}§
 
 
 class Game(object):
@@ -67,8 +67,6 @@ class Game(object):
 
         self.enemy = pygame.sprite.GroupSingle(Enemy("alienbig1.png"))
         self.all_bullets = pygame.sprite.Group()
-        self.time_stamp = pygame.time.get_ticks()  # Zeitpunkt festhalten§\label{srcZeit0201}§
-        self.time_duration = 500  # Intervalldauer§\label{srcZeit0202}§
         self.running = False
 
     def run(self) -> None:
@@ -78,7 +76,7 @@ class Game(object):
             self.watch_for_events()
             self.update()
             self.draw()
-            self.clock.tick(Settings.FPS)
+            self.clock.tick(Settings.FPS)           # frame rate limiting§\label{srcTime0005}§
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
@@ -99,14 +97,12 @@ class Game(object):
         self.window.flip()
 
     def update(self) -> None:
-        self.new_bullet()
+        self.new_bullet()                           # spawn bullet§\label{srcTime0006}§
         self.all_bullets.update()
         self.enemy.update()
 
     def new_bullet(self) -> None:
-        if pygame.time.get_ticks() >= self.time_stamp + self.time_duration:  # §\label{srcZeit0204}§
-            self.all_bullets.add(Bullet("shoot.png", self.enemy.sprite.rect.move(0, 20).center))
-            self.time_stamp = pygame.time.get_ticks()  # Intervallstart §\label{srcZeit0205}§
+        self.all_bullets.add(Bullet("shoot.png", self.enemy.sprite.rect.move(0, 20).center))
 
 
 def main():

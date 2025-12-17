@@ -38,8 +38,8 @@ class Tile(pygame.sprite.DirtySprite):  # Neue Super-Klasse§\label{srcDirty0100
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode(Settings.WINDOW.size)
-        pygame.display.set_caption("Dirty Sprites Demo")
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="Dirty Sprites Demo")
+        self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background_image = pygame.image.load(Settings.get_image("background.png"))
         self.background_image = pygame.transform.scale(self.background_image, (Settings.WINDOW.size))

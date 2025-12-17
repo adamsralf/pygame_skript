@@ -7,7 +7,7 @@ from pygame.constants import (K_ESCAPE, K_MINUS, K_PLUS, KEYDOWN, KEYUP, QUIT,
 
 
 class Settings:
-    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 600, 800)  # Rect §\label{srcSound0001}§
+    WINDOW: pygame.rect.Rect = pygame.rect.Rect(0, 0, 600, 800)   # Rect§\label{srcSound0001}§
     FPS = 60
     PATH: dict[str, str] = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
@@ -30,21 +30,20 @@ class Settings:
 
 class Game:
     def __init__(self) -> None:
-        pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title='Fingerübung "Sound"')  # Auch mixer §\label{srcSound0002}§
+        pygame.init()                               # Includes mixer §\label{srcSound0002}§
+        self.window = pygame.Window(size=Settings.WINDOW.size, title='Fingerübung "Sound"')  
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
-
         self.font_bigsize = pygame.font.Font(pygame.font.get_default_font(), 40)
         self.running = True
         self.pause = False
-        self.volume: float = 0.1  # Lautstärke §\label{srcSound0003}§
+        self.volume: float = 0.1                    # Volume§\label{srcSound0003}§
         self.sounds()
 
     def sounds(self) -> None:
         pygame.mixer.music.load(Settings.get_sound("Lucifer.mid"))
-        pygame.mixer.music.set_volume(self.volume)  # Lautstärke §\label{srcSound0004}§
-        pygame.mixer.music.play(-1, 0.0)  # Endlos abspielen §\label{srcSound0005}§
+        pygame.mixer.music.set_volume(self.volume)  # §\label{srcSound0004}§
+        pygame.mixer.music.play(-1, 0.0)            # Endles loop§\label{srcSound0005}§
         self.bubble: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))  # §\label{srcSound0006}§
         self.clash: pygame.mixer.Sound = pygame.mixer.Sound(Settings.get_sound("glas.wav"))
 
@@ -93,7 +92,7 @@ class Game:
             pygame.mixer.music.unpause()
         else:
             pygame.mixer.music.pause()
-        self.pause = not self.pause  # §\label{srcSound0007}§
+        self.pause = not self.pause                 # §\label{srcSound0007}§
 
     def volume_alter(self, delta: float) -> None:
         self.volume += delta

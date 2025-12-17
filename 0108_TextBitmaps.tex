@@ -17,11 +17,11 @@ Die Klasse \texttt{Spritelib} wird eigentlich nur als Container gebraucht. Sie l
 \begin{itemize}
     \item \texttt{nof}: Enthält die Anzahl der Zeilen und Spalten. Unser Symbolsatz ist im Bitmap in 4~Zeilen und 10~Spalten angeordnet. Da ich mich immer nur für eine Farbe interessiere, reicht mir das.
 
-    \item \texttt{letter}: Jedes Sprite hat eine Breite und eine Höhe. In unserem Fall kommt erleichternd hinzu, dass alle Sprites immer den gleichen Platzbedarf haben; schauen Sie sich dazu die drei Quadrate um die Buchstaben~\texttt{N},~\texttt{W} und~\texttt{X} in \abbref[vref]{picSpritelib02} an. Unsere Sprites haben alle eine Breite und eine Höhe von $18~px$.
+    \item \texttt{letter}: Jedes Sprite hat eine Breite und eine Höhe. In unserem Fall kommt erleichternd hinzu, dass alle Sprites immer den gleichen Platzbedarf haben; schauen Sie sich dazu die drei Quadrate um die Buchstaben~\texttt{N},~\texttt{W} und~\texttt{X} in \abbref[vref]{picSpritelib02} an. Unsere Sprites haben alle eine Breite und eine Höhe von \unit[18]{px}.
 
-    \item \texttt{offset}: Das erste Sprite oben links hat einen Abstand vom linken Rand und einen vom oberen Rand. Schauen Sie sich dazu das Sprite der Zahl~\texttt{0} in \abbref{picSpritelib02} an. Dort haben wir das Quadrat um das Bitmap und zwischen dem Quadrat und der oberen bzw. der linken Kante einen Abstand (markiert durch die grüne Linie). Beide Offsets haben in unserem Beispiel einen Wert von $6~px$.
+    \item \texttt{offset}: Das erste Sprite oben links hat einen Abstand vom linken Rand und einen vom oberen Rand. Schauen Sie sich dazu das Sprite der Zahl~\texttt{0} in \abbref{picSpritelib02} an. Dort haben wir das Quadrat um das Bitmap und zwischen dem Quadrat und der oberen bzw. der linken Kante einen Abstand (markiert durch die grüne Linie). Beide Offsets haben in unserem Beispiel einen Wert von \unit[6]{px}.
 
-    \item \texttt{distance}: Jedes Sprite hat einen Abstand zum nächsten Sprite nach rechts und nach unten. Zum Glück sind unsere Sprites äquidistant in der Spritelib abgelegt, so dass ich es hier recht einfach habe. Am Beispiel des Sprites für~\texttt{X} in \abbref{picSpritelib02} können Sie die Abstände sehen. Hier sind es jeweils $14~px$.
+    \item \texttt{distance}: Jedes Sprite hat einen Abstand zum nächsten Sprite nach rechts und nach unten. Zum Glück sind unsere Sprites äquidistant in der Spritelib abgelegt, so dass ich es hier recht einfach habe. Am Beispiel des Sprites für~\texttt{X} in \abbref{picSpritelib02} können Sie die Abstände sehen. Hier sind es jeweils \unit[14]{px}.
 \end{itemize}
 
 
@@ -112,7 +112,7 @@ Ab \zeiref{srcTextbitmaps0002} beginnt eine verschachtelte \forSchleife. Die äu
 
 Die Methode \texttt{get\_text()} liefert mir letztlich die passende Bitmap-Folge zu einem Text. Dabei bedient sie sich der Methode \texttt{get\_letter()}, die notwendig ist, damit das Programm nicht bei undefinierten Buchstaben/Symbolen abstürzt. Wenn Sie jetzt beispielsweise ein \texttt{ü} eintippen, wird das Quadrat ausgegeben.
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{103}{116}{python}{Textbitmaps (5): \texttt{get\_letter()} und \texttt{get\_text()} von \texttt{Letters}}{srcTextbitmaps00e} 
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{104}{117}{python}{Textbitmaps (5): \texttt{get\_letter()} und \texttt{get\_text()} von \texttt{Letters}}{srcTextbitmaps00e} 
 
 
 Das eigentliche Hauptprogramm ist in der Klasse \texttt{TextBitmaps} gekapselt. Da die Quelltexte hier nichts neues beinhalten, sollte der Quelltext verstanden werden. Nur zwei Zeilen möchte ich näher besprechen:
@@ -123,7 +123,7 @@ Das eigentliche Hauptprogramm ist in der Klasse \texttt{TextBitmaps} gekapselt. 
     \item \zeiref{srcTextbitmaps0009}: Das Attribut \texttt{unicode}\myindex{pyg}{\texttt{event}!\texttt{Event}!\texttt{unicode}}\randnotiz{unicode} liefert mir, sofern dies sinnvoll ist, den Wert der gedrückten Tastatur im \gls{unicode}-Format. Somit werden sinnvolle Buchstaben, Ziffern usw. als Zeichen meinem String hinzugefügt.
 \end{itemize}
 
-\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{119}{155}{python}{Textbitmaps (6): \texttt{TextBitmaps}}{srcTextbitmaps00f}
+\lstsource{SRC/00 Einführung/08 TextBitmaps/textbitmaps.py}{120}{156}{python}{Textbitmaps (6): \texttt{TextBitmaps}}{srcTextbitmaps00f}
 
 %Und der Vollständigkeit halber:
 
@@ -131,6 +131,7 @@ Das eigentliche Hauptprogramm ist in der Klasse \texttt{TextBitmaps} gekapselt. 
 
 \myebild{textbitmaps00}{0.7}{Textausgabe mit Bitmaps}{picTextbitmaps01}
 
+\newpage
 \subsection*{Was war neu?}
 
 Textausgaben werden nicht nur über Fonts erzeugt, sondern auch über Spritlibs, die Zeichenbitmaps enthalten. Diese werden ausgestanzt und neuen Bitmaps zusammengesetzt.

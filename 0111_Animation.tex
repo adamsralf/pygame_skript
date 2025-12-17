@@ -10,11 +10,11 @@ Eine Animation ist eigentlich eine Art \emph{Filmchen} innerhalb eines Spiels. B
 
 Die Einzelbilder des Bewegungsbeispiels können Sie in \abbref[vref]{picAnimation00} sehen. Werden diese Einzelsprites in einer gewissen Geschwindigkeit hintereinander ausgegeben, so erscheinen sie wie eine flüssige Bewegung. Dabei gilt: Je mehr Einzelbilder, desto flüssiger die Bewegung.
 
-Der \srcref[vref]{srcAnimation00a} unterscheidet sich nur um ein Feature zum letzten Kapitel. Die \texttt{Timer}-Klasse wurde um die Methode \texttt{change\_duration()} erweitert. Diese Methode ermöglicht es, zur Laufzeit die Dauer des Zeitintervalls zu verändern, wobei die untere Grenze bei ~$0~ms$ festgelegt wird. Wir werden dieses Feature gleich dazu verwenden, die Animationsgeschwindigkeit manuell einzustellen. 
+Der \srcref[vref]{srcAnimation00a} unterscheidet sich nur um ein Feature zum letzten Kapitel. Die \texttt{Timer}-Klasse wurde um die Methode \texttt{change\_duration()} erweitert. Diese Methode ermöglicht es, zur Laufzeit die Dauer des Zeitintervalls zu verändern, wobei die untere Grenze bei~\unit[0]{ms} festgelegt wird. Wir werden dieses Feature gleich dazu verwenden, die Animationsgeschwindigkeit manuell einzustellen. 
 
 \lstsource{SRC/00 Einführung/11 Animation/animation00.py}{1}{44}{python}{Animation einer Katze (1), Version 1.0: Präambel, \texttt{Timer} und \texttt{Settings}}{srcAnimation00a} 
 
-Wenn wir etwas animieren wollen, so benötigt diese Animation nicht nur ein Sprite zur Darstellung, sondern mehrere. Ich habe deshalb neben dem Attribut \texttt{image} ein weiteres: das Array \texttt{images}. In dieses lade ich nun mit Hilfe der \forSchleife\ ab \zeiref{srcAnimation0001} alle Bitmaps der Animation. Ich brauche nun ein Attribut, das sich merkt, welches der 6~Sprites nun eigentlich angezeigt werden soll: \texttt{imageindex}. Wenn die Bilder in der Reihenfolge in das Array \texttt{images} abgelegt werden, in welcher sie auch ausgegeben werden sollen, so muss \texttt{imageindex} nur noch hochgezählt werden. Auch brauchen wir ein \texttt{Timer}-Objekt, damit die Animation nicht absurd schnell abläuft -- wir starten hier mit $100~ms$.
+Wenn wir etwas animieren wollen, so benötigt diese Animation nicht nur ein Sprite zur Darstellung, sondern mehrere. Ich habe deshalb neben dem Attribut \texttt{image} ein weiteres: das Array \texttt{images}. In dieses lade ich nun mit Hilfe der \forSchleife\ ab \zeiref{srcAnimation0001} alle Bitmaps der Animation. Ich brauche nun ein Attribut, das sich merkt, welches der 6~Sprites nun eigentlich angezeigt werden soll: \texttt{imageindex}. Wenn die Bilder in der Reihenfolge in das Array \texttt{images} abgelegt werden, in welcher sie auch ausgegeben werden sollen, so muss \texttt{imageindex} nur noch hochgezählt werden. Auch brauchen wir ein \texttt{Timer}-Objekt, damit die Animation nicht absurd schnell abläuft -- wir starten hier mit \unit[100]{ms}.
 
 In der Methode \texttt{update()} wird nun abhängig vom \texttt{Timer}-Objekt das Attribut \texttt{imageindex} immer um~1 erhöht und dieses Bitmap dann dem Attribut \texttt{image} zugewiesen, damit die schon bekannten \texttt{Sprite}-Features genutzt werden können. Die Methode \texttt{change\_\-ani\-ma\-tion\_\-time()} reicht seinen Übergabeparameter einfach nur an das \texttt{Timer}-Objekt weiter. Damit sind eigentlich alle vorbereitenden Aktiväten abgeschlossen.
 
@@ -41,7 +41,7 @@ Schauen wir uns die Übergabeparameter des Konstruktors an:
 
     \item \textbf{endless}: Über dieses Flag wird gesteuert, ob die Animation sich immer wiederholt. \true\ bedeutet, dass nach dem letztes Sprite wieder mit dem ersten begonnen wird. \false\ lässt das letzte Sprite stehen.
 
-    \item \textbf{animationtime}: Abstand der Einzelsprites in~$ms$.
+    \item \textbf{animationtime}: Abstand der Einzelsprites in~\unit{ms}.
 
     \item \textbf{colorkey}: Mit diesem Parameter wird abgefangen, dass Sprites ggf. keine Transparenz besitzen und daher eine Angabe über Transparenzfarbe brauchen (siehe Seite~\pageref{pageTransparenz}). Wird keine Angabe gemacht, bleibt die Transparenz des geladenen Sprites erhalten. Wird eine Farbangabe gemacht, wird diese mit \texttt{set\_colorkey()} in \zeiref{srcAnimation0101} verwendet.
 \end{itemize}
@@ -54,7 +54,7 @@ Ein Feature, was man immer wieder mal braucht, wurde in der Methode \texttt{is\_
 
 \lstsource{SRC/00 Einführung/11 Animation/animation01.py}{27}{55}{python}{Animation (6), Version 1.1: \texttt{Animation}}{srcAnimation01a} 
 
-Die Klasse \texttt{Cat} hat sich damit vereinfacht und kann sich wieder mehr auf ihre -- hier natürlich noch nicht vorhandene -- Spiellogik konzentrieren. Das Erzeugen des \texttt{Animation}-Objekts erfolgt hier in \zeiref{srcAnimation0102}. Die Dateinamen lassen sich schön einfach generieren, da sie durchnummeriert wurden. Die Katze soll endlos laufen und dabei $100~ms$ zeitlichen Abstand zwischen den Sprites haben. In \texttt{update()} wird dann einfach die Methode \texttt{next()} aufgerufen.
+Die Klasse \texttt{Cat} hat sich damit vereinfacht und kann sich wieder mehr auf ihre -- hier natürlich noch nicht vorhandene -- Spiellogik konzentrieren. Das Erzeugen des \texttt{Animation}-Objekts erfolgt hier in \zeiref{srcAnimation0102}. Die Dateinamen lassen sich schön einfach generieren, da sie durchnummeriert wurden. Die Katze soll endlos laufen und dabei \unit[100]{ms} zeitlichen Abstand zwischen den Sprites haben. In \texttt{update()} wird dann einfach die Methode \texttt{next()} aufgerufen.
 
 \newpage
 \lstsource{SRC/00 Einführung/11 Animation/animation01.py}{79}{95}{python}{Animation einer Katze (7), Version 1.1: \texttt{Cat}}{srcAnimation01b} 

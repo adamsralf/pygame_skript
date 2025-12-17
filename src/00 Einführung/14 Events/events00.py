@@ -33,7 +33,7 @@ class Game:
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
-            print(event)  # Eventinfo ausgeben§\label{srcEvents0001}§
+            print(event)                            # Print event information§\label{srcEvents0001}§
             if event.type == QUIT:
                 self.running = False
             elif event.type == KEYDOWN:

@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -62,7 +62,7 @@ class Background(pygame.sprite.Sprite):
 
 class BubbleContainer:
     def __init__(self) -> None:
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}
 
@@ -123,7 +123,7 @@ class Points(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -153,7 +153,7 @@ class Game:
         self.window.flip()
 
     def update(self) -> None:
-        if self.check_bubblecollision():  # Spielende?§\label{srcBubble0801}§
+        if self.check_bubblecollision():            # Game over?§\label{srcBubble0801}§
             self.running = False
         else:
             self.all_sprites.update(action="grow")
@@ -198,16 +198,16 @@ class Game:
                 bubble.update(action="sting")
 
     def check_bubblecollision(self) -> bool:
-        for index1 in range(0, len(self.all_sprites) - 1):  # Bubbles prüfen§\label{srcBubble0802}§
+        for index1 in range(0, len(self.all_sprites) - 1):  # Check bubbles§\label{srcBubble0802}§
             for index2 in range(index1 + 1, len(self.all_sprites)):
                 bubble1 = self.all_sprites.sprites()[index1]
                 bubble2 = self.all_sprites.sprites()[index2]
                 if type(bubble1).__name__ == "Bubble" and type(bubble2).__name__ == "Bubble":
-                    if pygame.sprite.collide_circle(bubble1, bubble2):  # Blasen kollidieren§\label{srcBubble0803}§
+                    if pygame.sprite.collide_circle(bubble1, bubble2):  # Bubbles?§\label{srcBubble0803}§
                         return True
-                    if not Settings.PLAYGROUND.contains(bubble1):  # Blase1 berührt Rand§\label{srcBubble0804}§
+                    if not Settings.PLAYGROUND.contains(bubble1):  # Bubble1 touches border§\label{srcBubble0804}§
                         return True
-                    if not Settings.PLAYGROUND.contains(bubble2):  # Blase2 berührt Rand§\label{srcBubble0805}§
+                    if not Settings.PLAYGROUND.contains(bubble2):  # Bubble2 touches border§\label{srcBubble0805}§
                         return True
         return False
 

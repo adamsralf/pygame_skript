@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -61,7 +61,7 @@ class Background(pygame.sprite.Sprite):
 
 
 class BubbleContainer:
-    def __init__(self, filename: str) -> None:  # Jetzt mit Dateinamen§\label{srcBubble1002}§
+    def __init__(self, filename: str) -> None:      # Now with filename§\label{srcBubble1002}§
         imagename = Settings.get_image(filename)
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}
@@ -75,7 +75,7 @@ class BubbleContainer:
 class Bubble(pygame.sprite.Sprite):
     def __init__(self, speed: int) -> None:
         super().__init__()
-        self.mode = "blue"  # Farbmodus§\label{srcBubble1005}§
+        self.mode = "blue"                          # Color mode§\label{srcBubble1005}§
         self.radius = Settings.RADIUS["min"]
         self.image = Game.BUBBLE_CONTAINER[self.mode].get(self.radius)
         self.rect: pygame.rect.Rect = self.image.get_rect()
@@ -128,15 +128,15 @@ class Points(pygame.sprite.Sprite):
 
 
 class Game:
-    BUBBLE_CONTAINER: Dict[str, BubbleContainer] = {}  # Mehrere§\label{srcBubble1001}§
+    BUBBLE_CONTAINER: Dict[str, BubbleContainer] = {}  # Now mor than one§\label{srcBubble1001}§
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
-        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("blase1.png")  # blau§\label{srcBubble1003}§
-        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("blase2.png")  # rot§\label{srcBubble1004}§
+        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("bubble1.png")   # blue§\label{srcBubble1003}§
+        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("bubble2.png")    # red§\label{srcBubble1004}§
         self.background = pygame.sprite.GroupSingle(Background())
         self.timer_bubble = Timer(500, False)
         self.timer_bubble_speed = Timer(1000, False)
@@ -216,7 +216,7 @@ class Game:
                 bubble2 = self.all_sprites.sprites()[index2]
                 if type(bubble1).__name__ == "Bubble" and type(bubble2).__name__ == "Bubble":
                     if pygame.sprite.collide_circle(bubble1, bubble2):
-                        bubble1.update(mode="red")  # rot§\label{srcBubble1008}§
+                        bubble1.update(mode="red")  # §\label{srcBubble1008}§
                         bubble2.update(mode="red")
                         return True
                     if not Settings.PLAYGROUND.contains(bubble1):
@@ -238,7 +238,7 @@ class Game:
             time_current = time()
             Settings.DELTATIME = time_current - time_previous
             time_previous = time_current
-        pygame.time.wait(2000)  # Kurz warten§\label{srcBubble1007}§
+        pygame.time.wait(2000)                      # Wait a moment§\label{srcBubble1007}§
         pygame.quit()
 
 

@@ -1,3 +1,44 @@
+
+\newglossaryentry{stereopanning}{
+	name={Stereo-Panning},
+	description={Bezeichnet eine Technik der Audiowiedergabe, bei der ein Tonsignal durch unterschiedliche Lautstärken auf dem linken und rechten Audiokanal räumlich positioniert wird. Beim Stereo-Panning wird der Klang einer Quelle je nach horizontaler Position im Raum stärker auf den linken oder rechten Kanal gelegt. In der Spieleentwicklung, z.\,B.\ mit Pygame, wird Stereo-Panning verwendet, um die Position eines Objekts akustisch wahrnehmbar zu machen, typischerweise durch getrennte Lautstärkeregelung der Kanäle eines Sound-Kanals}
+}
+
+
+\newdualentry{Stereo} % label
+	{Stereo}            % abbreviation
+	{Stereofonie}  % long form
+	{Bezeichnet ein zweikanaliges Audioverfahren, bei dem ein Tonsignal getrennt über einen linken und einen rechten Kanal wiedergegeben wird. Durch unterschiedliche Lautstärken oder Signale auf beiden Kanälen entsteht ein räumlicher Höreindruck. In der Spieleentwicklung wird Stereo häufig genutzt, um die Position einer Klangquelle im Raum zu vermitteln, z.\,B.\ durch Stereo-Panning, bei dem die Lautstärke eines Sounds abhängig von der horizontalen Position eines Objekts angepasst wird} % description
+
+\newglossaryentry{funktionszeiger}{
+	name={Funktionszeiger},
+	description={Bezeichnet eine Variable oder Referenz, die auf eine Funktion zeigt und diese wie einen Wert behandelbar macht. Funktionszeiger ermöglichen es, Funktionen als Parameter zu übergeben, in Datenstrukturen zu speichern oder dynamisch auszuwählen. In Sprachen wie C oder C++ werden Funktionszeiger explizit verwendet, während in Python Funktionen grundsätzlich Objekte erster Klasse sind und daher ohne spezielle Syntax als Funktionszeiger eingesetzt werden können}
+}
+
+
+\newglossaryentry{dontasktell}{
+	name={Don't ask~-- tell},
+	description={Ein Entwurfsprinzip der objektorientierten Programmierung, das fordert, 
+		dass ein Objekt nicht nach dem inneren Zustand eines anderen Objekts fragen und daraufhin 
+		selbst Entscheidungen treffen soll. Stattdessen soll ein Objekt einem anderen mitteilen, 
+		\emph{was} es tun soll, während das \emph{wie} vollständig im Objekt selbst gekapselt bleibt. 
+		Dadurch werden Kapselung, Austauschbarkeit und Wartbarkeit verbessert, und die Kopplung zwischen 
+		Klassen reduziert.}
+}
+
+
+\newglossaryentry{variable}{
+	name={Variable},
+	description={Ein benannter Verweis auf ein Objekt im Speicher. In Python ist eine Variable kein Container, der einen festen Datentyp speichert, sondern ein flexibler Name, der auf beliebige Objekte zeigen kann. Anders als bei einer Konstanten, kann der Wert einer Variable jederzeit geändert werden, indem ihr ein neues Objekt mittels Zuweisung (\texttt{=}) zugewiesen wird. Beispiel: \texttt{x = 10} oder \texttt{name = "Alice"}}
+}
+
+\newglossaryentry{vscode}{
+	name={Visual Studio Code},
+	description={Ein freier, plattformübergreifender Quellcode-Editor von Microsoft. Er unterstützt zahlreiche Programmiersprachen, bietet eine integrierte Erweiterungsverwaltung, Debugging-Funktionen und ein anpassbares Interface. Durch seine schlanke Architektur, Git-Integration und die große Auswahl an Erweiterungen eignet sich Visual Studio Code sowohl für Einsteiger als auch	professionelle Softwareentwicklung},
+	text={VS~Code}
+}
+
+
 \newglossaryentry{gadget}{
 	name=Gadget,
 	plural=Gadgets,
@@ -83,14 +124,14 @@
 		Ein Verfahren zur Transparenz- und Farbmischung in der Computergrafik. Dabei werden die Farbwerte eines Vordergrundpixels mit denen des Hintergrundpixels auf Grundlage eines Alpha-Werts ($\alpha$) kombiniert. Der Alpha-Wert gibt an, wie deckend ein Pixel ist: 
 		$\alpha = 1$ bedeutet vollständig sichtbar (opak), 
 		$\alpha = 0$ vollständig transparent.
-		\textbf{Formel:}
+		Formel:
 		\[
 		C_\text{neu} = \alpha \cdot C_\text{vordergrund} + (1 - \alpha) \cdot C_\text{hintergrund}
 		\]
 		Pygame unterstützt Alpha-Blending über Oberflächen mit einem Alpha-Kanal (RGBA).
 		Dies ermöglicht halbtransparente Effekte, wie Schatten, Glühen oder Lichtschein.
 		Die Qualität und Geschwindigkeit des Alpha-Blending hängt von der Hardware und der SDL-Version ab.
-		In der \textbf{pygame-ce}-Version sind erweiterte Alpha-Operationen und schnellere Blit-Methoden verfügbar}
+		In der pygame-ce-Version sind erweiterte Alpha-Operationen und schnellere Blit-Methoden verfügbar}
 }
 
 \newglossaryentry{python}
@@ -103,8 +144,8 @@
 {
   name={Pygame},
   description={
-  	Eine frei verfügbare, in Python geschriebene Bibliothek zur Entwicklung von 2D-Spielen und Multimedia-Anwendungen.	Pygame basiert auf der C-Bibliothek SDL und bietet Funktionen für Grafikdarstellung, Ereignisverwaltung, Audio-Wiedergabe sowie Eingabesteuerung über Tastatur, Maus und Gamecontroller.
-  	Pygame wurde ursprünglich von Pete Shinners im Jahr 2000 entwickelt und war über viele Jahre hinweg das Standard-Framework für Python-basierte Spieleentwicklung. Da das ursprüngliche Projekt jedoch längere Zeit keine Updates mehr erhielt, entstand 2020 eine Abspaltung namens \textbf{Pygame Community Edition (pygame-ce)}.
+  	Eine frei verfügbare, in Python geschriebene Bibliothek zur Entwicklung von 2D-Spielen und Multimedia-Anwendungen.	Pygame basiert auf der C-Bibliothek SDL und bietet Funktionen für Grafikdarstellung, Ereignisverwaltung, Audio\-wieder\-gabe sowie Eingabesteuerung über Tastatur, Maus und Gamecontroller.
+  	Pygame wurde ursprünglich von Pete Shinners im Jahr 2000 entwickelt und war über viele Jahre hinweg das Standard-Framework für Python-basierte Spieleentwicklung. Da das ursprüngliche Projekt jedoch längere Zeit keine Updates mehr erhielt, entstand 2020 eine Abspaltung namens Pygame Community Edition (pygame-ce).
   	Diese wird von einer aktiven Community weiterentwickelt, um moderne Python-Versionen, erweiterte Grafikfunktionen (z.B. Alpha-Blending, bessere Transformationen) und höhere Performance zu unterstützen}
 }
 
@@ -113,7 +154,8 @@
 {
   name={Konstante},
   plural={Konstanten},
-  description={Eine Konstante ist ein Wert, der zur Laufzeit eines Programmes nicht mehr geändert werden kann. In vielen Programmiersprachen können Variablen durch Schlüsselwörter wie \texttt{const} als Konstanten -- also Unveränderlichen -- deklariert werden. Direkte beispielsweise Zahlen- oder Stringangaben im Quelltext sind ebenfalls Konstanten}
+  description={Eine Konstante ist ein Wert, der zur Laufzeit eines Programmes nicht mehr geändert werden kann. In vielen Programmiersprachen können Variablen durch Schlüsselwörter wie \texttt{const} als Konstanten -- also Unveränderlichen -- deklariert werden. Direkte  Zahlen- oder Stringangaben im Quelltext sind ebenfalls Konstanten. 
+  Python kennt keine echten Konstanten auf Sprachebene; stattdessen wird die Konvention verwendet, Konstanten in GROSSBUCHSTABEN zu schreiben (z.\,B.\ \texttt{PI = 3.14159}). Obwohl der Wert technisch veränderbar bleibt, signalisiert die Schreibweise anderen Entwicklern, dass die Variable unverändert bleiben soll}
 }
 
 \newglossaryentry{event}
@@ -127,21 +169,29 @@
 {
   name={Funktion},
   plural={Funktionen},
-  description={Eine Funktion ist in der Programmierung ein Anweisungsblock mit einem Namen. Sie können Parametersätze haben und Ergebnisse zurückliefern. In der Regel gilt dabei das Prinzip, dass alle Werte innerhalb der Funktion lokal sind}
+  description={Eine Funktion ist in der Programmierung ein Anweisungsblock mit einem Namen. Sie können Parametersätze haben und mit \texttt{return} Ergebnisse zurückliefern. In der Regel gilt dabei das Prinzip, dass alle Werte innerhalb der Funktion lokal sind. In Python beginnt eine Funktionsdeklaration mit dem Schlüsselwort \texttt{def}}
 }
 
 \newglossaryentry{klasse}
 {
   name={Klasse},
   plural={Klassen},
-  description={Eine Klasse beschreibt die Attribute und die Methoden (Funktionen) einer inhaltlich abgeschlossenen Programmiereinheit. In der Praxis gibt es viele Varianten von Klassen, aber im Prinzip wird definiert, welche Informationen eine Klasse ausmacht (z.B. Marke, Farbe und Baujahr eines Autos) und was man mit einem Objekt der Klasse alles tun kann (z.B. beschleunigen, kaufen und tanken beim einem Auto). Die Informationen werden \emph{Attribute} genannt und die Möglichkeiten \emph{Methoden} oder \emph{member funtions}} 
+  description={Eine Klasse beschreibt die Eigenschaften (Attribute) und die Methoden (Funktionen) einer inhaltlich abgeschlossenen Programmiereinheit. In der Praxis gibt es viele Varianten von Klassen, aber im Prinzip wird definiert, welche Informationen eine Klasse ausmacht (z.B. Marke, Farbe und Baujahr eines Autos) und was man mit einem Objekt der Klasse alles tun kann (z.B. beschleunigen, kaufen und tanken beim einem Auto). Die Informationen werden \emph{Attribute} genannt und die Möglichkeiten \emph{Methoden} oder \emph{member funtions}. 
+  In Python werden Klassen mit dem Schlüsselwort \texttt{class} definiert und mit \texttt{\_\_init\_\_()} initialisiert} 
 }
 
 \newglossaryentry{namensraum}
 {
   name={Namensraum},
   plural={Namensräume},
-  description={Innerhalb eines Namensraums müssen alle Namen für Klassen, Funktionen und Konstanten eindeutig sein. In der Regel werden Namensräume in Python anhand der Module und Pakete definiert} 
+  description={Ein struktureller Bereich, in dem Bezeichner wie Variablen-, Funktions- oder Klassennamen definiert werden. Namensräume verhindern Namenskollisionen, indem sie eindeutige Zuordnungen von Namen zu Objekten ermöglichen. In Python existieren unter anderem lokale, globale und modulbezogene Namensräume. Beispiel: Auf eine Variable in einem Modul kann über \texttt{modulname.variable} zugegriffen werden} 
+}
+
+\newglossaryentry{flag}{
+	name={Flag},
+	description={Eine Variable, die ausschließlich einen Wahrheitswert (\texttt{True} oder \texttt{False}) speichert und zur Steuerung von Programmabläufen verwendet wird. Flags dienen häufig dazu, Zustände wie 
+	\emph{Programm läuft}, \emph{Spiel beendet} oder \emph{Eingabe erlaubt} darzustellen. 
+	Durch das Setzen oder Zurücksetzen des Flags kann das Verhalten eines Programms gezielt beeinflusst werden. Beispiel in Python: \texttt{running = True}}
 }
 
 \newglossaryentry{umgebungsvari}
@@ -169,19 +219,13 @@
 \newglossaryentry{doublebuffer}
 {
   name={Doublebuffer},
-  description={Dies ist ein zweiter Speicherbereich, der genauso groß ist wie der Bildschirmspeicher. Wird jetzt etwas auf die Spielfläche gezeichnet, passiert dies zunächst auf diesem zweiten Speicher. Erst wenn alle Spielelemente ihr neues Aussehen gemalt haben, wird mit einem Schlag der alte Bildschirmspeicher mit dem zweiten ausgetauscht. Bei bestimmten Hardware- oder Grafikkonfigurationen kann es passieren, dass der Bildschirmspeicher neu gemalt wird, obwohl das Spiel noch nicht alle neuen Zustände abgebildet hat. Dadurch können hässliche Artefakte entstehen. Durch das Doublebuffering wird dieser Effekt vermieden} 
+  description={Dies ist ein zweiter Speicherbereich (back buffer), der genauso groß ist wie der Bildschirmspeicher (front buffer). Wird jetzt etwas auf die Spielfläche gezeichnet, passiert dies zunächst im back buffer. Erst wenn alle Spielelemente ihr neues Aussehen gemalt haben, wird mit einem Schlag der front buffer mit dem back buffer ausgetauscht. Bei bestimmten Hardware- oder Grafikkonfigurationen kann es passieren, dass der Bildschirmspeicher neu gemalt wird, obwohl das Spiel noch nicht alle neuen Zustände abgebildet hat. Dadurch können hässliche Artefakte oder Flackern entstehen. Durch das Doublebuffering wird dieser Effekt vermieden} 
 }
 
 \newglossaryentry{messagequeue}
 {
   name={Message Queue},
-  description={Warteschlange des Betriebssystem zur Verwaltung von Ereignissen, die vom System erzeugt oder empfangen wurden. Laufende Anwendungen können diese Nachrichten für sich deklarieren und aus der Warteschlange entnehmen} 
-}
-
-\newglossaryentry{flag}
-{
-  name={Flag},
-  description={Eine meist boolsche Variable, die eine Operation/Schleife ein- und ausschaltet} 
+  description={Eine vom Betriebssystem bereitgestellte Warteschlange, in der Ereignisse und Nachrichten gespeichert werden, die an Anwendungen oder Prozesse gerichtet sind. Solche Nachrichten können z.\,B.\ Eingaben von Tastatur und Maus, Fensterereignisse oder Systemsignale sein. Programme lesen die Message Queue regelmäßig aus, um auf aktuelle Ereignisse zu reagieren. In ereignisgesteuerten Anwendungen wie grafischen Benutzeroberflächen oder Spielen ist das Auslesen der Message Queue ein zentraler Bestandteil der Hauptprogrammschleife} 
 }
 
 \newglossaryentry{alpha}
@@ -247,13 +291,14 @@
 \newglossaryentry{render}
 {
 	name={Rendern},
-	description={Das Erzeugen eines Bildes -- meist in Bitmap-Format -- aus einer Bildbeschreibungsangabe} 
+	description={Bezeichnet den Vorgang, bei dem aus abstrakten Daten (z.\,B.\ Text, Vektoren, Sprites oder 3D-Modellen) ein konkretes, darstellbares Bild erzeugt wird. In der Computergrafik und in 
+		Frameworks wie Pygame bedeutet Rendern typischerweise, dass ein Objekt seine visuelle Repräsentation (\emph{Surface}, \emph{Bitmap}) berechnet und für die Ausgabe auf dem Bildschirm vorbereitet. Rendern wird häufig nur dann ausgeführt, wenn sich der Inhalt oder der Zustand eines Objekts verändert hat, um Rechenzeit zu sparen} 
 }
 
 \newglossaryentry{font}
 {
 	name={Font},
-	description={In digitaler Form vorhandene Information über einen Zeichensatz. Er ist meist in einem dieser drei Formate verfügbar: als Bitmap, als Vektorgrafik oder als Beschreibung} 
+	description={Bezeichnet einen vollständigen, digital gespeicherten Zeichensatz, der Informationen über die grafische Darstellung von 	Buchstaben, Ziffern und Symbolen enthält. Ein Font definiert 	typografische Eigenschaften wie Schriftstil, Strichstärke, Laufweite und Größe. In Pygame wird ein Font über ein Font-Objekt repräsentiert, das zum Rendern von Text in eine Bitmap oder Surface verwendet wird. Fonts können systemweit installiert sein oder als separate Dateien (z.\,B.\ \texttt{.ttf}, \texttt{.otf}) geladen werden} 
 }
 
 \newglossaryentry{dictionary}
@@ -285,7 +330,7 @@
 {
 	name={Sprite},
     plural={Sprites},
-	description={Ein Grafikobjekt, welches auf einem Hintergrund platziert wird und meist auch Eigenschaften hat, die über die reine Anzeige hinausgehen. So können Sprites sich oft bewegen oder werden animiert oder lösen bei Kontakt eine Reaktion aus. Üblicherweise meint man damit immer 2D-Objekte. Andere Namen sind \emph{moveable object (MOB)} oder \emph{blitter object (BOB)} } 
+	description={Ein einzelnes zweidimensionales Grafikelement, das typischerweise eine Spielfigur, ein Objekt oder eine Animation repräsentiert. Sprites werden unabhängig vom Hintergrund gerendert und können bewegt, gedreht oder skaliert werden. Viele Game-Engines und Bibliotheken wie Pygame unterstützen spezielle Sprite-Klassen zur effizienten Verwaltung und Aktualisierung von Spielobjekten. Andere Namen sind \emph{moveable object (MOB)} oder \emph{blitter object (BOB)} } 
 }
 
 \newglossaryentry{maske}
@@ -363,7 +408,7 @@
 \newglossaryentry{tradeoff}
 {
     name={Trade-off},
-    description={Jeder Vorteil wird durch einen Nachteil erkauft. Algorithmisch muss dann anhand der Datenlage abgewägt werden, ob in der Gesamtbetrachtung der Nutzen die Kosten überwiegt. Beispiel: Durch die Verwendung von Indizes werden Zugriffe auf Datenbankinhalte dramatisch beschleunigt (Nutzen). Um diese Beschleunigung zu erreichen, müssen Dateien angelegt werden, und das Anlegen, Ändern und Löschen von Daten wird langsamer, da diese Dateien dann mitgepflegt werden müssen (Kosten)} 
+    description={Jeder Vorteil wird durch einen Nachteil erkauft. Algorithmisch muss dann anhand der Datenlage abgewägt werden, ob in der Gesamtbetrachtung der Nutzen die Kosten überwiegt. Beispiel: Durch die Verwendung von Indizes werden Zugriffe auf Datenbankinhalte dramatisch beschleunigt (Nutzen). Um diese Beschleunigung zu erreichen, müssen Dateien angelegt werden, und das Anlegen, Ändern und Löschen von Daten wird langsamer, da diese Dateien dann mitgepflegt werden müssen (Kosten). In der Softwareentwicklung beschreibt ein Trade-off häufig die bewusste Abwägung zwischen konkurrierenden Faktoren wie Genauigkeit und Rechenaufwand, Speicherverbrauch und Geschwindigkeit oder Flexibilität und Komplexität. Trade-offs sind unvermeidlich und erfordern eine situationsabhängige Entscheidung} 
 }
 
 \newglossaryentry{float}
@@ -400,7 +445,7 @@
 \newglossaryentry{tangente}
 {
 	name={Tangente},
-	description={Eine Tangente ist eine Gerade, die eine andere geometriesche Form (Kurve, Kreis etc.) in nur einem Punkt berührt, aber nicht schneidet}
+	description={Eine Tangente ist eine Gerade, die eine andere geometrische Form (Kurve, Kreis etc.) in nur einem Punkt berührt, aber nicht schneidet}
 }
 
 \newglossaryentry{orthogonale}
@@ -419,15 +464,17 @@
 
 %\newacronym{mAn}{m.A.n.}{Meiner Ansicht nach}
 
-\newdualentry{Stereo} % label
-  {Stereo}            % abbreviation
-  {Stereofonie}  % long form
-  {Verfahren um mit mehr als einer Schallquelle einen mehrdimensionalen Schalleindruck zu erzeugen} % description
+\newdualentry{ita}
+	{ITA}
+	{Informationstechnische Assistentinnen und Assistenten}
+	{Ein staatlich anerkannter Bildungsgang des Berufskollegs in Nordrhein-Westfalen, der eine schulische Berufsausbildung im Bereich der	Informationstechnik vermittelt. Die Ausbildung kombiniert theoretische Grundlagen und praktische Inhalte aus Informatik, Programmierung,	Netzwerktechnik, Datenbanken, Softwareentwicklung sowie IT-Systemen. Je nach Bildungsgang kann zusätzlich die Fachhochschulreife oder die allgemeine Hochschulreife erworben werden. Absolventinnen und Absolventen sind für Tätigkeiten in IT-nahen Berufsfeldern qualifiziert oder für ein weiterführendes Studium vorbereitet}
+
+
 
 \newdualentry{PX} % label
   {px}            % abbreviation
   {Pixel}  % long form
-  {Die kleinste bei gegebener Auflösung ansteuerbare Bildschirmfläche} % description
+  {Die kleinste adressierbare Einheit eines digitalen Bildes oder einer Bildschirmdarstellung. Ein Pixel repräsentiert typischerweise eine Farbe, die aus einzelnen Farbkanälen (z.\,B.\ Rot, Grün und Blau) besteht. Die Gesamtheit vieler Pixel bildet ein vollständiges Bild. Je mehr Pixel ein Bildschirm oder Bild besitzt, desto höher ist die mögliche Auflösung und Detailgenauigkeit} % description
 
 \newdualentry{bmp} % label
   {bmp}            % abbreviation
@@ -452,7 +499,7 @@
 \newdualentry{png} % label
   {png}            % abbreviation
   {Portable Network Graphics}  % long form
-  {Verlustfrei komprimierte Bildinformationen} % description
+  {Ein weit verbreitetes Rastergrafikformat, das verlustfreie Kompression und optional einen Alpha-Kanal für transparente Pixel unterstützt. PNG eignet sich besonders für Grafiken mit scharfen Kanten, Text oder Transparenzeffekten und wird häufig in Spielen und Benutzeroberflächen eingesetzt} % description
 
 \newdualentry{usb} % label
   {USB}            % abbreviation
@@ -467,7 +514,7 @@
 \newdualentry{rgb} % label
   {RGB}            % abbreviation
   {Red Green Blue}  % long form
-  {Additive Farbkodierung} % description
+  {Ein additives Farbmodell, bei dem Farben durch die Kombination 	der drei Grundfarben Rot, Grün und Blau  dargestellt werden. Jeder Farbkanal besitzt typischerweise einen Wertebereich von 0 bis 255. Durch Mischen unterschiedlicher Intensitäten entstehen $256^3 = 16.777.216$ darstellbarer Farben. Das RGB-Modell wird in digitalen Displays, Grafikprogrammierung und Bildbearbeitung eingesetzt} % description
 
 \newdualentry{fps} % label
   {fps}            % abbreviation
@@ -479,11 +526,16 @@
   {Integrated Development Environment}  % long form
   {Integrierte Entwicklungsumgebung. Diese heißen \emph{integriert}, da sie nicht nur einen Compiler und Linker enthalten, sondern auch einen Editor, Debugger, Profiler etc} % description
 
+\newdualentry{lsp} % label
+  {LSP}            % abbreviation
+  {Liskov Substitution Principle}  % long form
+  {Ein Prinzip der objektorientierten Programmierung, das fordert, dass Objekte einer abgeleiteten Klasse
+  	jederzeit anstelle von Objekten ihrer Basisklasse verwendet werden können müssen, ohne das korrekte Verhalten des Programms zu verändern. Formuliert von Barbara Liskov (1987). Das LSP stellt sicher, dass Vererbung nicht zu unerwarteten Nebenwirkungen führt und Klassen hierarchisch konsistent bleiben} % description
+
 \newdualentry{srp} % label
-  {SRP}            % abbreviation
-  {Single Responsibility Principle}  % long form
-  {Jede Klasse / jede Funktion sollte nur eine Verantwortlichkeit haben. Die Klasse / die Funktion sollte sich
-  auf diese Aufgabe konzentrieren. Kapseln Sie eine Lösung in eine Klasse oder eine Methode} % description
+{SRP}            % abbreviation
+{Single Responsibility Principle}  % long form
+{Jede Klasse / jede Funktion sollte nur eine Verantwortlichkeit haben. Die Klasse / die Funktion sollte sich auf diese Aufgabe konzentrieren. Kapseln Sie eine Lösung in eine Klasse oder eine Methode} % description
 
 \newdualentry{oo} % label
   {OO}            % abbreviation

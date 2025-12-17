@@ -49,7 +49,7 @@ class Cat(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.images: list[pygame.surface.Surface] = []
-        for i in range(6):  # Animations-Sprites laden §\label{srcAnimation0001}§
+        for i in range(6):                          # Load animation sprites§\label{srcAnimation0001}§
             bitmap = pygame.image.load(Settings.imagepath(f"cat{i}.bmp")).convert()
             bitmap.set_colorkey("black")
             self.images.append(bitmap)
@@ -82,7 +82,7 @@ class CatAnimation:
         self.clock = pygame.time.Clock()
 
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
-        self.cat = pygame.sprite.GroupSingle(Cat())  # Meine Katze §\label{srcAnimation0002}§
+        self.cat = pygame.sprite.GroupSingle(Cat()) # My cat sprite§\label{srcAnimation0002}§
         self.running = False
 
     def run(self) -> None:

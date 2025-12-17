@@ -34,23 +34,23 @@ class Paddle(pygame.sprite.Sprite):
 
     def __init__(self, player: str, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
-        self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height // 10)  # Größe §\label{srcPong0201}§
-        self.rect.centery = Settings.WINDOW.centery  # Position §\label{srcPong0202}§
+        self.rect = pygame.rect.FRect(0, 0, 15, Settings.WINDOW.height // 10)  # Size§\label{srcPong0201}§
+        self.rect.centery = Settings.WINDOW.centery # Position §\label{srcPong0202}§
         self.player = player
         if self.player == "left":
             self.rect.left = Paddle.BORDERDISTANCE["horizontal"]
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
-        self.speed = Settings.WINDOW.height // 2  # Geschwindigkeit§\label{srcPong0206}§
-        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
-        self.image = pygame.surface.Surface(self.rect.size)  # Surface §\label{srcPong0203}§
+        self.speed = Settings.WINDOW.height // 2    # Speed§\label{srcPong0206}§
+        self.direction = Paddle.DIRECTION["halt"]   # 
+        self.image = pygame.surface.Surface(self.rect.size)  # Surface§\label{srcPong0203}§
         self.image.fill("yellow")
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
-            if kwargs["action"] == "move":  # Postionsänderung §\label{srcPong0204}§
+            if kwargs["action"] == "move":          # Change Postion§\label{srcPong0204}§
                 self.move()
-            elif kwargs["action"] in Paddle.DIRECTION.keys():  # Bewegungsrichtung §\label{srcPong0205}§
+            elif kwargs["action"] in Paddle.DIRECTION.keys():  # Direction§\label{srcPong0205}§
                 self.direction = Paddle.DIRECTION[kwargs["action"]]
         return super().update(*args, **kwargs)
 
@@ -88,11 +88,11 @@ class Game:
         pygame.quit()
 
     def update(self):
-        self.all_sprites.update(action="move")  # Bewegung §\label{srcPong0209}§
+        self.all_sprites.update(action="move")      # Move§\label{srcPong0209}§
 
     def draw(self):
         self.background.draw(self.screen)
-        self.all_sprites.draw(self.screen)  # Ausgabe §\label{srcPong0210}§
+        self.all_sprites.draw(self.screen)          # §\label{srcPong0210}§
         self.window.flip()
 
     def watch_for_events(self):
@@ -102,7 +102,7 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                elif event.key == pygame.K_UP:  # Schlägerbewegung §\label{srcPong0211}§
+                elif event.key == pygame.K_UP:      # Paddle moves§\label{srcPong0211}§
                     self.paddle["right"].update(action="up")
                 elif event.key == pygame.K_DOWN:
                     self.paddle["right"].update(action="down")
@@ -110,7 +110,7 @@ class Game:
                     self.paddle["left"].update(action="up")
                 elif event.key == pygame.K_s:
                     self.paddle["left"].update(action="down")
-            elif event.type == pygame.KEYUP:  # Schlägerstopp §\label{srcPong0212}§
+            elif event.type == pygame.KEYUP:        # Paddle stops§\label{srcPong0212}§
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_w or event.key == pygame.K_s:

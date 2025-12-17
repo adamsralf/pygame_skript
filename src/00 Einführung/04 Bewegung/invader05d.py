@@ -3,12 +3,12 @@ import pygame
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 100))
-    FPS = 5
+    FPS = 60
 
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -28,14 +28,14 @@ def main():
                 running = False
 
         # Update
-        newpos = defender_rect.move(defender_direction_h * defender_speed, 0)  # Testposition §\label{srcInvader0510}§
+        newpos = defender_rect.move(defender_direction_h * defender_speed, 0)  # New position§\label{srcInvader0510}§
         if newpos.right >= Settings.WINDOW.right:
             defender_direction_h *= -1
-            newpos.right = Settings.WINDOW.right  # Ausrichten am rechten Rand
+            newpos.right = Settings.WINDOW.right    # Align to right edge
         elif newpos.left <= Settings.WINDOW.left:
             defender_direction_h *= -1
-            newpos.left = Settings.WINDOW.left  # Ausrichten am linken Rand
-        defender_rect = newpos  # Übernehme neue Position §\label{srcInvader0511}§
+            newpos.left = Settings.WINDOW.left      # Align to left edge
+        defender_rect = newpos                      # Accept new position§\label{srcInvader0511}§
 
         # Draw
         screen.fill("white")

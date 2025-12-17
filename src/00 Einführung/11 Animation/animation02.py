@@ -81,13 +81,13 @@ class Rock(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        rocknb = random.randint(6, 9)  # Felsennummer §\label{srcAnimation0201}§
+        rocknb = random.randint(6, 9)               # Rock image number§\label{srcAnimation0201}§
         self.image = pygame.image.load(Settings.imagepath(f"felsen{rocknb}.png")).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.centerx = random.randint(self.rect.width, Settings.WINDOW.width - self.rect.width)
         self.rect.centery = random.randint(self.rect.height, Settings.WINDOW.height - self.rect.height)
         self.anim = Animation([f"explosion0{i}.png" for i in range(1, 5)], False, 50)  # §\label{srcAnimation0202}§
-        self.timer_lifetime = Timer(random.randint(100, 2000), False)  # Lebenszeit §\label{srcAnimation0203}§
+        self.timer_lifetime = Timer(random.randint(100, 2000), False)  # Lifetime timer§\label{srcAnimation0203}§
         self.bumm = False
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -95,7 +95,7 @@ class Rock(pygame.sprite.Sprite):
             self.bumm = True
         if self.bumm:
             self.image = self.anim.next()
-            c = self.rect.center  # Zentrum §\label{srcAnimation0204}§
+            c = self.rect.center                    # Center position§\label{srcAnimation0204}§
             self.rect = self.image.get_rect()
             self.rect.center = c
         if self.anim.is_ended():
@@ -111,7 +111,7 @@ class ExplosionAnimation(object):
         self.clock = pygame.time.Clock()
 
         self.all_rocks = pygame.sprite.Group()
-        self.timer_newrock = Timer(500)  # Timer §\label{srcAnimation0205}§
+        self.timer_newrock = Timer(500)             # Timer§\label{srcAnimation0205}§
         self.running = False
 
     def run(self) -> None:
@@ -136,7 +136,7 @@ class ExplosionAnimation(object):
                     self.running = False
 
     def update(self) -> None:
-        if self.timer_newrock.is_next_stop_reached():  # 500ms? §\label{srcAnimation0206}§
+        if self.timer_newrock.is_next_stop_reached():  # 500ms?§\label{srcAnimation0206}§
             self.all_rocks.add(Rock())
         self.all_rocks.update()
 

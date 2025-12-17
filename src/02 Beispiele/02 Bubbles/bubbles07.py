@@ -15,13 +15,13 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
     MAX_BUBBLES = PLAYGROUND.height * PLAYGROUND.width // 10000
-    POINTS = 0  # Globaler Punktestand§\label{srcBubble0701}§
-    BOX = pygame.rect.Rect(90, 770, 1055, 130)  # Ausgabebox§\label{srcBubble0700}§
+    POINTS = 0                                      # Score§\label{srcBubble0701}§
+    BOX = pygame.rect.Rect(90, 770, 1055, 130)      # Messagebox§\label{srcBubble0700}§
 
     @staticmethod
     def get_file(filename: str) -> str:
@@ -62,7 +62,7 @@ class Background(pygame.sprite.Sprite):
 
 class BubbleContainer:
     def __init__(self) -> None:
-        imagename = Settings.get_image("blase1.png")
+        imagename = Settings.get_image("bubble1.png")
         image: pygame.surface.Surface = pygame.image.load(imagename).convert_alpha()
         self.images = {i: pygame.transform.scale(image, (i * 2, i * 2)) for i in range(Settings.RADIUS["min"], Settings.RADIUS["max"] + 1)}
 
@@ -103,7 +103,7 @@ class Bubble(pygame.sprite.Sprite):
 
     def stung(self):
         self.kill()
-        Settings.POINTS += self.radius  # Increment points§\label{srcBubble0702}§
+        Settings.POINTS += self.radius              # Increment points§\label{srcBubble0702}§
 
 
 class Points(pygame.sprite.Sprite):
@@ -123,7 +123,7 @@ class Points(pygame.sprite.Sprite):
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
         self.background = pygame.sprite.GroupSingle(Background())
@@ -150,7 +150,7 @@ class Game:
         self.window.flip()
 
     def update(self) -> None:
-        self.all_sprites.update(action="grow")  # §\label{srcBubble0705}§
+        self.all_sprites.update(action="grow")      # §\label{srcBubble0705}§
         self.spawn_bubble()
         self.set_mousecursor()
 
@@ -189,7 +189,7 @@ class Game:
     def sting(self, mousepos: Tuple[int, int]) -> None:
         for bubble in self.all_sprites:
             if self.collidepoint(mousepos, bubble):
-                bubble.update(action="sting")  # Nach Bubble verschoben§\label{srcBubble0704}§
+                bubble.update(action="sting")       # Redesigned§\label{srcBubble0704}§
 
     def run(self) -> None:
         time_previous = time()

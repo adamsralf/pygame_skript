@@ -46,7 +46,7 @@ class Letters(object):
     def create_letter_bitmap(self, colornumber: int):
         lettername = (
             "0",
-            "1",  # Die Zeilen zwischen 59 und 82 werden übersprungen!
+            "1",  # The rows between 49 and 82 are skipped!!
             "2",
             "3",
             "4",
@@ -91,11 +91,12 @@ class Letters(object):
             self.spritelib.offset["h"],
             self.spritelib.offset["v"] + colornumber * self.spritelib.nof["rows"] * (self.spritelib.letter["height"] + self.spritelib.distance["v"]),
         )  # §\label{srcTextbitmaps0001}§
-        for row in range(self.spritelib.nof["rows"]):  # Zeilen §\label{srcTextbitmaps0002}§
-            for col in range(self.spritelib.nof["cols"]):  # Spalten §\label{srcTextbitmaps0003}§
+        for row in range(self.spritelib.nof["rows"]):           # Rows§\label{srcTextbitmaps0002}§
+            for col in range(self.spritelib.nof["cols"]):       # Columns§\label{srcTextbitmaps0003}§
                 left = startpos[0] + col * (self.spritelib.letter["width"] + self.spritelib.distance["h"])  # §\label{srcTextbitmaps0004}§
                 top = startpos[1] + row * (self.spritelib.letter["height"] + self.spritelib.distance["v"])  # §\label{srcTextbitmaps0005}§
-                width, height = self.spritelib.letter.values()  # Größe §\label{srcTextbitmaps0006}§
+                width  = self.spritelib.letter["width"]         # Size§\label{srcTextbitmaps0006}§
+                height = self.spritelib.letter["height"]
                 r = pygame.rect.Rect(left, top, width, height)
                 self.letters[lettername[index]] = self.spritelib.image.subsurface(r)  # §\label{srcTextbitmaps0007}§
                 index += 1
@@ -136,9 +137,9 @@ class TextBitmaps(object):
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
                 elif event.key == pygame.K_BACKSPACE:
-                    self.input = self.input[:-1]  # Letztes Zeichen abschneiden§\label{srcTextbitmaps0008}§
+                    self.input = self.input[:-1] # Remove last character§\label{srcTextbitmaps0008}§
                 else:
-                    self.input += event.unicode  # Tastaturwert als unicode-Zeichen§\label{srcTextbitmaps0009}§
+                    self.input += event.unicode  # Keyboard input as Unicode character§\label{srcTextbitmaps0009}§
 
     def run(self) -> None:
         spritelib = Spritelib(self.filename)

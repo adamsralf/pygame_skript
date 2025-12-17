@@ -1,5 +1,4 @@
 import pygame
-import pygame.time
 
 
 class Settings:
@@ -10,7 +9,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -22,10 +21,10 @@ def main():
     defender_speed = 2
     defender_direction_v = -1
 
-    start_time = pygame.time.get_ticks()  # Startzeit der Bewegung  §\label{srcInvader05e02}§
+    start_time = pygame.time.get_ticks()                           # Movement starts§\label{srcInvader05e02}§
     running = True
     while running:
-        if pygame.time.get_ticks() > start_time + Settings.LIMIT:  # Fertig?§\label{srcInvader05e04}§
+        if pygame.time.get_ticks() > start_time + Settings.LIMIT:  # Ready?§\label{srcInvader05e04}§
             defender_speed = 0
         # Events
         for event in pygame.event.get():
@@ -33,7 +32,7 @@ def main():
                 running = False
 
         # Update
-        defender_rect.top += defender_direction_v * defender_speed  # Neue Höhe§\label{srcInvader05e03}§
+        defender_rect.top += defender_direction_v * defender_speed  # New height§\label{srcInvader05e03}§
         if defender_rect.bottom >= Settings.WINDOW.bottom:
             defender_direction_v *= -1
         elif defender_rect.top <= 0:

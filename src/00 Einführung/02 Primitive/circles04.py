@@ -26,7 +26,7 @@ class Circle:
 def main():
     size = (300, 600)
     pygame.init()
-    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    window = pygame.Window( size=size, title = "Particle swarm", position = (10, 50))         
     screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []

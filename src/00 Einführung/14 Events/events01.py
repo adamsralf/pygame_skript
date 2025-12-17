@@ -3,23 +3,26 @@ from time import time
 from typing import Any, Tuple
 
 import pygame
-from pygame.constants import (K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT,
-                              WINDOWPOS_CENTERED)
+from pygame.constants import (
+    K_ESCAPE,
+    KEYDOWN,
+    MOUSEBUTTONDOWN,
+    QUIT,
+    WINDOWPOS_CENTERED,
+)
 
 
-class MyEvents:
-    BUTTONPRESSED = pygame.USEREVENT + 0
-    OVERFLOW = pygame.USEREVENT + 1
-    NEWPARTICLES = pygame.USEREVENT + 2
+class MyEvents:                                     # Only for autocompletion (convenience)§\label{srcEvent0100}§
+    BUTTONPRESSED = pygame.USEREVENT + 0            # Event id for button presses§\label{srcEvent0101}§
+    OVERFLOW = pygame.USEREVENT + 1                 # Event id for overflow§\label{srcEvent0102}§
 
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 150))
     FPS = 60
     DELTATIME = 1.0 / FPS
-    STARTNOFPARTICLES = 500
-    NEWNOFPARTICLES = 10
-    NOFBOXES = 5
+    STARTNOFPARTICLES = 999
+    NOFBOXES = 3
     BOXWIDTH = 50
 
 
@@ -36,64 +39,43 @@ class Button(pygame.sprite.Sprite):
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "pressed":
-                pygame.event.post(pygame.event.Event(MyEvents.BUTTONPRESSED, text=self.text))
+                evt = pygame.event.Event(MyEvents.BUTTONPRESSED, text=self.text)  # §\label{srcEvent0103}§
+                pygame.event.post(evt)              # §\label{srcEvent0104}§
         return super().update(*args, **kwargs)
 
 
 class Particle(pygame.sprite.Sprite):
-    r = 0
-    g = 0
-    b = 0
-    halted = False
 
     def __init__(self, *groups: Tuple[pygame.sprite.Group]) -> None:
         super().__init__(*groups)
         self.image = pygame.surface.Surface((randint(3, 6), randint(3, 6)))
-        self.image.fill((Particle.r, Particle.g, Particle.b))
-        self.nextcolor()
+        self.image.fill((0, randint(100, 255), 0))
         self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.topleft = (
             randint(30, Settings.WINDOW.right - 30),
             randint(30, Settings.WINDOW.bottom - 30),
         )
-        self._speed = randint(100, 400)
-        self._direction = pygame.Vector2(choice((-1, 1)), choice((-1, 1)))
+        self.speed = randint(100, 400)
+        self.direction = pygame.Vector2(choice((-1, 1)), choice((-1, 1)))
+        self.halted = False
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "action" in kwargs.keys():
             if kwargs["action"] == "move":
-                if not Particle.halted:
+                if not self.halted:
                     self._move()
             elif kwargs["action"] == "Start":
-                Particle.halted = False
+                self.halted = False
             elif kwargs["action"] == "Stop":
-                Particle.halted = True
+                self.halted = True
 
     def _move(self) -> None:
-        self.rect.move_ip(self._speed * self._direction * Settings.DELTATIME)
-        if self.rect.left < 0:
-            self._direction[0] *= -1
-            self.rect.left = 0
-        if self.rect.right > Settings.WINDOW.right:
-            self._direction[0] *= -1
-            self.rect.right = Settings.WINDOW.right
-        if self.rect.top < 0:
-            self._direction[1] *= -1
-            self.rect.top = 0
-        if self.rect.bottom > Settings.WINDOW.bottom:
-            self._direction[1] *= -1
-            self.rect.bottom = Settings.WINDOW.bottom
-
-    def nextcolor(self):
-        Particle.r += 5
-        if Particle.r > 254:
-            Particle.r = 0
-            Particle.g += 5
-            if Particle.g > 254:
-                Particle.g = 5
-                Particle.b += 5
-                if Particle.b > 254:
-                    Particle.b = 5
+        self.rect.move_ip(self.speed * self.direction * Settings.DELTATIME)
+        if self.rect.left < Settings.WINDOW.left or self.rect.right > Settings.WINDOW.right:
+            self.direction[0] *= -1
+        if self.rect.top < Settings.WINDOW.top or self.rect.bottom > Settings.WINDOW.bottom:
+            self.direction[1] *= -1
+        self.rect.clamp_ip(Settings.WINDOW)
 
 
 class Box(pygame.sprite.Sprite):
@@ -105,19 +87,20 @@ class Box(pygame.sprite.Sprite):
         self.font = pygame.font.SysFont(None, 30)
         self.counter = 0
         self.index = index
-        self._fill()
+        self.fill()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if "counter" in kwargs.keys():
             if kwargs["counter"] == "inc":
                 self.counter += 1
-                if self.counter == 10:
-                    pygame.event.post(pygame.event.Event(MyEvents.OVERFLOW, index=self.index))
+                if self.counter == 10:              # Overflow§\label{srcEvent0105}§
+                    evt = pygame.event.Event(MyEvents.OVERFLOW, index=self.index)
+                    pygame.event.post(evt)
                     self.counter = 0
-                self._fill()
+                self.fill()
         return super().update(*args, **kwargs)
 
-    def _fill(self) -> None:
+    def fill(self) -> None:
         self.image.fill("gray")
         number = self.font.render(f"{self.counter}", False, "Blue")
         self.image.blit(number, (18, 1))
@@ -127,9 +110,10 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title="Event (2)", position=WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title="Event (1)", position=WINDOWPOS_CENTERED)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
+        self.running = True
         self.all_sprites = pygame.sprite.Group()
         self.all_particles = pygame.sprite.Group()
         self.generate_particles(Settings.STARTNOFPARTICLES)
@@ -138,7 +122,6 @@ class Game:
         self.all_buttons.add(Button("Stop", (100, Settings.WINDOW.bottom - 30), self.all_sprites))
         self.all_boxes = pygame.sprite.Group()
         self.generate_boxes(Settings.NOFBOXES)
-        pygame.time.set_timer(MyEvents.NEWPARTICLES, 500)  # Periodischer Timer §\label{srcEvent0201}§
         self.running = True
 
     def run(self) -> None:
@@ -163,13 +146,11 @@ class Game:
             elif event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     self._check_button_pressed(event.pos)
-            elif event.type == MyEvents.BUTTONPRESSED:
+            elif event.type == MyEvents.BUTTONPRESSED:  # §\label{srcEvent0106}§
                 self.all_particles.update(action=event.text)
-            elif event.type == MyEvents.OVERFLOW:
+            elif event.type == MyEvents.OVERFLOW:   # §\label{srcEvent0107}§
                 if event.index < Settings.NOFBOXES - 1:
                     self.all_boxes.sprites()[event.index + 1].update(counter="inc")
-            elif event.type == MyEvents.NEWPARTICLES:  # Periodisches Event §\label{srcEvent0202}§
-                self.generate_particles(Settings.NEWNOFPARTICLES)
 
     def update(self):
         self.all_buttons.update()
@@ -185,7 +166,7 @@ class Game:
         for i in range(number):
             self.all_boxes.add(Box(i, (Settings.WINDOW.right - 50 - i * 100, Settings.WINDOW.centery), self.all_sprites))
 
-    def generate_particles(self, number) -> None:
+    def generate_particles(self, number: int) -> None:
         for i in range(number):
             self.all_particles.add(Particle(self.all_sprites))
 
@@ -195,11 +176,9 @@ class Game:
                 b.update(action="pressed")
 
     def _check_boxcollision(self) -> None:
-        for p in self.all_particles.sprites():
-            for b in self.all_boxes.sprites():
-                if p.rect.colliderect(b):
-                    self.all_boxes.sprites()[0].update(counter="inc")
-                    p.kill()
+        c = pygame.sprite.groupcollide(self.all_particles, self.all_boxes, True, False) 
+        for _ in c:
+            self.all_boxes.sprites()[0].update(counter="inc")
 
 
 def main():

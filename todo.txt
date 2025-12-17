@@ -1,0 +1,3 @@
+- Erklärung zu update mit String/action Übergabe aus dem Kapitel "maus" nach viel weiter vorne.
+- Animation ist eigentlich ein Technik-Kapitel
+- Dirty-Sprite löschen!

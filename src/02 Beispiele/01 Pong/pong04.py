@@ -11,7 +11,7 @@ class Settings:
     DELTATIME = 1.0 / FPS
 
 
-class MyEvents:  # Userevent§\label{srcPong0400}§
+class MyEvents:                                     # User events§\label{srcPong0400}§
     POINT_FOR = pygame.USEREVENT
     MYEVENT = pygame.event.Event(POINT_FOR, player=0)
 
@@ -48,7 +48,7 @@ class Paddle(pygame.sprite.Sprite):
         else:
             self.rect.right = Settings.WINDOW.right - Paddle.BORDERDISTANCE["horizontal"]
         self.speed = Settings.WINDOW.height // 2
-        self.direction = Paddle.DIRECTION["halt"]  # Steht erstmal still
+        self.direction = Paddle.DIRECTION["halt"]  
         self.image = pygame.surface.Surface(self.rect.size)
         self.image.fill("yellow")
 
@@ -101,8 +101,8 @@ class Ball(pygame.sprite.Sprite):
             self.vertical_flip()
             self.rect.bottom = Settings.WINDOW.bottom
         elif self.rect.right < 0:
-            MyEvents.MYEVENT.player = 2  # Spielernummer§\label{srcPong0402}§
-            pygame.event.post(MyEvents.MYEVENT)  # Abfeuern§\label{srcPong0403}§
+            MyEvents.MYEVENT.player = 2             # Player§\label{srcPong0402}§
+            pygame.event.post(MyEvents.MYEVENT)     # Shoot event§\label{srcPong0403}§
             self.service()
         elif self.rect.left > Settings.WINDOW.right:
             MyEvents.MYEVENT.player = 1
@@ -125,7 +125,7 @@ class Score(pygame.sprite.Sprite):
     def __init__(self, *groups: Tuple[pygame.sprite.Group]):
         super().__init__(*groups)
         self.font = pygame.font.SysFont(None, 30)
-        self.score = {1: 0, 2: 0}  # Nicht mehr in Settings!§\label{srcPong0405}§
+        self.score = {1: 0, 2: 0}                   # Not in Settings anymore!§\label{srcPong0405}§
         self.image: pygame.surface.Surface = None
         self.rect: pygame.rect.Rect = None
         self.render()
@@ -195,7 +195,7 @@ class Game:
                     self.paddle["right"].update(action="halt")
                 elif event.key == pygame.K_w or event.key == pygame.K_s:
                     self.paddle["left"].update(action="halt")
-            elif event.type == MyEvents.POINT_FOR:  # Userevent§\label{srcPong0404}§
+            elif event.type == MyEvents.POINT_FOR:  # User event§\label{srcPong0404}§
                 self.score.update(player=event.player)
 
 

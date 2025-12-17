@@ -1,6 +1,3 @@
-import os
-from math import atan2, cos, sin
-from random import randint
 from time import time
 
 import pygame
@@ -8,7 +5,7 @@ import pygame
 
 class Settings:
     WINDOW = pygame.rect.Rect((0, 0), (600, 600))
-    FPS = 30
+    FPS = 60
     DELTATIME = 1.0 / FPS
 
 
@@ -20,7 +17,7 @@ class Ball(pygame.sprite.DirtySprite):
         self.image.set_colorkey((0, 0, 0))
         pygame.draw.circle(self.image, "blue", (15, 15), 15)
         pygame.draw.rect(self.image, "red", (0, 0, 30, 30), 1)
-        self.rect = pygame.rect.FRect(self.image.get_rect())
+        self.rect = pygame.rect.Rect(self.image.get_rect())
         self.speed = pygame.Vector2(-10, 5)
         self.dirty = 1
 
@@ -38,12 +35,13 @@ class Game(object):
     def __init__(self) -> None:
         pygame.init()
         self.screen = pygame.display.set_mode(Settings.WINDOW.size)
+        pygame.display.set_caption("Ball mit DirtySprite")
         self.background = pygame.surface.Surface(Settings.WINDOW.size)
         self.background.fill("white")
-        pygame.display.set_caption("Ball mit DirtySprite")
         self.clock = pygame.time.Clock()
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.flip()
         self.ball = pygame.sprite.LayeredDirty(Ball())
-        self.ball.clear(self.screen, self.background)
         self.ball.set_timing_threshold(1000.0 / Settings.FPS)
         self.running = True
 
@@ -68,6 +66,7 @@ class Game(object):
         self.ball.update()
 
     def draw(self) -> None:
+        self.ball.clear(self.screen, self.background)   
         rects = self.ball.draw(self.screen)
         pygame.display.update(rects)
 

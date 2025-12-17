@@ -72,7 +72,7 @@ class Game(object):
 
     def update(self) -> None:
         if pygame.sprite.spritecollide(self.defender.sprite, self.all_border, False):
-            self.defender.sprite.change_direction()  # Gefällt mir nicht! §\label{srcInvader06d01}§
+            self.defender.sprite.change_direction()  # I don't like this!§\label{srcInvader06d01}§
         self.defender.update()
 
     def draw(self) -> None:

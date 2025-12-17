@@ -8,7 +8,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -29,9 +29,9 @@ def main():
 
         # Update
         defender_rect.left += defender_direction_h * defender_speed
-        if defender_rect.right >= Settings.WINDOW.right:  # Rechter Rand erreicht§\label{srcInvader0508}§
-            defender_direction_h *= -1  # Richtungswechsel§\label{srcInvader0509}§
-        elif defender_rect.left <= Settings.WINDOW.left:  # Linker Rand erreicht
+        if defender_rect.right >= Settings.WINDOW.right:  # Right edge reached§\label{srcInvader0508}§
+            defender_direction_h *= -1                    # Change direction§\label{srcInvader0509}§
+        elif defender_rect.left <= Settings.WINDOW.left:  # Left edge reached
             defender_direction_h *= -1
 
         # Draw

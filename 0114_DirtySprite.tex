@@ -24,7 +24,7 @@ Das eigentliche Spiel ist etwas anspruchsvoller. Dabei werden die Quadrate in ei
 
 Zunächst ein paar Worte über das noch nicht umgebaute Spiel. Die Klassen \texttt{Settings} und \texttt{Timer} werde ich nicht mehr kommentieren, da die schon ausführlich besprochen wurden. 
 
-Die Klasse \texttt{Tile}: Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von $500~ms$ gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch Anklicken zerstört werden kann.
+Die Klasse \texttt{Tile}: Eine sehr simple Klasse, die im Konstruktor ein farbiges Rechteck-Surface erzeugt. In \texttt{Tile.update()} werden die Zustandsänderungen definiert. Soll ein Farbwechsel erfolgen (\texttt{action='switch'}) so kann dies nur passieren, wenn der Status der Kachel den Wert~0 hat, was bedeutet, dass die Kachel noch weiß ist. Nur dann wird ein \texttt{Timer} mit einer Periodendauer von \unit[500]{ms} gestartet, die Farbe gewechselt und der Status auf~1 gesetzt. Dadurch wird markiert, dass nun die Kachel durch Anklicken zerstört werden kann.
 
 Wird ein Kill-Signal gesendet (\texttt{action='kill'}), wird die Kachel nur dann gelöscht, wenn der Status den Wert~1 hat, also rot eingefärbt ist. Ansonsten wird der Timer überprüft und ggf. Status und Farbe wieder zurückgesetzt.
 

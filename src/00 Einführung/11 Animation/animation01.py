@@ -35,7 +35,7 @@ class Animation:
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert_alpha()
             else:
                 bitmap = pygame.image.load(Settings.imagepath(filename)).convert()
-                bitmap.set_colorkey(colorkey)  # Transparenz herstellen §\label{srcAnimation0101}§
+                bitmap.set_colorkey(colorkey)       # Enable transparency§\label{srcAnimation0101}§
             self.images.append(bitmap)
         self.imageindex = -1
 

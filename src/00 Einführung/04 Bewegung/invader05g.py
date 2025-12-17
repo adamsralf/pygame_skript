@@ -1,5 +1,4 @@
 import pygame
-import pygame.time
 
 
 class Settings:
@@ -11,7 +10,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -45,7 +44,7 @@ def main():
         pygame.draw.line(screen, "red", (0, 315), (Settings.WINDOW.width, 315), 2)
         screen.blit(defender_image, defender_rect)
         window.flip()
-        Settings.DELTATIME = clock.tick(Settings.FPS) / 1000.0  # Korrekturwert ermitteln§\label{srcInvader05g01}§
+        Settings.DELTATIME = clock.tick(Settings.FPS) / 1000.0  # §\label{srcInvader05g01}§
     print(f"top={defender_rect.top}")
 
     pygame.quit()

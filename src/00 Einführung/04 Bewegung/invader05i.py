@@ -1,7 +1,6 @@
 from time import time
 
 import pygame
-import pygame.time
 
 
 class Settings:
@@ -13,7 +12,7 @@ class Settings:
 
 def main():
     pygame.init()
-    window = pygame.Window(size=Settings.WINDOW.size, title="Bewegung", position=(10, 50))
+    window = pygame.Window(size=Settings.WINDOW.size, title="Movement", position=(10, 50))
     screen = window.get_surface()
     clock = pygame.time.Clock()
 
@@ -26,7 +25,7 @@ def main():
     defender_direction_v = -1
 
     start_time = pygame.time.get_ticks()
-    time_previous = time()  # Startzeit festhalten§\label{srcInvader05i01}§
+    time_previous = time()  # remember start time§\label{srcInvader05i01}§
     running = True
     while running:
         if pygame.time.get_ticks() > start_time + Settings.LIMIT:
@@ -49,9 +48,9 @@ def main():
         screen.blit(defender_image, defender_rect)
         window.flip()
         clock.tick(Settings.FPS)
-        time_current = time()  # Aktuelle Zeit festhalten§\label{srcInvader05i02}§
-        Settings.DELTATIME = time_current - time_previous  # Zeitverbrauche§\label{srcInvader05i03}§
-        time_previous = time_current  # Neue Startzeit§\label{srcInvader05i04}§
+        time_current = time()  # remember stop time§\label{srcInvader05i02}§
+        Settings.DELTATIME = time_current - time_previous  # Time consumption§\label{srcInvader05i03}§
+        time_previous = time_current  # New start time§\label{srcInvader05i04}§
     pygame.quit()
 
 

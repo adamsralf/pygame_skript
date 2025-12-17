@@ -22,11 +22,14 @@
 \usepackage[acronym]{glossaries}
 \usepackage{xparse}
 \usepackage{tikz}
+\usepackage{tkz-euclide}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.geometric, positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{angles,quotes}
 \usepackage{pgf-umlcd}
 \usepackage{multirow}
 \usepackage{colortbl}
-\usetikzlibrary{calc}
-\usetikzlibrary{angles,quotes}
 \usepackage{chngcntr}
 \usepackage[os=win]{menukeys}
 
@@ -58,7 +61,7 @@
 
   \title{Einführung in die\\2D-Spieleprogrammierung mit Pygame}
   \author{Ralf Adams (\href{https://www.tbs1.de/}{\nolinkurl{TBS 1}}, Bochum)}
-  \date{Version 0.13 vom \today}
+  \date{Version 0.13.1 vom \today}
   \maketitle
   \tableofcontents
 
@@ -84,12 +87,11 @@
 \input{0111_Animation}
 \input{0112_Maus}
 \input{0113_Sound}
-\input{0114_DirtySprite}
-\input{0115_Events}
+%\input{0114_DirtySprite}
+\input{0114_Events}
 \chapter{Techniken und Tipps}
 \input{0201_TileMaps}
 \input{0202_MapScrolling}
-%\input{Partikel(-schauer)}
 %\input{3D-Hintergründe}
 %\input{Pfadsuche}
 %\input{Client/Server Anwendungen}

@@ -8,7 +8,7 @@ class Settings(object):
 
     WINDOW = pygame.rect.Rect((0, 0), (700, 200))
     FPS = 60
-    TITLE = "Kollisionsarten"
+    TITLE = "Collision Types"
     PATH: dict[str, str] = {}
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
@@ -30,9 +30,9 @@ class Obstacle(pygame.sprite.Sprite):
         self.image_normal = pygame.image.load(Settings.imagepath(filename1)).convert_alpha()
         self.image_hit = pygame.image.load(Settings.imagepath(filename2)).convert_alpha()
         self.image = self.image_normal
-        self.rect = self.image.get_rect()  # Rechteck §\label{srcKollision01}§
-        self.mask = pygame.mask.from_surface(self.image)  # Maske §\label{srcKollision02}§
-        self.radius = self.rect.centerx  # Innenkreis §\label{srcKollision03}§
+        self.rect: pygame.rect.Rect = self.image.get_rect()  # Bounding rectangle§\label{srcKollision01}§
+        self.mask = pygame.mask.from_surface(self.image)     # Pixel mask§\label{srcKollision02}§
+        self.radius = self.rect.width // 2                   # Inner circle§\label{srcKollision03}§
         self.rect.centery = Settings.WINDOW.centery
         self.hit = False
 
@@ -51,7 +51,8 @@ class Bullet(pygame.sprite.Sprite):
         self.radius = self.rect.centery
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (10, 10)
-        self.directions = {"stop": (0, 0), "down": (0, 1), "up": (0, -1), "left": (-1, 0), "right": (1, 0)}
+        self.directions = {"stop": (0, 0), "down": (0, 1), "up": (0, -1), 
+                           "left": (-1, 0), "right": (1, 0)}
         self.set_direction("stop")
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -77,7 +78,7 @@ class Game(object):
         self.bullet = pygame.sprite.GroupSingle(Bullet("shoot.png"))
         self.all_obstacles = pygame.sprite.Group()
         self.all_obstacles.add(Obstacle("brick1.png", "brick2.png"))
-        self.all_obstacles.add(Obstacle("raumschiff1.png", "raumschiff2.png"))
+        self.all_obstacles.add(Obstacle("ship1.png", "ship2.png"))
         self.all_obstacles.add(Obstacle("alienbig1.png", "alienbig2.png"))
         self.running = False
 
@@ -132,7 +133,7 @@ class Game(object):
         total_width = 0
         for s in self.all_obstacles:
             total_width += s.rect.width
-        padding = (Settings.WINDOW.width - total_width) // 4  # Abstand §\label{srcKollision04}§
+        padding = (Settings.WINDOW.width - total_width) // 4  # Spacing between obstacles§\label{srcKollision04}§
         for i in range(len(self.all_obstacles)):
             if i == 0:
                 self.all_obstacles.sprites()[i].rect.left = padding

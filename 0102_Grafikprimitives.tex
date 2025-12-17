@@ -16,7 +16,7 @@ Für die meisten Fälle brauche ich mir aber keine eigenen Farben zu definieren.
 		\myfigure{primitives.png}{0.4}{Einige Grafikprimitive}{picPrimitive}%
 	\end{center}%
 \end{wrapfigure}%
-Gehen wir der Reihe nach die einzelnen Figuren durch und fangen mit dem Rechteck an. Es gibt mehrere Möglichkeiten, ein Rechteck in Pygame zu bestimmen. Da wir es später auch sehr oft brauchen, möchte ich hier schonmal die Klasse \texttt{pygame.rect.Rect}\myindex{pyg}{\texttt{rect}!\texttt{Rect}}\randnotiz{Rect} einführen. Sie wird durch vier Parameter bestimmt: die linke obere Ecke, seine Breite und seine Höhe. In \zeiref{srcPrimitives02} wird also ein Rechteck an der Position $(10,10)$ mit der Breite von $20~px$ und einer Höhe von $30~px$ definiert. 
+Gehen wir der Reihe nach die einzelnen Figuren durch und fangen mit dem Rechteck an. Es gibt mehrere Möglichkeiten, ein Rechteck in Pygame zu bestimmen. Da wir es später auch sehr oft brauchen, möchte ich hier schonmal die Klasse \texttt{pygame.rect.Rect}\myindex{pyg}{\texttt{rect}!\texttt{Rect}}\randnotiz{Rect} einführen. Sie wird durch vier Parameter bestimmt: die linke obere Ecke, seine Breite und seine Höhe. In \zeiref{srcPrimitives02} wird also ein Rechteck an der Position $(10,10)$ mit der Breite von \unit[20]{px} und einer Höhe von \unit[30]{px} definiert. 
 
 Hinweis: Die Klasse \texttt{Rect} ist kein gezeichnetes Rechteck, sondern lediglich ein Container für Informationen, die für ein Rechteck interessant sind. 
 
@@ -26,9 +26,9 @@ Allgemeiner als ein Rechteck ist ein \Gls{polygon}. Ein Polygon\index{Grafikprim
 
 Für einzelne Linien\index{Linie|underline}\index{Grafikprimitive!Linie|underline} gibt es \texttt{pygame.draw.line()}\myindex{pyg}{\texttt{draw}!\texttt{line()}}\randnotiz{line()} bzw. für einen -- hier ohne Beispiel -- \gls{linienzug} \texttt{pygame.draw.lines()}\myindex{pyg}{\texttt{draw}!\texttt{lines()}}\randnotiz{lines()}. Ein Beispiel finden Sie in \zeiref{srcPrimitives08}.
 
-Ein Kreis\index{Grafikprimitive!Kreis|underline}\index{Kreis|underline} wird durch zwei Angaben definiert: Mittelpunkt und Radius. In \zeiref{srcPrimitives09} wird mit \texttt{pygame.draw.circle()}\myindex{pyg}{\texttt{draw}!\texttt{circle()}}\randnotiz{circle()} ein gefüllter Kreis mit dem Mittelpunkt $(40, 150)$ und einem Radius von $30~px$ gezeichnet. Wie bei Rechtecken und Polygonen gibt es auch nicht gefüllte Varianten (\zeiref{srcPrimitives10}). Interessant ist der Kreisbogenausschnitt in \zeiref{srcPrimitives11}. Hier wird über boolsche Variablen gesteuert, welcher Abschnitt des Kreisbogens gezeichnet wird (Näheres in der Pygame-Referenz).
+Ein Kreis\index{Grafikprimitive!Kreis|underline}\index{Kreis|underline} wird durch zwei Angaben definiert: Mittelpunkt und Radius. In \zeiref{srcPrimitives09} wird mit \texttt{pygame.draw.circle()}\myindex{pyg}{\texttt{draw}!\texttt{circle()}}\randnotiz{circle()} ein gefüllter Kreis mit dem Mittelpunkt $(40, 150)$ und einem Radius von \unit[30]{px} gezeichnet. Wie bei Rechtecken und Polygonen gibt es auch nicht gefüllte Varianten (\zeiref{srcPrimitives10}). Interessant ist der Kreisbogenausschnitt in \zeiref{srcPrimitives11}. Hier wird über boolsche Variablen gesteuert, welcher Abschnitt des Kreisbogens gezeichnet wird (Näheres in der Pygame-Referenz).
 
-Zum Schluss noch einen kleine Farbenspielerei. Seltsamerweise gibt es in Pygame keine eigene Funktion zum Zeichnen eines einzelnen Punktes/Pixel\index{Grafikprimitive!Punkt|underline}\index{Punkt|underline}. Ich habe hier mal drei Workarounds programmiert, die ich gefunden habe. Man könnte sich noch weitere überlegen: Eine Linie mit $start=ende$, ein Kreis mit dem Radius~1 usw.
+Zum Schluss noch einen kleine Farbenspielerei. Seltsamerweise gibt es in Pygame keine eigene Funktion zum Zeichnen eines einzelnen Punktes/Pixel\index{Grafikprimitive!Punkt|underline}\index{Punkt|underline}. Ich habe hier mal drei Workarounds programmiert, die ich gefunden habe. Man könnte sich noch weitere überlegen: Eine Linie mit $start=ende$, ein Kreis mit dem Radius~\unit[1]{px} usw.
 
 In \zeiref{srcPrimitives12} wird der Punkt durch das Setzen eines einzelnen Farbwertes an einer Position mit \texttt{pygame.Surface.set\_at()}\myindex{pyg}{\texttt{Surface}!\texttt{set\_at()}}\randnotiz{set\_at()} gezeichnet. Man könnte auch die schon oben verwendete Surface-Funktion \texttt{fill()} mit einer Ausdehnung von nur einem Pixel Breite und Höhe verwenden (\zeiref{srcPrimitives13}). Ein Möglichkeit einen Pixel über eine Grafikbibliothek zu setzen, ist die experimentelle \texttt{gfxdraw}-Umgebung. In \zeiref{srcPrimitives14} wird mit \texttt{pygame.gfxdraw.pixel()}\myindex{pyg}{\texttt{gfxdraw}!\texttt{pixel()}}\randnotiz{pixel()} ein einzelnes Pixel gesetzt. Die \texttt{gfxdraw}-Umgebung wird nicht automatisch durch \texttt{import pygame} importiert (siehe \zeiref{srcPrimitives15}).
 
@@ -60,7 +60,7 @@ Das Ergebnis ist noch wenig berauschend (siehe \abbref[vref]{picCircles01}) und 
 \end{wrapfigure}%
 Im nächsten Schritt wollen wir aus den klobigen Kreisen bunte Partikel machen. Auch sollen diese nicht genau auf der Mausposition landen, sondern darum verstreut. Dazu müssen nur minimal Änderungen in der Klasse \texttt{Circle} vorgenommen werden.
 
-Die beiden Positionsangaben werden nun durch eine Zufallszahl zwischen~$-2$ und~$+2$ ergänzt. Auch wird der Radius auf~$2~px$ reduziert. Die Farbe wird ebenfalls durch zufällige Werte gestreut. Hier habe ich einige Kombinationen ausprobiert und mir gefällt diese Farbvariation ganz gut. Spielen Sie ruhig selber mal mit den Farbkanälen und den Zufallswerten rum. Das Ergebnis in \abbref[vref]{picCircles02} sieht schon besser aus. 
+Die beiden Positionsangaben werden nun durch eine Zufallszahl zwischen~$-2$ und~$+2$ ergänzt. Auch wird der Radius auf~\unit[2]{px} reduziert. Die Farbe wird ebenfalls durch zufällige Werte gestreut. Hier habe ich einige Kombinationen ausprobiert und mir gefällt diese Farbvariation ganz gut. Spielen Sie ruhig selber mal mit den Farbkanälen und den Zufallswerten rum. Das Ergebnis in \abbref[vref]{picCircles02} sieht schon besser aus. 
 
 \lstsource{SRC/00 Einführung/02 Primitive/circles02.py}{7}{12}{python}{Partikelfontaine, Version 2.0}{srcCircles02}
 
@@ -110,7 +110,7 @@ Warum rufe ich nicht den \texttt{remove()} schon innerhalb der Update-Schleife a
 \begin{lstlisting}[firstnumber=1]
 	klein = [1, 2, 3]
 	for a in klein:
-	klein.append(a*10)
+	    klein.append(a*10)
 	print(klein)	
 \end{lstlisting}
 

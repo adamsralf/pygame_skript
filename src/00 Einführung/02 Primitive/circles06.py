@@ -5,14 +5,14 @@ import pygame
 
 class Circle:
     GRAVITY = 0.3
-    RADIUS_INC = -0.1                                       # Radiusinkrement§\label{srcCircles0600}§
+    RADIUS_INC = -0.1                                       # Radius increment§\label{srcCircles0600}§
 
     def __init__(self, pos) -> None:
-        self.posx = pos[0] + randint(-4, 4)                 # Veränderte Streuung§\label{srcCircles0601}§
+        self.posx = pos[0] + randint(-4, 4)                 # Changed spread§\label{srcCircles0601}§
         self.posy = pos[1] + randint(-4, 4)
         self.radius = 8
         self.color = [randint(100, 255), randint(50, 255), 0]
-        self.speedx = randint(-15, 15) / 10.01              # Fontaine breiter§\label{srcCircles0602}§
+        self.speedx = randint(-15, 15) / 10.01              # Fountain wider§\label{srcCircles0602}§
         self.speedy = randint(-100, 0) / 10.01
         self.todelete = False
 
@@ -27,7 +27,7 @@ class Circle:
             self.todelete = True
         elif self.posy - self.radius > window.size[1]:
             self.todelete = True
-        elif self.radius <= 0.0:                            # Können raus§\label{srcCircles0603}§
+        elif self.radius <= 0.0:                            # Can be removed§\label{srcCircles0603}§
             self.todelete = True
 
     def draw(self, screen: pygame.surface.Surface) -> None:
@@ -37,7 +37,7 @@ class Circle:
 def main():
     size = (300, 600)
     pygame.init()
-    window = pygame.Window( size=size, title = "Partikelschwarm", position = (10, 50))         
+    window = pygame.Window( size=size, title = "Particle swarm", position = (10, 50))         
     screen = window.get_surface()                   
     clock = pygame.time.Clock()
     circles = []

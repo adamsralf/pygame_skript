@@ -135,7 +135,6 @@ class WindowResult:
         top = 70 + pos[1] * (Settings.TARGET_WINDOW.height + 30)
         self.window.position = left, top
         self.screen : pygame.surface.Surface = self.window.get_surface()
-        #self.image = pygame.surface.Surface(Settings.TARGET_WINDOW.size)
         self.rect = self.screen.get_rect()
         self.window.title = "Result"
         self.filename = f"images/{filename}"

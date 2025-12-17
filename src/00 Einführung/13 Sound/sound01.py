@@ -63,9 +63,10 @@ class Tank(pygame.sprite.Sprite):
         self.rect = pygame.rect.FRect(self.image.get_rect())
         self.rect.left, self.rect.top = 3 * self.rect.width, 2 * self.rect.height
         self.sound_drive = pygame.mixer.Sound(Settings.get_sound("tank_drive1.wav"))  # §\label{srcSound0101}§
-        self.channel = pygame.mixer.find_channel()  # Sound-Kanal finden§\label{srcSound0104}§
-        self.stereo()  # §\label{srcSound0102}§
-        self.channel.play(self.sound_drive, -1)  # §\label{srcSound0103}§
+        self.channel = pygame.mixer.find_channel()  # Find a free sound channel§\label{srcSound0104}§
+        if self.channel:
+            self.stereo()                           # §\label{srcSound0102}§
+            self.channel.play(self.sound_drive, -1) # §\label{srcSound0103}§
         self.speed = 50
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -110,7 +111,7 @@ class Tank(pygame.sprite.Sprite):
 
 class Bullet(pygame.sprite.Sprite):
 
-    SOUND_FIRE = None  # Es braucht nur einen §\label{srcSound0106}§
+    SOUND_FIRE = None                               # Only one shared sound is needed§\label{srcSound0106}§
 
     def __init__(self, tank: Tank) -> None:
         super().__init__()
@@ -130,13 +131,14 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.center = tank.rect.center
         self.speed = directions[tank.direction]
 
-        if Bullet.SOUND_FIRE == None:  # Es braucht nur einen §\label{srcSound0107}§
+        if Bullet.SOUND_FIRE == None:               # §\label{srcSound0107}§
             Bullet.SOUND_FIRE = pygame.mixer.Sound(Settings.get_sound("tank_fire1.wav"))
         volume_rechts = self.rect.centerx / Settings.WINDOW.width
         volume_links = 1 - volume_rechts
         self.channel: pygame.mixer.Channel = pygame.mixer.find_channel()
-        self.channel.set_volume(volume_links, volume_rechts)
-        self.channel.play(Bullet.SOUND_FIRE)
+        if self.channel:
+            self.channel.set_volume(volume_links, volume_rechts)
+            self.channel.play(Bullet.SOUND_FIRE)
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.rect.move_ip(self.speed * Settings.DELTATIME)
@@ -168,11 +170,11 @@ class Game:
                 elif event.key == K_UP:
                     self.tank.update(turn="up")
                 elif event.key == K_DOWN:
-                    self.tank.sprite.update(turn="down")
+                    self.tank.update(turn="down")
                 elif event.key == K_LEFT:
-                    self.tank.sprite.update(turn="left")
+                    self.tank.update(turn="left")
                 elif event.key == K_RIGHT:
-                    self.tank.sprite.update(turn="right")
+                    self.tank.update(turn="right")
                 elif event.key == K_SPACE:
                     self.fire()
 

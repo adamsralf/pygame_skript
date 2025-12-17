@@ -15,7 +15,7 @@ class Settings:
     PATH["file"] = os.path.dirname(os.path.abspath(__file__))
     PATH["image"] = os.path.join(PATH["file"], "images")
     PATH["sound"] = os.path.join(PATH["file"], "sounds")
-    CAPTION = 'Fingerübung "Bubbles"'
+    CAPTION = 'Bubbles'
     RADIUS = {"min": 15, "max": 240}
     DISTANCE = 50
     PLAYGROUND = pygame.rect.Rect(90, 90, 1055, 615)
@@ -141,11 +141,11 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
-        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION, position=pygame.WINDOWPOS_CENTERED)
+        self.window = pygame.Window(size=Settings.WINDOW.size, title=Settings.CAPTION)
         self.screen = self.window.get_surface()
         self.clock = pygame.time.Clock()
-        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("blase1.png")
-        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("blase2.png")
+        Game.BUBBLE_CONTAINER["blue"] = BubbleContainer("bubble1.png")
+        Game.BUBBLE_CONTAINER["red"] = BubbleContainer("bubble2.png")
         Game.SOUND_CONTAINER["bubble"] = pygame.mixer.Sound(Settings.get_sound("plopp1.mp3"))  # §\label{srcBubble1302}§
         Game.SOUND_CONTAINER["burst"] = pygame.mixer.Sound(Settings.get_sound("burst.mp3"))
         Game.SOUND_CONTAINER["clash"] = pygame.mixer.Sound(Settings.get_sound("glas.wav"))
@@ -154,7 +154,7 @@ class Game:
         self.running = True
         self.pausing = False
         self.msgpause = Message("pause.png")
-        self.msgrestart = Message("neustart.png")
+        self.msgrestart = Message("restart.png")
 
         self.restart()
 
